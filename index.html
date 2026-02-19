@@ -486,7 +486,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
 <!-- DEMO BANNER (shown when in demo mode) -->
 <div id="demo-banner" style="display:none;background:rgba(245,158,11,.12);border-bottom:1px solid rgba(245,158,11,.25);padding:9px 24px;text-align:center;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#f59e0b">
-  Demo Preview · 10 Questions · Full version: 100 questions
+  Demo Preview · 10 Questions · Start with Legacy to earn your Tier
 </div>
 
 <!-- QUIZ -->
@@ -776,7 +776,7 @@ const savePend = ()=> { try { sessionStorage.setItem('atc_pend', JSON.stringify(
 const saveAppr = ()=> { try { sessionStorage.setItem('atc_appr', JSON.stringify(approved)); } catch(e){} };
 
 // ── UTILS ──
-function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); if(id==='s-land' && sName) updateCards(sName); }
 function toast(msg,d=2300){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),d); }
 function fmtDate(ts){ return new Date(ts).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}); }
 function fmtAUD(n){ return '$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
