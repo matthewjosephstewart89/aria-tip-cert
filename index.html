@@ -354,27 +354,27 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       <p class="l-sub">Complete the knowledge test in your own time. No rostered shift. Your score goes to management for approval — then your OnTheMonee allocation updates.</p>
 
       <table class="tier-tbl">
-        <thead><tr><th>Score</th><th></th><th>Tier</th><th>OTM Alloc.</th></tr></thead>
+        <thead><tr><th>Stage</th><th></th><th>Tier</th><th>OTM Alloc.</th></tr></thead>
         <tbody>
           <tr class="tr-full">
-            <td><span class="t-score">90–100</span></td><td style="width:14px"></td>
-            <td><div class="t-name">Expert</div><div class="t-sub">Full menu &amp; service mastery</div></td>
+            <td><span class="t-score">Master</span></td><td style="width:14px"></td>
+            <td><div class="t-name">Expert</div><div class="t-sub">Deep knowledge &amp; mastery</div></td>
             <td><span class="t-pct">100%</span></td>
           </tr>
           <tr class="tr-75">
-            <td><span class="t-score">70–89</span></td><td></td>
-            <td><div class="t-name">Proficient</div><div class="t-sub">Solid knowledge, room to grow</div></td>
+            <td><span class="t-score">Legacy</span></td><td></td>
+            <td><div class="t-name">Proficient</div><div class="t-sub">Foundational competency</div></td>
             <td><span class="t-pct">75%</span></td>
           </tr>
           <tr class="tr-50">
-            <td><span class="t-score">0–69</span></td><td></td>
-            <td><div class="t-name">Development</div><div class="t-sub">New staff — study &amp; retry in 7 days</div></td>
+            <td><span class="t-score">—</span></td><td></td>
+            <td><div class="t-name">Development</div><div class="t-sub">Uncertified — complete Legacy first</div></td>
             <td><span class="t-pct">50%</span></td>
           </tr>
         </tbody>
       </table>
 
-      <p class="l-note">100 questions · ~20 min · available FOH &amp; BOH · retake after 7 days if under 70</p>
+      <p class="l-note">Two-stage certification · Legacy (40q) unlocks 75% · Master (100q) unlocks 100%</p>
 
       <div class="l-form">
         <div class="f-row">
@@ -451,9 +451,33 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           </div>
         </div>
       </div>
-      <button class="l-cta" id="start-btn" disabled onclick="startQuiz()">Begin Assessment &rarr;</button>
+
+      <!-- Progression cards -->
+      <div id="test-cards" style="display:none;margin-bottom:14px">
+        <!-- Legacy card -->
+        <div id="card-legacy" style="background:var(--s1);border:1px solid var(--b3);border-radius:8px;padding:15px 17px;margin-bottom:8px;cursor:pointer;transition:border-color .15s" onclick="startLegacy()">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div>
+              <div style="font-family:var(--fh);font-size:16px;font-weight:700;letter-spacing:.02em" id="legacy-title">Stage 1 · Legacy</div>
+              <div style="font-size:11px;color:var(--muted2);margin-top:3px" id="legacy-sub">40 questions · Foundational knowledge · Unlocks 75%</div>
+            </div>
+            <div id="legacy-badge" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;flex-shrink:0;background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2)">Start →</div>
+          </div>
+        </div>
+        <!-- Master card -->
+        <div id="card-master" style="background:var(--s1);border:1px solid var(--b2);border-radius:8px;padding:15px 17px;opacity:.4;pointer-events:none;transition:all .15s">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div>
+              <div style="font-family:var(--fh);font-size:16px;font-weight:700;letter-spacing:.02em;color:var(--muted)" id="master-title">Stage 2 · Master</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px" id="master-sub">100 questions · Deep mastery · Unlocks 100%</div>
+            </div>
+            <div id="master-badge" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;flex-shrink:0;background:rgba(90,90,90,.08);color:var(--muted);border:1px solid var(--b3)">Locked</div>
+          </div>
+        </div>
+      </div>
+
       <div style="text-align:center;margin-top:16px;">
-        <a href="#" onclick="startDemo();return false;" style="font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:2px;" onmouseover="this.style.color='#7a9e7e'" onmouseout="this.style.color='var(--muted)'">Try the 10-question demo &rarr;</a>
+        <a href="#" onclick="startDemo();return false;" style="font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:2px;" onmouseover="this.style.color='#7a9e7e'" onmouseout="this.style.color='var(--muted)'">Try the 10-question demo →</a>
       </div>
     </div>
     <div class="l-deco"><div class="l-deco-t">Tip<br>Test</div></div>
@@ -734,6 +758,7 @@ const hatsAllQuestions = {
 // ── STATE ──
 let sName='', sRole='', sPool='', sTips=0;
 let isDemo = false;
+let quizMode = 'legacy'; // 'legacy', 'master', or 'demo'
 let QS = {qs:[],idx:0,score:0,answered:false,cats:{}};
 let pending, approved;
 try {
@@ -741,6 +766,11 @@ try {
   approved = JSON.parse(sessionStorage.getItem('atc_appr')||'[]');
 } catch(e) { pending = []; approved = []; }
 let lastRes  = null;
+
+// Certification store: {name: {legacy:{score,total,pct,date}, master:{...}}}
+let certStore = {};
+try { certStore = JSON.parse(sessionStorage.getItem('atc_certs')||'{}'); } catch(e){ certStore={}; }
+const saveCerts = ()=> { try { sessionStorage.setItem('atc_certs', JSON.stringify(certStore)); } catch(e){} };
 
 const savePend = ()=> { try { sessionStorage.setItem('atc_pend', JSON.stringify(pending)); } catch(e){} };
 const saveAppr = ()=> { try { sessionStorage.setItem('atc_appr', JSON.stringify(approved)); } catch(e){} };
@@ -753,7 +783,6 @@ function fmtAUD(n){ return '$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')
 function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]; } return b; }
 
 function getTier(score, total){
-  // Use total to determine thresholds; default to checking isDemo for backward compat
   const t = total || (isDemo ? 10 : 100);
   const hi = Math.round(t * 0.9), mid = Math.round(t * 0.7);
   if(score>=hi) return {key:'full',pct:'100%',label:'Expert — Full Allocation',cls:'vc-full',col:'var(--green)',
@@ -764,39 +793,150 @@ function getTier(score, total){
     desc:"You're building your knowledge. Focus on the Tier Training Hub — menus, allergens and service sequence. 50% allocation applies. Eligible to retake after 7 days."};
 }
 
+// ── CHECK CERTIFICATION STATUS ──
+function hasLegacyPass(name){
+  const c = certStore[name];
+  return c && c.legacy && c.legacy.pct >= 70;
+}
+function hasMasterPass(name){
+  const c = certStore[name];
+  return c && c.master && c.master.pct >= 90;
+}
+
+// ── UPDATE PROGRESSION CARDS ──
+function updateCards(name){
+  const cards = document.getElementById('test-cards');
+  if(!name){ cards.style.display='none'; return; }
+  cards.style.display='block';
+
+  const legacyDone = hasLegacyPass(name);
+  const masterDone = hasMasterPass(name);
+  const lc = certStore[name]?.legacy;
+  const mc = certStore[name]?.master;
+
+  // Legacy card
+  const legCard = document.getElementById('card-legacy');
+  const legTitle = document.getElementById('legacy-title');
+  const legSub = document.getElementById('legacy-sub');
+  const legBadge = document.getElementById('legacy-badge');
+
+  if(legacyDone){
+    legCard.style.borderColor='rgba(34,197,94,.25)';
+    legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
+    legCard.onclick=function(){ startLegacy(); };
+    legTitle.textContent='Stage 1 · Legacy ✓';
+    legTitle.style.color='var(--green)';
+    legSub.textContent='Passed — '+lc.score+'/'+lc.total+' ('+lc.pct+'%) · '+fmtDate(lc.date)+' · Retake available';
+    legSub.style.color='var(--green)';
+    legBadge.textContent='Retake';
+    legBadge.style.background='rgba(34,197,94,.08)';
+    legBadge.style.color='var(--green)';
+    legBadge.style.borderColor='rgba(34,197,94,.2)';
+  } else {
+    legCard.style.borderColor='var(--b3)';
+    legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
+    legCard.onclick=function(){ startLegacy(); };
+    legTitle.textContent='Stage 1 · Legacy';
+    legTitle.style.color='var(--cream)';
+    legSub.textContent='40 questions · Foundational knowledge · Unlocks 75%';
+    legSub.style.color='var(--muted2)';
+    legBadge.textContent='Start →';
+    legBadge.style.background='rgba(122,158,126,.1)';
+    legBadge.style.color='var(--gold)';
+    legBadge.style.borderColor='rgba(122,158,126,.2)';
+  }
+
+  // Master card
+  const masCard = document.getElementById('card-master');
+  const masTitle = document.getElementById('master-title');
+  const masSub = document.getElementById('master-sub');
+  const masBadge = document.getElementById('master-badge');
+
+  if(masterDone){
+    masCard.style.borderColor='rgba(34,197,94,.25)';
+    masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
+    masCard.onclick=function(){ startMaster(); };
+    masTitle.textContent='Stage 2 · Master ✓';
+    masTitle.style.color='var(--green)';
+    masSub.textContent='Passed — '+mc.score+'/'+mc.total+' ('+mc.pct+'%) · '+fmtDate(mc.date)+' · Retake available';
+    masSub.style.color='var(--green)';
+    masBadge.textContent='Retake';
+    masBadge.style.background='rgba(34,197,94,.08)';
+    masBadge.style.color='var(--green)';
+    masBadge.style.borderColor='rgba(34,197,94,.2)';
+  } else if(legacyDone){
+    masCard.style.borderColor='rgba(122,158,126,.2)';
+    masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
+    masCard.onclick=function(){ startMaster(); };
+    masTitle.textContent='Stage 2 · Master';
+    masTitle.style.color='var(--cream)';
+    masSub.textContent='100 questions · Deep mastery · Unlocks 100%';
+    masSub.style.color='var(--muted2)';
+    masBadge.textContent='Start →';
+    masBadge.style.background='rgba(122,158,126,.1)';
+    masBadge.style.color='var(--gold)';
+    masBadge.style.borderColor='rgba(122,158,126,.2)';
+  } else {
+    masCard.style.borderColor='var(--b2)';
+    masCard.style.opacity='.4'; masCard.style.pointerEvents='none';
+    masCard.onclick=null;
+    masTitle.textContent='Stage 2 · Master';
+    masTitle.style.color='var(--muted)';
+    masSub.textContent='Complete Legacy first to unlock';
+    masSub.style.color='var(--muted)';
+    masBadge.textContent='Locked';
+    masBadge.style.background='rgba(90,90,90,.08)';
+    masBadge.style.color='var(--muted)';
+    masBadge.style.borderColor='var(--b3)';
+  }
+}
+
 // ── LANDING INIT ──
 (function(){
   var sel = document.getElementById('sel-name');
   if(!sel) return;
   sel.addEventListener('change', function(){
     var o = this.selectedOptions[0];
-    if(!o||!o.value){ document.getElementById('start-btn').disabled=true; return; }
+    if(!o||!o.value){
+      document.getElementById('test-cards').style.display='none';
+      return;
+    }
     document.getElementById('inp-role').value = o.getAttribute('data-role')||'';
     document.getElementById('inp-pool').value = o.getAttribute('data-pool')||'';
     var t = parseFloat(o.getAttribute('data-tips')||'0');
     document.getElementById('inp-tips').value = t>0 ? ('$'+t.toFixed(2)+' (09–15 Feb)') : '';
-    document.getElementById('start-btn').disabled = false;
+    updateCards(o.value);
   });
 })();
 
-function startQuiz(){
+// ── GATHER SELECTED STAFF ──
+function _getSelected(){
   const sel=document.getElementById('sel-name');
   const o=sel.selectedOptions[0];
-  if(!o.value) return;
+  if(!o||!o.value){ toast('Select your name first'); return null; }
   sName=o.value; sRole=o.dataset.role; sPool=o.dataset.pool; sTips=parseFloat(o.dataset.tips);
+  return o;
+}
+
+function startLegacy(){
+  if(!_getSelected()) return;
   isDemo = false;
+  quizMode = 'legacy';
+  _launchQuiz(40);
+}
+
+function startMaster(){
+  if(!_getSelected()) return;
+  if(!hasLegacyPass(sName)){ toast('Complete Legacy first'); return; }
+  isDemo = false;
+  quizMode = 'master';
   _launchQuiz(100);
 }
 
 function startDemo(){
-  const sel=document.getElementById('sel-name');
-  const o=sel.selectedOptions[0];
-  if(!o||!o.value){
-    // If no name selected, prompt them
-    toast('Select your name first'); return;
-  }
-  sName=o.value; sRole=o.dataset.role; sPool=o.dataset.pool; sTips=parseFloat(o.dataset.tips);
+  if(!_getSelected()) return;
   isDemo = true;
+  quizMode = 'demo';
   _launchQuiz(10);
 }
 
@@ -812,8 +952,17 @@ function _launchQuiz(count){
       ...pick(hatsAllQuestions.other,   2),
       ...pick(hatsAllQuestions.service, 2),
     ].slice(0,10);
+  } else if(count<=40){
+    // Legacy: balanced draw to 40
+    qs=[
+      ...pick(hatsAllQuestions.entree,  8),
+      ...pick(hatsAllQuestions.main,   10),
+      ...pick(hatsAllQuestions.dessert, 6),
+      ...pick(hatsAllQuestions.other,   4),
+      ...pick(hatsAllQuestions.service,12),
+    ].slice(0,40);
   } else {
-    // Full: balanced draw to 100
+    // Master: balanced draw to 100
     qs=[
       ...pick(hatsAllQuestions.entree,  20),
       ...pick(hatsAllQuestions.main,    25),
@@ -829,7 +978,8 @@ function _launchQuiz(count){
 
   // Update quiz nav for mode
   const total = qs.length;
-  document.getElementById('qz-namespan').textContent=(isDemo?'Demo · ':'')+sName.split(' ')[0];
+  const modeLabel = quizMode==='demo'?'Demo':quizMode==='legacy'?'Legacy':'Master';
+  document.getElementById('qz-namespan').textContent=modeLabel+' · '+sName.split(' ')[0];
   document.getElementById('qz-score').textContent='0';
   document.querySelector('.qz-score-d').textContent='/ '+total;
   document.getElementById('demo-banner').style.display=isDemo?'block':'none';
@@ -901,13 +1051,54 @@ function showResult(){
   const score=QS.score, total=QS.qs.length, pct=Math.round(score/total*100);
   const t=getTier(score, total), ts=Date.now();
 
+  // Determine stage-specific tier
+  let stageTier, stageLabel;
+  if(quizMode==='legacy'){
+    const passed = pct>=70;
+    stageTier = passed ? '75' : '50';
+    stageLabel = passed ? 'Legacy Certified — 75%' : 'Not Yet Passed';
+    // Save to cert store
+    if(passed || !certStore[sName]?.legacy){
+      if(!certStore[sName]) certStore[sName]={};
+      certStore[sName].legacy = {score,total,pct,date:ts};
+      saveCerts();
+    }
+  } else if(quizMode==='master'){
+    const passed = pct>=90;
+    stageTier = passed ? 'full' : '75';
+    stageLabel = passed ? 'Master Certified — 100%' : 'Not Yet Passed — Legacy 75% maintained';
+    if(passed || !certStore[sName]?.master){
+      if(!certStore[sName]) certStore[sName]={};
+      certStore[sName].master = {score,total,pct,date:ts};
+      saveCerts();
+    }
+  } else {
+    // Demo
+    stageTier = t.key;
+    stageLabel = t.label;
+  }
+
+  const tierObj = {
+    'full':{key:'full',pct:'100%',label:'Expert — Full Allocation',cls:'vc-full',col:'var(--green)',
+      desc:'Outstanding. Master-level knowledge demonstrated. OTM allocation recommended at 100%.'},
+    '75':{key:'75',pct:'75%',label:'Proficient — Standard Allocation',cls:'vc-75',col:'var(--amber)',
+      desc:'Good foundation. OTM allocation at 75%. Continue studying for Master certification.'},
+    '50':{key:'50',pct:'50%',label:'Development Level',cls:'vc-50',col:'var(--muted)',
+      desc:"Keep building your knowledge. Focus on the Tier Training Hub. 50% allocation applies. Retake when ready."}
+  };
+  const tier = tierObj[stageTier];
+
   lastRes={id:ts,name:sName,role:sRole,pool:sPool,weekTips:sTips,
-    score,total,pct,tier:t.key,tierPct:t.pct,tierLabel:t.label,
-    cats:JSON.parse(JSON.stringify(QS.cats)),date:ts,status:'pending'};
-  // Remove any previous pending entry for this person before adding new one
-  pending = pending.filter(r=>r.name!==sName);
-  savePend();
-  pending.push(lastRes); savePend();
+    score,total,pct,tier:tier.key,tierPct:tier.pct,tierLabel:stageLabel,
+    cats:JSON.parse(JSON.stringify(QS.cats)),date:ts,status:'pending',
+    quizMode:quizMode};
+
+  // Only push non-demo results to pending
+  if(quizMode!=='demo'){
+    pending = pending.filter(r=>r.name!==sName || r.quizMode!==quizMode);
+    savePend();
+    pending.push(lastRes); savePend();
+  }
 
   document.getElementById('r-date').textContent=fmtDate(ts);
   document.getElementById('r-name').textContent=sName;
@@ -918,16 +1109,16 @@ function showResult(){
 
   // Ring animation
   const circ=2*Math.PI*62, ring=document.getElementById('rg-fill');
-  ring.style.strokeDasharray=circ; ring.style.stroke=t.col; ring.style.strokeDashoffset=circ;
-  document.getElementById('r-big').style.color=t.col;
+  ring.style.strokeDasharray=circ; ring.style.stroke=tier.col; ring.style.strokeDashoffset=circ;
+  document.getElementById('r-big').style.color=tier.col;
   setTimeout(()=>ring.style.strokeDashoffset=circ*(1-score/total),120);
 
   // Verdict
   document.getElementById('r-verdict-inner').innerHTML=`
-    <div class="v-card ${t.cls}">
+    <div class="v-card ${tier.cls}">
       <div class="v-top">
-        <div><div class="v-label">${t.label}</div><div class="v-desc" style="margin-top:7px">${t.desc}</div></div>
-        <div class="v-pct">${t.pct}</div>
+        <div><div class="v-label">${stageLabel}</div><div class="v-desc" style="margin-top:7px">${tier.desc}</div></div>
+        <div class="v-pct">${tier.pct}</div>
       </div>
     </div>`;
 
@@ -947,34 +1138,44 @@ function showResult(){
   setTimeout(()=>document.querySelectorAll('.cat-fill').forEach(el=>el.style.width=el.dataset.p+'%'),280);
 
   // OTM fields
-  const vc=t.key==='full'?'green':t.key==='75'?'amber':'gr';
-  // Calculate what this week's tips would be at the certified tier
-  const tierMult = t.key==='full'?1:t.key==='75'?0.75:0.5;
+  const vc=tier.key==='full'?'green':tier.key==='75'?'amber':'gr';
+  const tierMult = tier.key==='full'?1:tier.key==='75'?0.75:0.5;
   const adjTips = (sTips*tierMult).toFixed(2);
+  const modeLabel = quizMode==='demo'?'Demo':quizMode==='legacy'?'Legacy':'Master';
   document.getElementById('otm-fields').innerHTML=`
     <div class="otm-f"><span class="otm-fk">Staff Member</span><span class="otm-fv">${sName}</span></div>
     <div class="otm-f"><span class="otm-fk">Role</span><span class="otm-fv">${sRole}</span></div>
     <div class="otm-f"><span class="otm-fk">Pool</span><span class="otm-fv">${sPool}</span></div>
-    <div class="otm-f"><span class="otm-fk">Assessment Score</span><span class="otm-fv">${score}/${total} (${pct}%)</span></div>
-    <div class="otm-f"><span class="otm-fk">Certified Tier</span><span class="otm-fv ${vc}">${t.label}</span></div>
-    <div class="otm-f"><span class="otm-fk">OTM Tip Allocation</span><span class="otm-fv ${vc} big">${t.pct}</span></div>
+    <div class="otm-f"><span class="otm-fk">Assessment</span><span class="otm-fv">${modeLabel} (${total}q)</span></div>
+    <div class="otm-f"><span class="otm-fk">Score</span><span class="otm-fv">${score}/${total} (${pct}%)</span></div>
+    <div class="otm-f"><span class="otm-fk">Result</span><span class="otm-fv ${vc}">${stageLabel}</span></div>
+    <div class="otm-f"><span class="otm-fk">OTM Tip Allocation</span><span class="otm-fv ${vc} big">${tier.pct}</span></div>
     <div class="otm-f"><span class="otm-fk">Applied to last week (${fmtAUD(sTips)})</span><span class="otm-fv ${vc}">${fmtAUD(parseFloat(adjTips))}</span></div>
     <div class="otm-f"><span class="otm-fk">Completed</span><span class="otm-fv">${fmtDate(ts)}</span></div>`;
 
   const notes={
     full:`<strong>Ready for approval.</strong> Once approved, update ${sName.split(' ')[0]}'s tip allocation to <strong>100%</strong> in the OnTheMonee employer portal.`,
-    '75':`<strong>Ready for approval.</strong> Once approved, set allocation to <strong>75%</strong> in OnTheMonee. Recommend reviewing lower-scoring categories before next retake.`,
-    '50':`<strong>Development level.</strong> Set allocation to <strong>50%</strong> in OnTheMonee once approved. Staff may retake after 7 days — study the Tier Training Hub first.`
+    '75':`<strong>Ready for approval.</strong> Once approved, set allocation to <strong>75%</strong> in OnTheMonee. ${quizMode==='legacy'?'Master test available to unlock 100%.':'Recommend reviewing lower-scoring categories.'}`,
+    '50':`<strong>Development level.</strong> Set allocation to <strong>50%</strong> in OnTheMonee once approved. Staff may retake Legacy when ready — study the Tier Training Hub first.`
   };
-  document.getElementById('otm-note').innerHTML=notes[t.key];
+  document.getElementById('otm-note').innerHTML=notes[tier.key];
 
-  // Retry
+  // Retry section — stage-aware
   const rr=document.getElementById('r-retry');
-  if(isDemo){
-    rr.innerHTML=`<div class="r-retry-sub">Ready for the full 100-question assessment?</div><button class="r-retry-btn" onclick="show('s-land')">Take Full Assessment</button>`;
+  if(quizMode==='demo'){
+    rr.innerHTML=`<div class="r-retry-sub">Ready for the real thing? Start with Legacy.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
+  } else if(quizMode==='legacy'){
+    if(pct>=70){
+      rr.innerHTML=`<div class="r-retry-sub">Legacy passed! Master test is now unlocked.</div><button class="r-retry-btn" onclick="show('s-land')">Continue to Master →</button>`;
+    } else {
+      rr.innerHTML=`<div class="r-retry-sub">Score 70%+ to pass Legacy. Retake when ready.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
+    }
   } else {
-    const msg=score<70?'Eligible to retake after 7 days':'Retake available at any time';
-    rr.innerHTML=`<div class="r-retry-sub">${msg}</div><button class="r-retry-btn" onclick="show('s-land')">Retake Assessment</button>`;
+    if(pct>=90){
+      rr.innerHTML=`<div class="r-retry-sub">Master certified! Full 100% allocation unlocked.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Home</button>`;
+    } else {
+      rr.innerHTML=`<div class="r-retry-sub">Score 90%+ to pass Master. Your Legacy 75% is maintained.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
+    }
   }
 
   // Update result ring denominator
@@ -989,12 +1190,14 @@ function copyResult(){
   if(!lastRes) return;
   const r=lastRes;
   const tierMult=r.tier==='full'?1:r.tier==='75'?0.75:0.5;
+  const mLabel=r.quizMode==='legacy'?'Legacy (40q)':r.quizMode==='master'?'Master (100q)':'Demo (10q)';
   const txt=`ARIA TIP CERTIFICATION
 ─────────────────────────────
 Staff      : ${r.name}
 Role       : ${r.role} (${r.pool})
+Assessment : ${mLabel}
 Score      : ${r.score}/${r.total||100} (${r.pct}%)
-Tier       : ${r.tierLabel}
+Result     : ${r.tierLabel}
 OTM Alloc. : ${r.tierPct}
 Last Wk Tips: ${fmtAUD(r.weekTips)}  →  ${fmtAUD(r.weekTips*tierMult)} at ${r.tierPct}
 Completed  : ${fmtDate(r.date)}
@@ -1015,7 +1218,7 @@ function renderMgr(){
   document.getElementById('kpi-p').textContent=pending.length;
   document.getElementById('kpi-a').textContent=approved.length;
   document.getElementById('kpi-f').textContent=all.filter(r=>r.tier==='full').length;
-  const sc=all.map(r=>r.score);
+  const sc=all.map(r=>r.pct);
   document.getElementById('kpi-av').textContent=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length)+'%':'—';
 
   // Pending
@@ -1027,12 +1230,13 @@ function renderMgr(){
       const bc=r.tier==='full'?'ptb-full':r.tier==='75'?'ptb-75':'ptb-50';
       const sc_col=r.pct>=90?'var(--green)':r.pct>=70?'var(--amber)':'var(--muted2)';
       const ini=r.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'Assessment';
       return `<div class="pc" id="pc${r.id}">
         <div class="pc-top">
           <div class="pc-av">${ini}</div>
           <div class="pc-info">
             <div class="pc-name">${r.name}</div>
-            <div class="pc-meta">${r.role} · ${r.pool} · ${fmtDate(r.date)}</div>
+            <div class="pc-meta">${r.role} · ${r.pool} · ${mLabel} · ${fmtDate(r.date)}</div>
           </div>
           <div class="pc-sc"><div class="pc-sc-n" style="color:${sc_col}">${r.score}</div><div class="pc-sc-d">/${r.total||100}</div></div>
         </div>
@@ -1054,9 +1258,10 @@ function renderMgr(){
     al.innerHTML=approved.map(r=>{
       const t=getTier(r.score, r.total);
       const pc=r.tier==='full'?'full':r.tier==='75'?'t75':'t50';
+      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'—';
       return `<div class="ar">
         <div class="ar-name"><strong>${r.name}</strong></div>
-        <div class="ar-role">${r.role}</div>
+        <div class="ar-role">${r.role} · ${mLabel}</div>
         <div class="ar-sc">${r.score}/${r.total||100}</div>
         <div class="ar-pct ${pc}">${t.pct}</div>
         <div class="ar-dt">${fmtDate(r.date)}</div>
