@@ -710,7 +710,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
         <div class="venue-platform-note">
           Platform managed by OnTheMonee · Venue onboarding: onthemonee.com<br>
-          Staff data is isolated per venue and session-scoped.
+          Staff data is securely stored per venue.
         </div>
         <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--b2);text-align:center">
           <button onclick="openMgrLogin()" style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .15s" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">Manager login →</button>
@@ -1290,9 +1290,9 @@ async function removeStaffById(id){
 }
 
 // ── AUTH: STAFF LOGIN ──
-function scrollToLogin(){
-  initLoginSelect();
+async function scrollToLogin(){
   show('s-login');
+  await initLoginSelect();
   setTimeout(()=>document.getElementById('venue-select').focus(),200);
 }
 
@@ -1300,19 +1300,28 @@ async function initLoginSelect(){
   const sel = document.getElementById('venue-select');
   if(!sel) return;
   sel.innerHTML = '<option value="">— Loading venues... —</option>';
-  const {data,error} = await sb.from('venues').select('id,name,slug').order('name');
-  if(error || !data){ sel.innerHTML='<option value="">— Error loading venues —</option>'; return; }
-  sel.innerHTML = '<option value="">— Select venue —</option>';
-  data.forEach(v=>{
-    const o = document.createElement('option');
-    o.value = v.slug; o.textContent = v.name; o.dataset.id = v.id;
-    sel.appendChild(o);
-  });
+  sel.disabled = true;
+  document.getElementById('venue-btn').disabled = true;
+  try {
+    const {data,error} = await sb.from('venues').select('id,name,slug').order('name');
+    if(error) throw error;
+    if(!data || !data.length){ sel.innerHTML='<option value="">— No venues found —</option>'; sel.disabled=false; return; }
+    sel.innerHTML = '<option value="">— Select venue —</option>';
+    data.forEach(v=>{
+      const o = document.createElement('option');
+      o.value = v.slug; o.textContent = v.name; o.dataset.id = v.id;
+      sel.appendChild(o);
+    });
+    sel.disabled = false;
+  } catch(e) {
+    console.error('Venue load error:', e);
+    sel.innerHTML='<option value="">— Error loading venues —</option>';
+    sel.disabled = false;
+  }
   sel.onchange = checkVenueReady;
   document.getElementById('venue-code').oninput = checkVenueReady;
   document.getElementById('venue-code').onkeydown = e=>{ if(e.key==='Enter') venueLogin(); };
   document.getElementById('venue-err').style.display='none';
-  document.getElementById('venue-btn').disabled=true;
 }
 
 function checkVenueReady(){
