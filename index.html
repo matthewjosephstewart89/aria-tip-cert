@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Tier · Tip & Training Platform</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,500;0,700;0,800;1,300;1,700;1,800&family=Barlow:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -1963,16 +1963,12 @@ async function showResult(){
     const passed = pct>=70;
     stageTier = passed?'75':'50';
     stageLabel = passed?'Legacy Certified — 75%':'Not Yet Passed';
-    if(!certs[sName]) certs[sName]={};
-    certs[sName].legacy = {score,total,pct,date:ts};
-    saveVenueCerts(certs);
+    // Cert saved to DB when manager approves
   } else if(quizMode==='master'){
     const passed = pct>=90;
     stageTier = passed?'full':'75';
     stageLabel = passed?'Master Certified — 100%':'Not Yet Passed — Legacy 75% maintained';
-    if(!certs[sName]) certs[sName]={};
-    certs[sName].master = {score,total,pct,date:ts};
-    saveVenueCerts(certs);
+    // Cert saved to DB when manager approves
   } else {
     stageTier = t.key; stageLabel = t.label;
   }
@@ -2121,9 +2117,7 @@ function mgrLoginSubmit(){
 
   // Load the venue context (without going through staff landing)
   currentVenue = venueSlug;
-  venueStaff = getVenueStaff();
-  if(!vGet('staff')) saveVenueStaff(venue.staff);
-  venueStaff = getVenueStaff();
+  venueStaff = await getVenueStaff();
   document.getElementById('mgr-venue-tag').textContent = venue.name;
 
   renderMgr();
