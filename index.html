@@ -1290,9 +1290,9 @@ async function removeStaffById(id){
 }
 
 // ── AUTH: STAFF LOGIN ──
-async function scrollToLogin(){
+function scrollToLogin(){
   show('s-login');
-  await initLoginSelect();
+  initLoginSelect(); // async but non-blocking — populates dropdown in background
   setTimeout(()=>document.getElementById('venue-select').focus(),200);
 }
 
@@ -1871,13 +1871,13 @@ function _getSelected(){
   return o;
 }
 
-async function startLegacy(){ if(!_getSelected()) return; await clearDeclined('legacy'); isDemo=false; quizMode='legacy'; _launchQuiz(40); }
-async function startMaster(){
+async async function startLegacy(){ if(!_getSelected()) return; await clearDeclined('legacy'); isDemo=false; quizMode='legacy'; _launchQuiz(40); }
+async async async function startMaster(){
   if(!_getSelected()) return;
   if(!(await hasLegacyPass(sName))){ toast('Complete Legacy first'); return; }
   await clearDeclined('master'); isDemo=false; quizMode='master'; _launchQuiz(100);
 }
-function startDemo(){
+async function startDemo(){
   if(!_getSelected()) return;
   isDemo=true; quizMode='demo'; _launchQuiz(10);
 }
@@ -2114,23 +2114,7 @@ function mgrLoginSubmit(){
 
   if(!venueCode || !mgrCode){ err.style.display='block'; return; }
 
-  // Find venue by matching venue code
-  const venueSlug = Object.keys(VENUES).find(k => VENUES[k].code === venueCode);
-  if(!venueSlug){ err.style.display='block'; return; }
-  const venue = VENUES[venueSlug];
 
-  const expected = venue.mgrCode || venue.code + '_mgr';
-  if(mgrCode !== expected){ err.style.display='block'; return; }
-  err.style.display='none';
-
-  // Load the venue context (without going through staff landing)
-  currentVenue = venueSlug;
-  venueStaff = await getVenueStaff();
-  document.getElementById('mgr-venue-tag').textContent = venue.name;
-
-  renderMgr();
-  show('s-mgr');
-}
 function goBack(){ lastRes?show('s-result'):show('s-land'); }
 function mgrBack(){ show('s-venue'); }
 
