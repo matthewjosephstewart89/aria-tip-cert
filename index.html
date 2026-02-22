@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Tier · Tip & Training Platform</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,500;0,700;0,800;1,300;1,700;1,800&family=Barlow:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -23,7 +24,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
 
 .screen{display:none!important}.screen.active{display:block!important}
-#s-venue.screen.active,#s-land.screen.active{display:flex!important}
+#s-venue.screen.active,#s-land.screen.active,#s-mgr-login.screen.active,#s-login.screen.active{display:flex!important}
 
 /* ══ VENUE SCREEN ══ */
 #s-venue{min-height:100vh;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;overflow-x:hidden}
@@ -554,6 +555,40 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .prog-card-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .prog-card-badge{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;flex-shrink:0}
 
+/* ══ MGR LOGIN ══ */
+#s-mgr-login{min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px}
+.ml-card{width:100%;max-width:400px;text-align:center}
+.ml-logo{font-family:var(--fh);font-size:44px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.02em;text-transform:uppercase;line-height:1;margin-bottom:6px}
+.ml-badge{display:inline-block;font-family:var(--fm);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border:1px solid var(--b3);border-radius:20px;padding:4px 12px;margin-bottom:32px}
+.ml-heading{font-family:var(--fh);font-size:20px;font-weight:700;letter-spacing:.02em;margin-bottom:6px}
+.ml-sub{font-size:12px;color:var(--muted2);margin-bottom:24px;line-height:1.6}
+.ml-err{font-family:var(--fm);font-size:10px;letter-spacing:.08em;color:var(--red);text-align:center;display:none;margin-bottom:10px}
+.ml-back{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:20px;transition:color .15s}
+.ml-back:hover{color:var(--cream)}
+
+/* ══ STAFF PROGRESS TRACKER ══ */
+.sp-wrap{margin-top:20px;border:1px solid var(--b3);border-radius:8px;overflow:hidden}
+.sp-header{background:var(--s2);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b2)}
+.sp-title{font-family:var(--fh);font-size:13px;font-weight:700;letter-spacing:.04em}
+.sp-subtitle{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sp-body{padding:16px}
+.sp-empty{font-size:12px;color:var(--muted);text-align:center;padding:12px 0}
+.sp-stage{margin-bottom:12px}
+.sp-stage:last-child{margin-bottom:0}
+.sp-stage-label{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.sp-bar-wrap{background:var(--b2);border-radius:4px;height:6px;overflow:hidden;margin-bottom:6px}
+.sp-bar{height:100%;border-radius:4px;transition:width .6s ease;background:#8fa87a}
+.sp-bar.pending{background:var(--amber)}
+.sp-bar.declined{background:var(--red)}
+.sp-status-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sp-status-pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border-radius:20px;padding:3px 10px}
+.sp-status-pill.approved{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.sp-status-pill.pending{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.sp-status-pill.declined{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.sp-status-pill.not-started{background:rgba(90,90,90,.08);color:var(--muted);border:1px solid var(--b3)}
+.sp-score{font-family:var(--fm);font-size:10px;color:var(--muted2)}
+.sp-date{font-family:var(--fm);font-size:9px;color:var(--muted)}
+
 @media(max-width:600px){
   .f-row{grid-template-columns:1fr}
   .m-kpis{grid-template-columns:repeat(2,1fr)}
@@ -607,6 +642,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <button class="vh-cta-primary" onclick="scrollToLogin()">Log in to your venue →</button>
         <button class="vh-cta-secondary" onclick="loadDemoVenue()">
           Try demo <span class="vh-cta-arrow">→</span>
+        </button>
+        <button class="vh-cta-secondary" onclick="openMgrLogin()" style="opacity:.6">
+          Manager login <span class="vh-cta-arrow">→</span>
         </button>
       </div>
     </div>
@@ -668,10 +706,14 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
         <div class="venue-divider">or</div>
         <button class="venue-demo-link" onclick="loadDemoVenue()">Try the demo venue →</button>
+        <button class="ml-back" style="margin-top:12px" onclick="sendPasswordReset()">Forgot password?</button>
 
         <div class="venue-platform-note">
           Platform managed by OnTheMonee · Venue onboarding: onthemonee.com<br>
           Staff data is isolated per venue and session-scoped.
+        </div>
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--b2);text-align:center">
+          <button onclick="openMgrLogin()" style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .15s" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">Manager login →</button>
         </div>
       </div>
     </div>
@@ -767,6 +809,17 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       <div style="text-align:center;margin-top:16px">
         <a href="#" onclick="startDemo();return false;" style="font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:2px">Try a 10-question demo →</a>
       </div>
+
+      <!-- Staff progress tracker -->
+      <div class="sp-wrap" id="staff-progress" style="display:none">
+        <div class="sp-header">
+          <div>
+            <div class="sp-title">Your Progress</div>
+            <div class="sp-subtitle">Certification status</div>
+          </div>
+        </div>
+        <div class="sp-body" id="sp-body"></div>
+      </div>
     </div>
     <div class="l-deco"><div class="l-deco-t">Tip<br>Test</div></div>
   </div>
@@ -843,6 +896,42 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 </div>
 
 <!-- ══ MANAGER ══ -->
+<!-- ══ MGR LOGIN ══ -->
+<div id="s-mgr-login" class="screen">
+  <div style="min-height:100vh;display:flex;flex-direction:column">
+    <!-- nav -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--b2)">
+      <div style="font-family:var(--fh);font-size:26px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.01em;text-transform:uppercase;cursor:pointer" onclick="show('s-venue')">TIER.</div>
+      <button onclick="show('s-venue')" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--b3);border-radius:3px;padding:5px 12px;cursor:pointer;transition:all .14s" onmouseover="this.style.color='var(--cream)';this.style.borderColor='var(--muted)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--b3)'">← Back</button>
+    </div>
+    <!-- content -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px">
+      <div class="ml-card">
+        <div class="ml-logo">TIER.</div>
+        <div class="ml-badge">Manager Access</div>
+        <div class="ml-heading">Manager Portal</div>
+        <div class="ml-sub">Enter your venue code and manager code to access approvals, tip uploads and staff management.</div>
+        <div class="v-grp" style="text-align:left;margin-bottom:10px">
+          <label class="v-lbl">Venue Code</label>
+          <input class="v-inp" type="password" id="mgr-venue-code-inp" placeholder="Enter venue code" autocomplete="off"
+            onkeydown="if(event.key==='Enter') mgrLoginSubmit()">
+        </div>
+        <div class="v-grp" style="text-align:left;margin-bottom:12px">
+          <label class="v-lbl">Manager Code</label>
+          <input class="v-inp" type="password" id="mgr-code-inp" placeholder="Enter manager code" autocomplete="off"
+            onkeydown="if(event.key==='Enter') mgrLoginSubmit()">
+        </div>
+        <div class="ml-err" id="mgr-login-err">Incorrect code — please check both codes and try again</div>
+        <button class="venue-btn" onclick="mgrLoginSubmit()">Enter Manager Portal →</button>
+        <button class="ml-back" style="margin-top:12px" onclick="sendPasswordReset()">Forgot password?</button>
+        <div class="venue-platform-note" style="margin-top:20px">
+          Staff? <a href="#" onclick="show('s-venue');return false;" style="color:#8fa87a;text-decoration:none">Log in here →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="s-mgr" class="screen">
   <div class="m-nav">
     <div class="m-nav-l">
@@ -851,7 +940,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       <div class="m-venue-tag" id="mgr-venue-tag">Venue</div>
     </div>
     <div class="m-nav-r">
-      <button class="m-back" onclick="goBack()">← Back</button>
+      <button class="m-back" onclick="mgrBack()">← Back</button>
     </div>
   </div>
 
@@ -965,31 +1054,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
 <script>
 // ════════════════════════════════════════════════
-// PLATFORM VENUE CONFIG
-// Add new venues here — each gets isolated storage
+// SUPABASE CONFIG
 // ════════════════════════════════════════════════
-const VENUES = {
-  'demo': {
-    name: 'Demo Venue',
-    code: 'demo',
-    staff: [
-      {name:'Alex Thompson', role:'Wait Staff', pool:'FOH'},
-      {name:'Jordan Lee', role:'Bartender', pool:'FOH'},
-      {name:'Sam Nguyen', role:'Supervisor', pool:'FOH'},
-      {name:'Casey Williams', role:'Chef De Partie', pool:'BOH'},
-      {name:'Riley Chen', role:'Host', pool:'FOH'},
-      {name:'Morgan Davis', role:'Sommelier', pool:'FOH'},
-      {name:'Taylor Smith', role:'Demi Chef', pool:'BOH'},
-      {name:'Jamie Brown', role:'Assistant Manager', pool:'FOH'},
-    ]
-  },
-  // Add new venues below:
-  // 'venue-slug': {
-  //   name: 'Venue Display Name',
-  //   code: 'secretcode',
-  //   staff: [{name:'...', role:'...', pool:'FOH'}]
-  // },
-};
+const SUPABASE_URL = 'https://uhrsxqiksqvgjdksbxna.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_p_K8ZONW-YW16vvTlB5rsg_mEv_D5Hp';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Keep VENUES as fallback for question bank / local config
+// Venue data now comes from Supabase
+const VENUES = {};
 
 // ════════════════════════════════════════════════
 // QUESTION BANK (generic — replace with venue-specific content)
@@ -1056,28 +1129,14 @@ const ALL_QUESTIONS = {
 // ════════════════════════════════════════════════
 // PLATFORM STATE
 // ════════════════════════════════════════════════
-let currentVenue = null;
-let venueStaff = [];
+let currentVenue = null;   // { id, name, slug }
+let currentUser  = null;   // Supabase auth user
+let currentRole  = null;   // 'staff' | 'manager'
+let venueStaff   = [];
 let sName='', sRole='', sPool='', sTips=0;
 let isDemo=false, quizMode='legacy';
 let QS={qs:[],idx:0,score:0,answered:false,cats:{}};
 let lastRes=null;
-
-// Per-venue storage keys
-const vKey = k => `tier_${currentVenue}_${k}`;
-function vGet(k){ try{ return JSON.parse(sessionStorage.getItem(vKey(k))||'null'); }catch(e){ return null; } }
-function vSet(k,v){ try{ sessionStorage.setItem(vKey(k), JSON.stringify(v)); }catch(e){} }
-
-function getVenuePending(){ return vGet('pending') || []; }
-function getVenueApproved(){ return vGet('approved') || []; }
-function savePending(p){ vSet('pending', p); }
-function saveApproved(a){ vSet('approved', a); }
-function getVenueCerts(){ return vGet('certs') || {}; }
-function saveVenueCerts(c){ vSet('certs', c); }
-function getVenueStaff(){ return vGet('staff') || venueStaff; }
-function saveVenueStaff(s){ vSet('staff', s); venueStaff = s; }
-function getVenueWeeks(){ return vGet('weeks') || []; }
-function saveVenueWeeks(w){ vSet('weeks', w); }
 
 // ── UTILS ──
 function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
@@ -1091,26 +1150,162 @@ function getTier(score, total){
   if(pct>=90) return {key:'full',pct:'100%',label:'Expert — Full Allocation',cls:'vc-full',col:'var(--green)',
     desc:'Outstanding. Expert-level knowledge demonstrated. OTM allocation recommended at 100%.'};
   if(pct>=70) return {key:'75',pct:'75%',label:'Proficient — Standard Allocation',cls:'vc-75',col:'var(--amber)',
-    desc:'Good performance with a solid foundation. OTM allocation recommended at 75%. Study and retake Master when ready.'};
+    desc:'Good performance with a solid foundation. OTM allocation recommended at 75%.'};
   return {key:'50',pct:'50%',label:'Development Level',cls:'vc-50',col:'var(--muted)',
-    desc:"Building your knowledge. 50% allocation applies. Focus on training materials and retake when ready."};
+    desc:'Building your knowledge. 50% allocation applies. Retake when ready.'};
 }
 
-// ── VENUE LOGIN ──
-// initVenueSelect is now called lazily by initLoginSelect() when login screen opens
-// Boot: just verify VENUES object is ready
-(function initVenueSelect(){
-  // Called on page load - s-login select populated lazily via initLoginSelect()
-})();
+// ── SUPABASE DATA HELPERS ──
+async function getVenueStaff(){
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('staff').select('*').eq('venue_id', currentVenue.id).order('name');
+  if(error){ console.error(error); return []; }
+  return data;
+}
 
-function initLoginSelect(){
-  // Mirror the VENUES into the login screen select
+async function getVenuePending(){
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('assessments').select('*')
+    .eq('venue_id', currentVenue.id)
+    .in('status',['pending','declined'])
+    .order('submitted_at', {ascending:false});
+  if(error){ console.error(error); return []; }
+  return data.map(r=>({
+    id:r.id, name:r.staff_name, role:'', pool:'', quizMode:r.quiz_mode,
+    score:r.score, total:r.total, pct:r.pct, tier:r.tier, tierPct:r.tier_pct,
+    tierLabel:r.tier_label, status:r.status, date:new Date(r.submitted_at).getTime()
+  }));
+}
+
+async function getVenueApproved(){
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('assessments').select('*')
+    .eq('venue_id', currentVenue.id)
+    .eq('status','approved')
+    .order('approved_at', {ascending:false});
+  if(error){ console.error(error); return []; }
+  return data.map(r=>({
+    id:r.id, name:r.staff_name, role:'', pool:'', quizMode:r.quiz_mode,
+    score:r.score, total:r.total, pct:r.pct, tier:r.tier, tierPct:r.tier_pct,
+    tierLabel:r.tier_label, status:r.status, date:new Date(r.submitted_at).getTime(),
+    approvedAt:r.approved_at ? new Date(r.approved_at).getTime() : null
+  }));
+}
+
+async function getVenueCerts(){
+  if(!currentVenue) return {};
+  const {data,error} = await sb.from('assessments').select('*')
+    .eq('venue_id', currentVenue.id)
+    .eq('status','approved');
+  if(error){ console.error(error); return {}; }
+  const certs = {};
+  data.forEach(r=>{
+    if(!certs[r.staff_name]) certs[r.staff_name]={};
+    const key = r.quiz_mode === 'master' ? 'master' : 'legacy';
+    certs[r.staff_name][key] = {score:r.score, total:r.total, pct:r.pct, date:new Date(r.approved_at||r.submitted_at).getTime()};
+  });
+  return certs;
+}
+
+async function getVenueWeeks(){
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('tip_weeks').select('*')
+    .eq('venue_id', currentVenue.id)
+    .order('week_end');
+  if(error){ console.error(error); return []; }
+  return data.map(w=>({
+    id:w.id, weekEnd:w.week_end, payDate:w.pay_date,
+    entries:w.entries||{}, total:w.total, savedAt:new Date(w.saved_at).getTime()
+  }));
+}
+
+async function savePendingResult(result){
+  if(!currentVenue) return;
+  // Remove existing pending/declined for same staff+mode
+  await sb.from('assessments').delete()
+    .eq('venue_id', currentVenue.id)
+    .eq('staff_name', result.name)
+    .eq('quiz_mode', result.quizMode)
+    .in('status',['pending','declined']);
+  // Insert new
+  const {error} = await sb.from('assessments').insert({
+    venue_id: currentVenue.id,
+    staff_name: result.name,
+    quiz_mode: result.quizMode,
+    score: result.score,
+    total: result.total,
+    pct: result.pct,
+    tier: result.tier,
+    tier_pct: result.tierPct,
+    tier_label: result.tierLabel,
+    status: 'pending'
+  });
+  if(error) console.error('Save assessment error:', error);
+}
+
+async function approveAssessment(id){
+  const {data,error} = await sb.from('assessments')
+    .update({status:'approved', approved_at: new Date().toISOString()})
+    .eq('id', id)
+    .select()
+    .single();
+  if(error){ console.error(error); return null; }
+  return data;
+}
+
+async function declineAssessment(id){
+  const {error} = await sb.from('assessments')
+    .update({status:'declined'})
+    .eq('id', id);
+  if(error) console.error(error);
+}
+
+async function saveWeek(weekData){
+  if(!currentVenue) return;
+  const {error} = await sb.from('tip_weeks').upsert({
+    venue_id: currentVenue.id,
+    week_end: weekData.weekEnd,
+    pay_date: weekData.payDate || null,
+    entries: weekData.entries,
+    total: weekData.total,
+    saved_at: new Date().toISOString()
+  }, {onConflict:'venue_id,week_end'});
+  if(error) console.error('Save week error:', error);
+}
+
+async function saveStaffMember(member){
+  if(!currentVenue) return;
+  const {error} = await sb.from('staff').insert({
+    venue_id: currentVenue.id,
+    name: member.name,
+    role: member.role,
+    pool: member.pool
+  });
+  if(error) console.error('Add staff error:', error);
+}
+
+async function removeStaffById(id){
+  const {error} = await sb.from('staff').delete().eq('id', id);
+  if(error) console.error('Remove staff error:', error);
+}
+
+// ── AUTH: STAFF LOGIN ──
+function scrollToLogin(){
+  initLoginSelect();
+  show('s-login');
+  setTimeout(()=>document.getElementById('venue-select').focus(),200);
+}
+
+async function initLoginSelect(){
   const sel = document.getElementById('venue-select');
   if(!sel) return;
+  sel.innerHTML = '<option value="">— Loading venues... —</option>';
+  const {data,error} = await sb.from('venues').select('id,name,slug').order('name');
+  if(error || !data){ sel.innerHTML='<option value="">— Error loading venues —</option>'; return; }
   sel.innerHTML = '<option value="">— Select venue —</option>';
-  Object.keys(VENUES).forEach(k=>{
+  data.forEach(v=>{
     const o = document.createElement('option');
-    o.value = k; o.textContent = VENUES[k].name;
+    o.value = v.slug; o.textContent = v.name; o.dataset.id = v.id;
     sel.appendChild(o);
   });
   sel.onchange = checkVenueReady;
@@ -1120,13 +1315,6 @@ function initLoginSelect(){
   document.getElementById('venue-btn').disabled=true;
 }
 
-function scrollToLogin(){
-  // Re-populate the login screen select before showing
-  initLoginSelect();
-  show('s-login');
-  setTimeout(()=>document.getElementById('venue-select').focus(),200);
-}
-
 function checkVenueReady(){
   const v = document.getElementById('venue-select').value;
   const c = document.getElementById('venue-code').value;
@@ -1134,44 +1322,45 @@ function checkVenueReady(){
   document.getElementById('venue-err').style.display='none';
 }
 
-function venueLogin(){
-  const v = document.getElementById('venue-select').value;
-  const c = document.getElementById('venue-code').value.trim().toLowerCase();
-  if(!VENUES[v]){ return; }
-  if(VENUES[v].code !== c){
-    document.getElementById('venue-err').style.display='block';
-    return;
+async function venueLogin(){
+  const slug = document.getElementById('venue-select').value;
+  const code = document.getElementById('venue-code').value.trim().toLowerCase();
+  if(!slug || !code){ return; }
+
+  // Look up venue and check staff_code
+  const {data, error} = await sb.from('venues').select('*').eq('slug', slug).single();
+  if(error || !data){
+    document.getElementById('venue-err').style.display='block'; return;
   }
-  loadVenue(v);
+  if(!data.staff_code || data.staff_code.toLowerCase() !== code){
+    document.getElementById('venue-err').style.display='block'; return;
+  }
+  await loadVenueBySlug(slug);
 }
 
-function loadDemoVenue(){ loadVenue('demo'); }
+async function loadDemoVenue(){
+  await loadVenueBySlug('demo');
+}
 
-function loadVenue(slug){
-  currentVenue = slug;
-  const venue = VENUES[slug];
-  venueStaff = getVenueStaff();
-  if(!vGet('staff')) saveVenueStaff(venue.staff);
-  venueStaff = getVenueStaff();
-
-  // Update UI
-  document.getElementById('venue-name-badge').textContent = venue.name;
-  document.getElementById('mgr-venue-tag').textContent = venue.name;
-
-  // Populate staff dropdown
-  populateStaffDropdown();
+async function loadVenueBySlug(slug){
+  const {data,error} = await sb.from('venues').select('*').eq('slug',slug).single();
+  if(error||!data){ toast('Venue not found'); return; }
+  currentVenue = data;
+  venueStaff = await getVenueStaff();
+  document.getElementById('venue-name-badge').textContent = data.name;
+  document.getElementById('mgr-venue-tag').textContent = data.name;
+  await populateStaffDropdown();
   show('s-land');
 }
 
-function signOut(){
-  currentVenue = null;
-  venueStaff = [];
-  sName=''; sRole=''; sPool=''; sTips=0;
-  // Reset login form
-  const vc = document.getElementById('venue-code');
-  const ve = document.getElementById('venue-err');
-  const vb = document.getElementById('venue-btn');
-  const vs = document.getElementById('venue-select');
+async function signOut(){
+  await sb.auth.signOut();
+  currentVenue=null; currentUser=null; currentRole=null;
+  venueStaff=[]; sName=''; sRole=''; sPool=''; sTips=0;
+  const vc=document.getElementById('venue-code');
+  const ve=document.getElementById('venue-err');
+  const vb=document.getElementById('venue-btn');
+  const vs=document.getElementById('venue-select');
   if(vc) vc.value='';
   if(ve) ve.style.display='none';
   if(vb) vb.disabled=true;
@@ -1179,60 +1368,168 @@ function signOut(){
   show('s-venue');
 }
 
-function populateStaffDropdown(){
+// ── AUTH: MANAGER LOGIN ──
+function openMgrLogin(){
+  const vci=document.getElementById('mgr-venue-code-inp');
+  const mci=document.getElementById('mgr-code-inp');
+  const err=document.getElementById('mgr-login-err');
+  if(vci) vci.value='';
+  if(mci) mci.value='';
+  if(err) err.style.display='none';
+  show('s-mgr-login');
+}
+
+async function mgrLoginSubmit(){
+  const venueCode = document.getElementById('mgr-venue-code-inp').value.trim().toLowerCase();
+  const mgrCode   = document.getElementById('mgr-code-inp').value.trim();
+  const err = document.getElementById('mgr-login-err');
+  if(!venueCode || !mgrCode){ err.style.display='block'; return; }
+
+  // Manager login: email = venueCode+'@tier.manager', password = mgrCode
+  const email = venueCode + '@tier.manager';
+  const {data, error} = await sb.auth.signInWithPassword({email, password: mgrCode});
+
+  if(error){ err.style.display='block'; return; }
+
+  // Verify this user is a manager
+  const {data:profile} = await sb.from('profiles').select('*,venues(*)').eq('id', data.user.id).single();
+  if(!profile || profile.role !== 'manager'){ err.style.display='block'; await sb.auth.signOut(); return; }
+
+  currentUser = data.user;
+  currentRole = 'manager';
+  currentVenue = profile.venues;
+  venueStaff = await getVenueStaff();
+  document.getElementById('mgr-venue-tag').textContent = currentVenue.name;
+
+  err.style.display='none';
+  await renderMgr();
+  show('s-mgr');
+}
+
+function mgrBack(){ show('s-venue'); }
+function goBack(){ lastRes?show('s-result'):show('s-land'); }
+
+// ── RESET PASSWORD ──
+async function sendPasswordReset(){
+  const email = prompt('Enter your email address to receive a reset link:');
+  if(!email) return;
+  const {error} = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.href
+  });
+  if(error){ toast('Could not send reset email — check address'); return; }
+  toast('Reset link sent — check your email ✓', 4000);
+}
+
+// ── STAFF ROSTER ──
+async function populateStaffDropdown(){
   const sel = document.getElementById('sel-name');
   sel.innerHTML = '<option value="">— Select name —</option>';
-  const staff = getVenueStaff();
-  const weeks = getVenueWeeks();
+  venueStaff = await getVenueStaff();
+  const weeks = await getVenueWeeks();
   const lastWeek = weeks.length ? weeks[weeks.length-1] : null;
-  staff.forEach(s=>{
+  venueStaff.forEach(s=>{
     const o = document.createElement('option');
     o.value = s.name;
-    o.dataset.role = s.role;
-    o.dataset.pool = s.pool;
+    o.dataset.role = s.role || '';
+    o.dataset.pool = s.pool || '';
+    o.dataset.sid  = s.id;
     const tips = lastWeek ? (lastWeek.entries[s.name]||0) : 0;
     o.dataset.tips = tips;
     o.textContent = s.name;
     sel.appendChild(o);
   });
-
-  sel.onchange = function(){
+  sel.onchange = async function(){
     const o = this.selectedOptions[0];
     if(!o||!o.value){
       document.getElementById('test-cards').style.display='none';
+      document.getElementById('staff-progress').style.display='none';
       return;
     }
     document.getElementById('inp-role').value = o.dataset.role||'';
     document.getElementById('inp-pool').value = o.dataset.pool||'';
     const t = parseFloat(o.dataset.tips||'0');
-    const weeks = getVenueWeeks();
+    const weeks = await getVenueWeeks();
     const lw = weeks.length ? weeks[weeks.length-1] : null;
     document.getElementById('inp-tips').value = t>0 && lw
       ? fmtAUD(t)+' (wk ending '+lw.weekEnd+')'
       : 'No tips uploaded yet';
-    updateCards(o.value);
+    await updateCards(o.value);
+    await renderStaffProgress(o.value);
   };
 }
 
-// ── CERTIFICATION STATUS ──
-function hasLegacyPass(name){
-  const c = getVenueCerts();
+// ── CERT HELPERS ──
+async function hasLegacyPass(name){
+  const c = await getVenueCerts();
   return c[name] && c[name].legacy && c[name].legacy.pct >= 70;
 }
-function hasMasterPass(name){
-  const c = getVenueCerts();
+async function hasMasterPass(name){
+  const c = await getVenueCerts();
   return c[name] && c[name].master && c[name].master.pct >= 90;
 }
 
-function updateCards(name){
+async function getCertifiedTier(name){
+  if(await hasMasterPass(name)) return {key:'full',pct:'100%',mult:1};
+  if(await hasLegacyPass(name)) return {key:'75',pct:'75%',mult:0.75};
+  return {key:'50',pct:'50%',mult:0.5};
+}
+
+// ── STAFF PROGRESS TRACKER ──
+async function renderStaffProgress(name){
+  const wrap = document.getElementById('staff-progress');
+  const body = document.getElementById('sp-body');
+  if(!name){ wrap.style.display='none'; return; }
+
+  const pending = await getVenuePending();
+  const certs   = await getVenueCerts();
+
+  function stageStatus(mode){
+    const cert = certs[name]?.[mode];
+    if(cert) return {status:'approved', score:cert.score, total:cert.total, pct:cert.pct, date:cert.date};
+    const pend = pending.find(r => r.name === name && r.quizMode === mode);
+    if(pend) return {status: pend.status === 'declined' ? 'declined' : 'pending', score:pend.score, total:pend.total, pct:pend.pct, date:pend.date};
+    return {status:'not-started'};
+  }
+
+  const stages = [
+    {key:'legacy', label:'Stage 1 · Legacy', target:'75% allocation'},
+    {key:'master', label:'Stage 2 · Master', target:'100% allocation'},
+  ];
+
+  let html = '';
+  stages.forEach(st => {
+    const s = stageStatus(st.key);
+    const barPct = s.score && s.total ? Math.round((s.score/s.total)*100) : 0;
+    const barClass = s.status === 'approved' ? '' : s.status === 'declined' ? ' declined' : ' pending';
+    const pillLabel = {'approved':'✓ Approved','pending':'⏳ Awaiting approval','declined':'✗ Declined','not-started':'Not started'}[s.status];
+    html += `<div class="sp-stage">
+      <div class="sp-stage-label">${st.label} · ${st.target}</div>
+      ${s.status !== 'not-started' ? `<div class="sp-bar-wrap"><div class="sp-bar${barClass}" style="width:${barPct}%"></div></div>` : ''}
+      <div class="sp-status-row">
+        <span class="sp-status-pill ${s.status}">${pillLabel}</span>
+        ${s.status !== 'not-started' ? `<span class="sp-score">${s.score}/${s.total} (${s.pct}%)</span>` : ''}
+      </div>
+      ${s.date ? `<div class="sp-date" style="margin-top:5px">${s.status==='approved'?'Approved':'Submitted'} ${fmtDate(s.date)}</div>` : ''}
+    </div>`;
+  });
+
+  body.innerHTML = html || '<div class="sp-empty">No submissions yet</div>';
+  wrap.style.display = 'block';
+}
+
+// ── UPDATE TEST CARDS ──
+async function updateCards(name){
   const cards = document.getElementById('test-cards');
   if(!name){ cards.style.display='none'; return; }
   cards.style.display='block';
-  const certs = getVenueCerts();
-  const legacyDone = hasLegacyPass(name);
-  const masterDone = hasMasterPass(name);
+  const certs = await getVenueCerts();
+  const pending = await getVenuePending();
+  const legacyDone = !!(certs[name]?.legacy && certs[name].legacy.pct >= 70);
+  const masterDone = !!(certs[name]?.master && certs[name].master.pct >= 90);
   const lc = certs[name]?.legacy;
   const mc = certs[name]?.master;
+  const legDeclined = !legacyDone && pending.find(r=>r.name===name && r.quizMode==='legacy' && r.status==='declined');
+  const masDeclined = !masterDone && pending.find(r=>r.name===name && r.quizMode==='master' && r.status==='declined');
 
   const legCard = document.getElementById('card-legacy');
   if(legacyDone){
@@ -1243,6 +1540,14 @@ function updateCards(name){
     document.getElementById('legacy-sub').style.color='var(--green)';
     document.getElementById('legacy-badge').textContent='Retake';
     document.getElementById('legacy-badge').style.cssText='background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.2)';
+  } else if(legDeclined){
+    legCard.style.borderColor='rgba(239,68,68,.3)'; legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
+    document.getElementById('legacy-title').textContent='Stage 1 · Legacy — Declined';
+    document.getElementById('legacy-title').style.color='var(--red)';
+    document.getElementById('legacy-sub').textContent='Your submission was not approved. You can retake the test when ready.';
+    document.getElementById('legacy-sub').style.color='rgba(239,68,68,.7)';
+    document.getElementById('legacy-badge').textContent='Try Again →';
+    document.getElementById('legacy-badge').style.cssText='background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25)';
   } else {
     legCard.style.borderColor='var(--b3)'; legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
     document.getElementById('legacy-title').textContent='Stage 1 · Legacy';
@@ -1262,6 +1567,14 @@ function updateCards(name){
     document.getElementById('master-sub').style.color='var(--green)';
     document.getElementById('master-badge').textContent='Retake';
     document.getElementById('master-badge').style.cssText='background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.2)';
+  } else if(masDeclined){
+    masCard.style.borderColor='rgba(239,68,68,.3)'; masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
+    document.getElementById('master-title').textContent='Stage 2 · Master — Declined';
+    document.getElementById('master-title').style.color='var(--red)';
+    document.getElementById('master-sub').textContent='Your submission was not approved. You can retake the test when ready.';
+    document.getElementById('master-sub').style.color='rgba(239,68,68,.7)';
+    document.getElementById('master-badge').textContent='Try Again →';
+    document.getElementById('master-badge').style.cssText='background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25)';
   } else if(legacyDone){
     masCard.style.borderColor='rgba(122,158,126,.2)'; masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
     document.getElementById('master-title').textContent='Stage 2 · Master';
@@ -1281,6 +1594,266 @@ function updateCards(name){
   }
 }
 
+async function clearDeclined(mode){
+  if(!currentVenue || !sName) return;
+  await sb.from('assessments').delete()
+    .eq('venue_id', currentVenue.id)
+    .eq('staff_name', sName)
+    .eq('quiz_mode', mode)
+    .eq('status','declined');
+}
+
+// ── MANAGER PORTAL ──
+function showMgr(){ show('s-mgr-login'); }
+
+async function renderMgr(){
+  const pending  = await getVenuePending();
+  const approved = await getVenueApproved();
+  const all = [...pending,...approved];
+  document.getElementById('kpi-p').textContent = pending.filter(r=>r.status==='pending').length;
+  document.getElementById('kpi-a').textContent = approved.length;
+  document.getElementById('kpi-f').textContent = all.filter(r=>r.tier==='full').length;
+  const sc = all.map(r=>r.pct).filter(Boolean);
+  document.getElementById('kpi-av').textContent = sc.length ? Math.round(sc.reduce((a,b)=>a+b,0)/sc.length)+'%' : '—';
+
+  const pl = document.getElementById('pend-list');
+  const pendingOnly = pending.filter(r=>r.status==='pending');
+  if(!pendingOnly.length){ pl.innerHTML='<div class="empty">No assessments pending</div>'; }
+  else {
+    pl.innerHTML = pendingOnly.map(r=>{
+      const bc=r.tier==='full'?'ptb-full':r.tier==='75'?'ptb-75':'ptb-50';
+      const sc_col=r.pct>=90?'var(--green)':r.pct>=70?'var(--amber)':'var(--muted2)';
+      const ini=r.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'Demo';
+      return `<div class="pc" id="pc${r.id}">
+        <div class="pc-top">
+          <div class="pc-av">${ini}</div>
+          <div class="pc-info">
+            <div class="pc-name">${r.name}</div>
+            <div class="pc-meta">${mLabel} · ${fmtDate(r.date)}</div>
+          </div>
+          <div class="pc-sc"><div class="pc-sc-n" style="color:${sc_col}">${r.score}</div><div class="pc-sc-d">/${r.total}</div></div>
+        </div>
+        <div class="pc-foot">
+          <span class="pc-tb ${bc}"><span class="ptb-dot"></span>${r.tierLabel} — ${r.tierPct}</span>
+          <div class="pc-acts">
+            <button class="pcb pcb-app" onclick="approve('${r.id}')">✓ Approve</button>
+            <button class="pcb pcb-dec" onclick="decline('${r.id}')">Decline</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const al = document.getElementById('appr-list');
+  if(!approved.length){ al.innerHTML='<div class="empty">No approved records yet</div>'; }
+  else {
+    al.innerHTML = approved.map(r=>{
+      const pc=r.tier==='full'?'full':r.tier==='75'?'t75':'t50';
+      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'—';
+      return `<div class="ar">
+        <div class="ar-name"><strong>${r.name}</strong></div>
+        <div class="ar-role">${mLabel}</div>
+        <div class="ar-sc">${r.score}/${r.total}</div>
+        <div class="ar-pct ${pc}">${r.tierPct}</div>
+        <div class="ar-dt">${fmtDate(r.date)}</div>
+        <div class="ar-tag">OTM Ready</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+async function approve(id){
+  const r = await approveAssessment(id);
+  if(!r) return;
+  toast(`Approved ✓`);
+  await renderMgr();
+}
+
+async function decline(id){
+  if(!confirm('Decline this assessment? The staff member will see this and can retake.')) return;
+  await declineAssessment(id);
+  toast('Assessment declined');
+  await renderMgr();
+}
+
+// ── TIP UPLOAD ──
+async function renderTipUpload(){
+  const staff = await getVenueStaff();
+  const grid = document.getElementById('tip-staff-grid');
+  if(!document.getElementById('tip-week-end').value){
+    const today = new Date();
+    const saturday = new Date(today);
+    saturday.setDate(today.getDate() - today.getDay() - 1);
+    document.getElementById('tip-week-end').value = saturday.toISOString().split('T')[0];
+    const payDay = new Date(saturday);
+    payDay.setDate(payDay.getDate() + 4);
+    document.getElementById('tip-pay-date').value = payDay.toISOString().split('T')[0];
+  }
+  const tiers = {};
+  for(const s of staff){ tiers[s.name] = await getCertifiedTier(s.name); }
+  grid.innerHTML = staff.map(s=>{
+    const tier = tiers[s.name];
+    const cls = tier.key==='full'?'full':tier.key==='75'?'t75':'nc';
+    return `<div class="tip-row">
+      <div>
+        <div class="tip-row-name">${s.name}</div>
+        <div class="tip-row-sub">${s.role} · ${s.pool}</div>
+      </div>
+      <input type="number" class="tip-amount-inp" id="tip-${s.name.replace(/\s+/g,'_')}"
+        placeholder="0.00" min="0" step="0.01" oninput="updateTipTotal()">
+      <div class="tip-certified-pct ${cls}">${tier.pct}</div>
+    </div>`;
+  }).join('');
+  updateTipTotal();
+  await renderWeekHistory();
+}
+
+function updateTipTotal(){
+  const inputs = document.querySelectorAll('.tip-amount-inp');
+  let total = 0;
+  inputs.forEach(el=>{ total += parseFloat(el.value||0); });
+  document.getElementById('tip-total-display').textContent = fmtAUD(total);
+}
+
+async function saveTipWeek(){
+  const weekEnd = document.getElementById('tip-week-end').value;
+  const payDate = document.getElementById('tip-pay-date').value;
+  if(!weekEnd){ toast('Please enter week ending date'); return; }
+  const staff = await getVenueStaff();
+  const entries = {};
+  let total = 0;
+  staff.forEach(s=>{
+    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
+    const v = parseFloat(el?.value||0);
+    entries[s.name] = v;
+    total += v;
+  });
+  await saveWeek({weekEnd, payDate, entries, total});
+  await populateStaffDropdown();
+  toast(`Week ending ${weekEnd} saved ✓`);
+  await renderWeekHistory();
+}
+
+async function renderWeekHistory(){
+  const weeks = await getVenueWeeks();
+  const container = document.getElementById('wk-history');
+  const staff = await getVenueStaff();
+  if(!weeks.length){ container.innerHTML='<div class="empty">No weeks uploaded yet</div>'; return; }
+  const tiers = {};
+  for(const s of staff){ tiers[s.name] = await getCertifiedTier(s.name); }
+  container.innerHTML = [...weeks].reverse().map(w=>{
+    const rows = staff.map(s=>{
+      const gross = w.entries[s.name]||0;
+      if(!gross) return '';
+      const tier = tiers[s.name];
+      const alloc = (gross * tier.mult).toFixed(2);
+      return `<div class="tip-row" style="margin:4px 0">
+        <div><div class="tip-row-name">${s.name}</div><div class="tip-row-sub">${s.role}</div></div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--muted2);text-align:right">${fmtAUD(gross)}</div>
+        <div class="tip-certified-pct ${tier.key==='full'?'full':tier.key==='75'?'t75':'nc'}">${fmtAUD(parseFloat(alloc))}</div>
+      </div>`;
+    }).join('');
+    return `<div class="wk-hist-row" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div>
+        <div class="wk-hist-label">Week ending ${w.weekEnd}</div>
+        <div class="wk-hist-meta">Pay date ${w.payDate||'—'} · ${staff.filter(s=>w.entries[s.name]>0).length} staff</div>
+      </div>
+      <div class="wk-hist-total">${fmtAUD(w.total)}</div>
+    </div>
+    <div class="wk-hist-expand">
+      <div style="padding:8px 0">${rows||'<div class="empty">No amounts entered</div>'}</div>
+    </div>`;
+  }).join('');
+}
+
+async function exportTipCSV(){
+  const weekEnd = document.getElementById('tip-week-end').value;
+  const staff = await getVenueStaff();
+  let csv = 'Name,Role,Pool,Gross Tips,Certified Tier,Allocated Amount\n';
+  for(const s of staff){
+    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
+    const gross = parseFloat(el?.value||0);
+    const tier = await getCertifiedTier(s.name);
+    const alloc = (gross * tier.mult).toFixed(2);
+    csv += `"${s.name}","${s.role}","${s.pool}",${gross.toFixed(2)},"${tier.pct}",${alloc}\n`;
+  }
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `tips-${weekEnd||'week'}.csv`;
+  a.click();
+  toast('CSV exported ✓');
+}
+
+// ── STAFF MANAGEMENT ──
+async function renderStaffList(){
+  const staff = await getVenueStaff();
+  const list = document.getElementById('staff-roster-list');
+  if(!staff.length){ list.innerHTML='<div class="empty" style="margin:16px">No staff added yet</div>'; return; }
+  list.innerHTML = staff.map(s=>`
+    <div class="staff-row">
+      <div class="staff-row-name">${s.name}</div>
+      <div class="staff-row-role">${s.role}</div>
+      <span class="staff-row-pool ${s.pool.toLowerCase()}">${s.pool}</span>
+      <button class="staff-row-del" onclick="removeStaff('${s.id}')" title="Remove">✕</button>
+    </div>`).join('');
+}
+
+function toggleAddStaff(){
+  document.getElementById('staff-add-form').classList.toggle('show');
+}
+
+async function addStaffMember(){
+  const name = document.getElementById('saf-name').value.trim();
+  const role = document.getElementById('saf-role').value.trim();
+  const pool = document.getElementById('saf-pool').value;
+  if(!name||!role){ toast('Enter name and role'); return; }
+  const staff = await getVenueStaff();
+  if(staff.find(s=>s.name.toLowerCase()===name.toLowerCase())){ toast('Staff member already exists'); return; }
+  await saveStaffMember({name,role,pool});
+  document.getElementById('saf-name').value='';
+  document.getElementById('saf-role').value='';
+  await renderStaffList();
+  await populateStaffDropdown();
+  toast(`${name} added ✓`);
+}
+
+async function removeStaff(id){
+  const staff = await getVenueStaff();
+  const s = staff.find(x=>x.id===id);
+  if(!s||!confirm(`Remove ${s.name} from the roster?`)) return;
+  await removeStaffById(id);
+  await renderStaffList();
+  await populateStaffDropdown();
+  toast('Staff member removed');
+}
+
+async function mgrTab(btn, id){
+  document.querySelectorAll('.m-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.m-tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='tab-tips') await renderTipUpload();
+  if(id==='tab-staff') await renderStaffList();
+}
+
+// ── BOOT ──
+(function init(){
+  // Check for password reset redirect
+  sb.auth.onAuthStateChange((event, session) => {
+    if(event === 'PASSWORD_RECOVERY'){
+      const newPass = prompt('Enter your new password:');
+      if(newPass){
+        sb.auth.updateUser({password: newPass}).then(({error})=>{
+          if(error) toast('Error updating password');
+          else toast('Password updated ✓', 4000);
+        });
+      }
+    }
+  });
+})();
+
 // ── QUIZ LAUNCH ──
 function _getSelected(){
   const sel=document.getElementById('sel-name');
@@ -1290,11 +1863,11 @@ function _getSelected(){
   return o;
 }
 
-function startLegacy(){ if(!_getSelected()) return; isDemo=false; quizMode='legacy'; _launchQuiz(40); }
-function startMaster(){
+async function startLegacy(){ if(!_getSelected()) return; await clearDeclined('legacy'); isDemo=false; quizMode='legacy'; _launchQuiz(40); }
+async function startMaster(){
   if(!_getSelected()) return;
-  if(!hasLegacyPass(sName)){ toast('Complete Legacy first'); return; }
-  isDemo=false; quizMode='master'; _launchQuiz(100);
+  if(!(await hasLegacyPass(sName))){ toast('Complete Legacy first'); return; }
+  await clearDeclined('master'); isDemo=false; quizMode='master'; _launchQuiz(100);
 }
 function startDemo(){
   if(!_getSelected()) return;
@@ -1379,7 +1952,7 @@ function nextQ(){ QS.idx++; QS.answered=false; QS.idx>=QS.qs.length?showResult()
 function quitQuiz(){ document.getElementById('demo-banner').style.display='none'; show('s-land'); }
 
 // ── RESULT ──
-function showResult(){
+async function showResult(){
   const score=QS.score, total=QS.qs.length, pct=Math.round(score/total*100);
   const t=getTier(score,total), ts=Date.now();
 
@@ -1419,10 +1992,7 @@ function showResult(){
     cats:JSON.parse(JSON.stringify(QS.cats)),date:ts,status:'pending',quizMode};
 
   if(quizMode!=='demo'){
-    let pending = getVenuePending();
-    pending = pending.filter(r=>!(r.name===sName && r.quizMode===quizMode));
-    pending.push(lastRes);
-    savePending(pending);
+    await savePendingResult(lastRes);
   }
 
   document.getElementById('r-date').textContent=fmtDate(ts);
@@ -1520,268 +2090,48 @@ ACTION: Update ${r.name.split(' ')[0]}'s tip scaling to ${r.tierPct} in OnTheMon
 }
 
 // ── MANAGER PORTAL ──
-function showMgr(){ renderMgr(); show('s-mgr'); }
-function goBack(){ lastRes?show('s-result'):show('s-land'); }
+function showMgr(){ show('s-mgr-login'); }
 
-function mgrTab(btn, id){
-  document.querySelectorAll('.m-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.m-tab-content').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(id).classList.add('active');
-  if(id==='tab-tips') renderTipUpload();
-  if(id==='tab-staff') renderStaffList();
+function openMgrLogin(){
+  // Clear fields
+  const vci = document.getElementById('mgr-venue-code-inp');
+  const mci = document.getElementById('mgr-code-inp');
+  const err = document.getElementById('mgr-login-err');
+  if(vci) vci.value='';
+  if(mci) mci.value='';
+  if(err) err.style.display='none';
+  show('s-mgr-login');
 }
 
-function renderMgr(){
-  const pending = getVenuePending();
-  const approved = getVenueApproved();
-  const all = [...pending,...approved];
-  document.getElementById('kpi-p').textContent=pending.length;
-  document.getElementById('kpi-a').textContent=approved.length;
-  document.getElementById('kpi-f').textContent=all.filter(r=>r.tier==='full').length;
-  const sc=all.map(r=>r.pct);
-  document.getElementById('kpi-av').textContent=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length)+'%':'—';
+function mgrLoginSubmit(){
+  const venueCode = document.getElementById('mgr-venue-code-inp').value.trim().toLowerCase();
+  const mgrCode   = document.getElementById('mgr-code-inp').value.trim().toLowerCase();
+  const err = document.getElementById('mgr-login-err');
 
-  const pl=document.getElementById('pend-list');
-  if(!pending.length){ pl.innerHTML='<div class="empty">No assessments pending</div>'; }
-  else {
-    pl.innerHTML=pending.map(r=>{
-      const bc=r.tier==='full'?'ptb-full':r.tier==='75'?'ptb-75':'ptb-50';
-      const sc_col=r.pct>=90?'var(--green)':r.pct>=70?'var(--amber)':'var(--muted2)';
-      const ini=r.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'Demo';
-      return `<div class="pc" id="pc${r.id}">
-        <div class="pc-top">
-          <div class="pc-av">${ini}</div>
-          <div class="pc-info">
-            <div class="pc-name">${r.name}</div>
-            <div class="pc-meta">${r.role} · ${r.pool} · ${mLabel} · ${fmtDate(r.date)}</div>
-          </div>
-          <div class="pc-sc"><div class="pc-sc-n" style="color:${sc_col}">${r.score}</div><div class="pc-sc-d">/${r.total}</div></div>
-        </div>
-        <div class="pc-foot">
-          <span class="pc-tb ${bc}"><span class="ptb-dot"></span>${r.tierLabel} — ${r.tierPct}</span>
-          <div class="pc-acts">
-            <button class="pcb pcb-app" onclick="approve(${r.id})">✓ Approve</button>
-            <button class="pcb pcb-dec" onclick="decline(${r.id})">Decline</button>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-  }
+  if(!venueCode || !mgrCode){ err.style.display='block'; return; }
 
-  const al=document.getElementById('appr-list');
-  if(!approved.length){ al.innerHTML='<div class="empty">No approved records yet</div>'; }
-  else {
-    al.innerHTML=approved.map(r=>{
-      const pc=r.tier==='full'?'full':r.tier==='75'?'t75':'t50';
-      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'—';
-      return `<div class="ar">
-        <div class="ar-name"><strong>${r.name}</strong></div>
-        <div class="ar-role">${r.role} · ${mLabel}</div>
-        <div class="ar-sc">${r.score}/${r.total}</div>
-        <div class="ar-pct ${pc}">${r.tierPct}</div>
-        <div class="ar-dt">${fmtDate(r.date)}</div>
-        <div class="ar-tag">OTM Ready</div>
-      </div>`;
-    }).join('');
-  }
-}
+  // Find venue by matching venue code
+  const venueSlug = Object.keys(VENUES).find(k => VENUES[k].code === venueCode);
+  if(!venueSlug){ err.style.display='block'; return; }
+  const venue = VENUES[venueSlug];
 
-function approve(id){
-  let pending = getVenuePending();
-  const i=pending.findIndex(r=>r.id===id); if(i===-1) return;
-  const r=pending.splice(i,1)[0]; r.status='approved'; r.approvedAt=Date.now();
-  savePending(pending);
-  let approved = getVenueApproved();
-  approved.unshift(r);
-  saveApproved(approved);
-  toast(`${r.name} approved at ${r.tierPct} ✓`);
+  const expected = venue.mgrCode || venue.code + '_mgr';
+  if(mgrCode !== expected){ err.style.display='block'; return; }
+  err.style.display='none';
+
+  // Load the venue context (without going through staff landing)
+  currentVenue = venueSlug;
+  venueStaff = getVenueStaff();
+  if(!vGet('staff')) saveVenueStaff(venue.staff);
+  venueStaff = getVenueStaff();
+  document.getElementById('mgr-venue-tag').textContent = venue.name;
+
   renderMgr();
+  show('s-mgr');
 }
+function goBack(){ lastRes?show('s-result'):show('s-land'); }
+function mgrBack(){ show('s-venue'); }
 
-function decline(id){
-  let pending = getVenuePending();
-  const i=pending.findIndex(r=>r.id===id); if(i===-1) return;
-  const r=pending[i];
-  if(confirm(`Decline ${r.name}'s assessment? This removes it from the queue.`)){
-    pending.splice(i,1); savePending(pending);
-    toast(`${r.name}'s result declined`); renderMgr();
-  }
-}
-
-// ── TIP UPLOAD ──
-function getCertifiedTier(name){
-  if(hasMasterPass(name)) return {key:'full',pct:'100%',mult:1};
-  if(hasLegacyPass(name)) return {key:'75',pct:'75%',mult:0.75};
-  return {key:'50',pct:'50%',mult:0.5};
-}
-
-function renderTipUpload(){
-  const staff = getVenueStaff();
-  const grid = document.getElementById('tip-staff-grid');
-
-  // Set default dates if empty
-  if(!document.getElementById('tip-week-end').value){
-    const today = new Date();
-    const saturday = new Date(today);
-    saturday.setDate(today.getDate() - today.getDay() - 1);
-    document.getElementById('tip-week-end').value = saturday.toISOString().split('T')[0];
-    const payDay = new Date(saturday);
-    payDay.setDate(payDay.getDate() + 4);
-    document.getElementById('tip-pay-date').value = payDay.toISOString().split('T')[0];
-  }
-
-  grid.innerHTML = staff.map(s=>{
-    const tier = getCertifiedTier(s.name);
-    const cls = tier.key==='full'?'full':tier.key==='75'?'t75':'nc';
-    return `<div class="tip-row">
-      <div>
-        <div class="tip-row-name">${s.name}</div>
-        <div class="tip-row-sub">${s.role} · ${s.pool}</div>
-      </div>
-      <input type="number" class="tip-amount-inp" id="tip-${s.name.replace(/\s+/g,'_')}"
-        placeholder="0.00" min="0" step="0.01"
-        oninput="updateTipTotal()">
-      <div class="tip-certified-pct ${cls}">${tier.pct}</div>
-    </div>`;
-  }).join('');
-
-  updateTipTotal();
-  renderWeekHistory();
-}
-
-function updateTipTotal(){
-  const staff = getVenueStaff();
-  let total = 0;
-  staff.forEach(s=>{
-    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
-    if(el) total += parseFloat(el.value||0);
-  });
-  document.getElementById('tip-total-display').textContent = fmtAUD(total);
-}
-
-function saveTipWeek(){
-  const weekEnd = document.getElementById('tip-week-end').value;
-  const payDate = document.getElementById('tip-pay-date').value;
-  if(!weekEnd){ toast('Please enter week ending date'); return; }
-
-  const staff = getVenueStaff();
-  const entries = {};
-  let total = 0;
-  staff.forEach(s=>{
-    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
-    const v = parseFloat(el?.value||0);
-    entries[s.name] = v;
-    total += v;
-  });
-
-  const week = {id:Date.now(), weekEnd, payDate, entries, total, savedAt:Date.now()};
-  const weeks = getVenueWeeks();
-  const existing = weeks.findIndex(w=>w.weekEnd===weekEnd);
-  if(existing>=0){ weeks[existing]=week; } else { weeks.push(week); }
-  saveVenueWeeks(weeks);
-
-  // Update staff dropdown tips
-  populateStaffDropdown();
-  toast(`Week ending ${weekEnd} saved — ${fmtAUD(total)} gross ✓`);
-  renderWeekHistory();
-}
-
-function renderWeekHistory(){
-  const weeks = getVenueWeeks();
-  const container = document.getElementById('wk-history');
-  if(!weeks.length){ container.innerHTML='<div class="empty">No weeks uploaded yet</div>'; return; }
-
-  const staff = getVenueStaff();
-  container.innerHTML = [...weeks].reverse().map(w=>{
-    const rows = staff.map(s=>{
-      const gross = w.entries[s.name]||0;
-      if(!gross) return '';
-      const tier = getCertifiedTier(s.name);
-      const alloc = (gross * tier.mult).toFixed(2);
-      return `<div class="tip-row" style="margin:4px 0">
-        <div><div class="tip-row-name">${s.name}</div><div class="tip-row-sub">${s.role}</div></div>
-        <div style="font-family:var(--fm);font-size:11px;color:var(--muted2);text-align:right">${fmtAUD(gross)}</div>
-        <div class="tip-certified-pct ${tier.key==='full'?'full':tier.key==='75'?'t75':'nc'}">${fmtAUD(parseFloat(alloc))}</div>
-      </div>`;
-    }).join('');
-    return `<div class="wk-hist-row" onclick="this.nextElementSibling.classList.toggle('open')">
-      <div>
-        <div class="wk-hist-label">Week ending ${w.weekEnd}</div>
-        <div class="wk-hist-meta">Pay date ${w.payDate||'—'} · ${staff.filter(s=>w.entries[s.name]>0).length} staff</div>
-      </div>
-      <div class="wk-hist-total">${fmtAUD(w.total)}</div>
-    </div>
-    <div class="wk-hist-expand">
-      <div style="padding:8px 0">${rows||'<div class="empty">No amounts entered</div>'}</div>
-    </div>`;
-  }).join('');
-}
-
-function exportTipCSV(){
-  const weekEnd = document.getElementById('tip-week-end').value;
-  const staff = getVenueStaff();
-  let csv = 'Name,Role,Pool,Gross Tips,Certified Tier,Allocated Amount\n';
-  staff.forEach(s=>{
-    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
-    const gross = parseFloat(el?.value||0);
-    const tier = getCertifiedTier(s.name);
-    const alloc = (gross * tier.mult).toFixed(2);
-    csv += `"${s.name}","${s.role}","${s.pool}",${gross.toFixed(2)},"${tier.pct}",${alloc}\n`;
-  });
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `tips-${weekEnd||'week'}.csv`;
-  a.click();
-  toast('CSV exported ✓');
-}
-
-// ── STAFF MANAGEMENT ──
-function renderStaffList(){
-  const staff = getVenueStaff();
-  const list = document.getElementById('staff-roster-list');
-  if(!staff.length){ list.innerHTML='<div class="empty" style="margin:16px">No staff added yet</div>'; return; }
-  list.innerHTML = staff.map((s,i)=>`
-    <div class="staff-row">
-      <div class="staff-row-name">${s.name}</div>
-      <div class="staff-row-role">${s.role}</div>
-      <span class="staff-row-pool ${s.pool.toLowerCase()}">${s.pool}</span>
-      <button class="staff-row-del" onclick="removeStaff(${i})" title="Remove">✕</button>
-    </div>`).join('');
-}
-
-function toggleAddStaff(){
-  const f = document.getElementById('staff-add-form');
-  f.classList.toggle('show');
-}
-
-function addStaffMember(){
-  const name = document.getElementById('saf-name').value.trim();
-  const role = document.getElementById('saf-role').value.trim();
-  const pool = document.getElementById('saf-pool').value;
-  if(!name||!role){ toast('Enter name and role'); return; }
-  const staff = getVenueStaff();
-  if(staff.find(s=>s.name.toLowerCase()===name.toLowerCase())){ toast('Staff member already exists'); return; }
-  staff.push({name,role,pool});
-  saveVenueStaff(staff);
-  document.getElementById('saf-name').value='';
-  document.getElementById('saf-role').value='';
-  renderStaffList();
-  populateStaffDropdown();
-  toast(`${name} added ✓`);
-}
-
-function removeStaff(idx){
-  const staff = getVenueStaff();
-  if(!confirm(`Remove ${staff[idx].name} from the roster?`)) return;
-  staff.splice(idx,1);
-  saveVenueStaff(staff);
-  renderStaffList();
-  populateStaffDropdown();
-  toast('Staff member removed');
-}
 
 </script>
 </body>
