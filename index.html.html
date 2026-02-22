@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tier · Tip & Training Platform</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,500;0,700;0,800;1,300;1,700;1,800&family=Barlow:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070707;--s1:#0f0f0f;--s2:#161616;--s3:#1e1e1e;
+  --b1:#181818;--b2:#222;--b3:#2d2d2d;--b4:#3a3a3a;
+  --cream:#ede9e1;--muted:#5a5a5a;--muted2:#888;
+  --gold:#7a9e7e;--gold2:#a8c5a0;
+  --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--blue:#60a5fa;--violet:#a78bfa;
+  --fh:'Barlow Condensed',sans-serif;
+  --fb:'Barlow',sans-serif;
+  --fm:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--cream);min-height:100vh;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.35;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
+
+.screen{display:none!important}.screen.active{display:block!important}
+#s-venue.screen.active,#s-land.screen.active,#s-mgr-login.screen.active,#s-login.screen.active{display:flex!important}
+
+/* ══ VENUE SCREEN ══ */
+#s-venue{min-height:100vh;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;overflow-x:hidden}
+
+/* Hero */
+.vh-hero{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start;
+  padding:60px 48px 80px;overflow:hidden;
+}
+.vh-hero::before{
+  content:'';position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 70% 40%, rgba(143,168,122,.07) 0%, transparent 65%),
+             radial-gradient(ellipse 50% 80% at 10% 80%, rgba(143,168,122,.04) 0%, transparent 60%);
+}
+.vh-grid-lines{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.vh-grid-lines::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(143,168,122,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(143,168,122,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.vh-deco-number{
+  position:absolute;right:-20px;top:50%;transform:translateY(-50%);
+  font-family:var(--fh);font-size:clamp(200px,30vw,380px);font-weight:800;font-style:italic;
+  line-height:1;letter-spacing:-.04em;color:transparent;
+  -webkit-text-stroke:1px rgba(143,168,122,.07);
+  pointer-events:none;user-select:none;
+  animation:fadeUp 1.2s ease both .6s;
+}
+.vh-hero-inner{position:relative;z-index:1;max-width:700px}
+.vh-eyebrow{
+  font-family:var(--fm);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:#8fa87a;display:flex;align-items:center;gap:12px;margin-bottom:28px;
+  animation:fadeUp .7s ease both .1s;
+}
+.vh-eyebrow::before{content:'';width:24px;height:1px;background:#8fa87a}
+.vh-logo{
+  font-family:var(--fh);font-size:clamp(72px,14vw,130px);font-weight:800;font-style:italic;
+  letter-spacing:-.02em;text-transform:uppercase;line-height:.9;
+  color:#8fa87a;margin-bottom:28px;
+  animation:fadeUp .8s ease both .2s;
+}
+.vh-headline{
+  font-family:var(--fh);font-size:clamp(22px,4vw,36px);font-weight:700;
+  line-height:1.18;letter-spacing:.01em;color:var(--cream);margin-bottom:20px;
+  animation:fadeUp .8s ease both .3s;
+}
+.vh-headline i{font-style:italic;color:#8fa87a}
+.vh-desc{
+  font-size:14px;color:var(--muted2);line-height:1.8;max-width:480px;
+  margin-bottom:44px;animation:fadeUp .8s ease both .4s;
+}
+
+/* Feature pills */
+.vh-features{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:44px;
+  animation:fadeUp .8s ease both .45s;
+}
+.vh-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--b3);border-radius:20px;padding:7px 14px;
+  font-size:11px;color:var(--muted2);background:rgba(255,255,255,.02);
+  transition:border-color .2s,color .2s;
+}
+.vh-pill-dot{width:5px;height:5px;border-radius:50%;background:#8fa87a;flex-shrink:0}
+
+/* Stats row */
+.vh-stats{
+  display:flex;gap:36px;margin-bottom:52px;
+  animation:fadeUp .8s ease both .5s;flex-wrap:wrap;
+}
+.vh-stat-n{
+  font-family:var(--fh);font-size:42px;font-weight:800;line-height:1;
+  color:var(--cream);letter-spacing:-.02em;
+}
+.vh-stat-n span{color:#8fa87a}
+.vh-stat-l{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+/* CTA row */
+.vh-ctas{display:flex;align-items:center;gap:14px;flex-wrap:wrap;animation:fadeUp .8s ease both .55s}
+.vh-cta-primary{
+  background:#8fa87a;color:#070707;border:none;border-radius:4px;
+  padding:15px 28px;font-family:var(--fh);font-size:14px;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  transition:all .18s;text-decoration:none;display:inline-block;
+}
+.vh-cta-primary:hover{background:#a8c5a0;transform:translateY(-1px)}
+.vh-cta-secondary{
+  font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:7px;transition:color .15s;padding:0;
+}
+.vh-cta-secondary:hover{color:var(--cream)}
+.vh-cta-arrow{font-size:14px;transition:transform .2s}
+.vh-cta-secondary:hover .vh-cta-arrow{transform:translateX(4px)}
+
+/* How it works strip */
+.vh-how{
+  position:relative;z-index:1;
+  border-top:1px solid var(--b2);
+  padding:40px 48px;display:grid;
+  grid-template-columns:repeat(3,1fr);gap:0;
+  background:rgba(255,255,255,.01);
+  animation:fadeUp .8s ease both .65s;
+}
+.vh-step{padding:0 28px 0 0;border-right:1px solid var(--b2)}
+.vh-step:first-child{padding-left:0}
+.vh-step:last-child{border-right:none;padding-right:0;padding-left:28px}
+.vh-step:nth-child(2){padding:0 28px}
+.vh-step-n{
+  font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:#8fa87a;margin-bottom:10px;
+}
+.vh-step-title{font-family:var(--fh);font-size:17px;font-weight:700;letter-spacing:.02em;margin-bottom:7px}
+.vh-step-desc{font-size:11px;color:var(--muted2);line-height:1.7}
+
+/* Login panel */
+.vh-login-section{
+  background:var(--s1);border-top:1px solid var(--b2);
+  padding:60px 48px;display:flex;align-items:flex-start;justify-content:center;
+  animation:fadeUp .8s ease both .2s;
+}
+.venue-card{width:100%;max-width:400px;text-align:center}
+.venue-tagline{font-family:var(--fm);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
+.venue-heading{font-family:var(--fh);font-size:20px;font-weight:700;letter-spacing:.02em;margin-bottom:6px}
+.venue-sub{font-size:12px;color:var(--muted2);margin-bottom:24px;line-height:1.6}
+.venue-input-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.v-grp{display:flex;flex-direction:column;gap:5px;text-align:left}
+.v-lbl{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2)}
+.v-inp{background:var(--s2);border:1px solid var(--b3);border-radius:4px;padding:13px 16px;
+  font-family:var(--fb);font-size:14px;color:var(--cream);outline:none;width:100%;transition:border-color .15s}
+.v-inp::placeholder{color:var(--muted)}
+.v-inp:focus{border-color:#8fa87a}
+.v-sel{appearance:none;-webkit-appearance:none;cursor:pointer;
+  background:var(--s2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a5a5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center}
+.v-sel option{background:#161616;color:var(--cream)}
+.venue-btn{width:100%;background:#8fa87a;color:#070707;border:none;border-radius:4px;padding:16px;
+  font-family:var(--fh);font-size:15px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:all .18s;margin-bottom:12px}
+.venue-btn:hover:not(:disabled){background:#a8c5a0}
+.venue-btn:disabled{opacity:.3;cursor:not-allowed}
+.venue-err{font-family:var(--fm);font-size:10px;letter-spacing:.08em;color:var(--red);text-align:center;display:none;margin-top:4px}
+.venue-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);font-family:var(--fm);font-size:9px;letter-spacing:.1em}
+.venue-divider::before,.venue-divider::after{content:'';flex:1;height:1px;background:var(--b2)}
+.venue-demo-link{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  background:none;border:1px solid var(--b3);border-radius:4px;padding:10px 18px;cursor:pointer;transition:all .15s;width:100%}
+.venue-demo-link:hover{border-color:#8fa87a;color:#8fa87a}
+.venue-platform-note{font-family:var(--fm);font-size:9px;letter-spacing:.06em;color:var(--muted);margin-top:28px;line-height:1.7;text-align:center}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media(max-width:700px){
+  .vh-hero{padding:48px 24px 60px}
+  .vh-how{grid-template-columns:1fr;padding:32px 24px;gap:24px}
+  .vh-step{border-right:none;border-bottom:1px solid var(--b2);padding:0 0 24px!important}
+  .vh-step:last-child{border-bottom:none;padding-bottom:0!important}
+  .vh-stats{gap:24px}
+  .vh-login-section{padding:48px 24px}
+  .vh-deco-number{display:none}
+}
+
+/* ══ LANDING ══ */
+#s-land{min-height:100vh;flex-direction:column}
+.l-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--b2)}
+.l-logo{font-family:var(--fh);font-size:18px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.l-logo b{color:var(--gold)}
+.l-venue-badge{font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  background:rgba(122,158,126,.08);color:var(--gold);border:1px solid rgba(122,158,126,.2);border-radius:3px;padding:3px 9px}
+.l-nav-r{display:flex;align-items:center;gap:10px}
+.l-signout{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);background:none;border:1px solid var(--b3);border-radius:3px;padding:4px 10px;cursor:pointer;transition:all .14s}
+.l-signout:hover{border-color:var(--muted);color:var(--cream)}
+
+.l-content{flex:1;display:grid;grid-template-columns:1fr;padding:0}
+.l-left{padding:42px 24px 40px;max-width:580px}
+.l-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.l-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold)}
+.l-h1{font-family:var(--fh);font-size:clamp(56px,13vw,96px);font-weight:800;line-height:.9;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:22px}
+.l-h1 i{font-style:italic;color:var(--gold)}
+.l-sub{font-size:13px;color:var(--muted2);line-height:1.75;max-width:380px;margin-bottom:36px}
+
+.tier-tbl{width:100%;border-collapse:collapse;margin-bottom:26px}
+.tier-tbl th{font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-bottom:10px;text-align:left;border-bottom:1px solid var(--b2)}
+.tier-tbl th:last-child,.tier-tbl td:last-child{text-align:right}
+.tier-tbl td{padding:11px 0 11px;border-bottom:1px solid var(--b1);vertical-align:middle}
+.t-score{font-family:var(--fm);font-size:12px}
+.t-name{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.02em}
+.t-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.t-pct{font-family:var(--fh);font-size:22px;font-weight:800}
+.tr-full .t-score,.tr-full .t-pct{color:var(--green)}
+.tr-75  .t-score,.tr-75  .t-pct{color:var(--amber)}
+.tr-50  .t-score,.tr-50  .t-pct{color:var(--muted2)}
+
+.l-note{font-family:var(--fm);font-size:10px;letter-spacing:.06em;color:var(--muted);border-top:1px solid var(--b2);padding-top:14px;margin-bottom:30px}
+
+.l-form{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.f-grp{display:flex;flex-direction:column;gap:5px}
+.f-lbl{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2)}
+.f-inp{background:var(--s1);border:1px solid var(--b3);border-radius:4px;padding:12px 14px;
+  font-family:var(--fb);font-size:14px;color:var(--cream);outline:none;width:100%;transition:border-color .15s}
+.f-inp::placeholder{color:var(--muted)}
+.f-inp:focus{border-color:var(--gold)}
+.f-sel{appearance:none;-webkit-appearance:none;cursor:pointer;
+  background:var(--s1) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a5a5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center}
+.f-sel option{background:#161616;color:var(--cream)}
+.f-ro{color:var(--muted2)!important;cursor:default}
+
+/* ── New staff entry fields ── */
+.f-new-staff{background:rgba(122,158,126,.04);border:1px solid rgba(122,158,126,.15);border-radius:6px;padding:14px;margin-top:6px;display:none;flex-direction:column;gap:8px}
+.f-new-staff.show{display:flex}
+.f-new-staff-ttl{font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+
+.l-cta{width:100%;background:var(--gold);color:#070707;border:none;border-radius:4px;padding:16px;
+  font-family:var(--fh);font-size:15px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:all .18s}
+.l-cta:hover:not(:disabled){background:var(--gold2)}
+.l-cta:disabled{opacity:.3;cursor:not-allowed}
+
+.l-deco{padding:0 20px 0;text-align:right;overflow:hidden;pointer-events:none;user-select:none;flex-shrink:0}
+.l-deco-t{font-family:var(--fh);font-size:clamp(100px,28vw,220px);font-weight:800;font-style:italic;
+  text-transform:uppercase;letter-spacing:-.03em;line-height:.85;
+  color:transparent;-webkit-text-stroke:1px var(--b3);
+  animation:slideIn .9s ease both .1s}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+
+/* ══ QUIZ ══ */
+#s-quiz{min-height:100vh}
+.qz-nav{position:sticky;top:0;z-index:20;background:rgba(7,7,7,.97);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--b2);padding:11px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px}
+.qz-nav-l{display:flex;flex-direction:column;gap:2px}
+.qz-who{font-family:var(--fm);font-size:11px;color:var(--muted2)}.qz-who span{color:var(--gold)}
+.qz-prog-txt{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:.04em}
+.qz-score-wrap{text-align:right}
+.qz-score-n{font-family:var(--fh);font-size:28px;font-weight:800;line-height:1;transition:color .25s}
+.qz-score-n.fl{color:var(--green)}
+.qz-score-d{font-family:var(--fm);font-size:9px;color:var(--muted)}
+.qz-track{height:2px;background:var(--b2)}.qz-bar{height:100%;background:var(--gold);transition:width .3s ease;width:0%}
+.qz-body{padding:24px 20px;max-width:600px;margin:0 auto}
+.qz-cat{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;
+  letter-spacing:.16em;text-transform:uppercase;border-radius:3px;padding:3px 9px;margin-bottom:13px}
+.qc-e{background:rgba(122,158,126,.09);color:var(--gold)}
+.qc-m{background:rgba(96,165,250,.08);color:var(--blue)}
+.qc-d{background:rgba(239,68,68,.07);color:#f87171}
+.qc-s{background:rgba(167,139,250,.08);color:var(--violet)}
+.qc-o{background:rgba(255,255,255,.04);color:var(--muted2)}
+.qz-qn{font-family:var(--fm);font-size:10px;color:var(--muted);margin-bottom:5px}
+.qz-qt{font-family:var(--fh);font-size:23px;font-weight:700;line-height:1.22;color:var(--cream);margin-bottom:20px;letter-spacing:.01em}
+.qz-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.qz-opt{background:var(--s1);border:1px solid var(--b3);border-radius:6px;padding:12px 14px;
+  display:flex;align-items:flex-start;gap:11px;cursor:pointer;text-align:left;width:100%;transition:all .13s}
+.qz-opt:hover:not(:disabled){border-color:var(--gold);background:rgba(122,158,126,.04)}
+.opt-lt{font-family:var(--fm);font-size:10px;color:var(--muted);min-width:15px;flex-shrink:0;padding-top:1px}
+.opt-tx{font-size:13px;color:var(--muted2);line-height:1.45}
+.qz-opt.ok{background:rgba(34,197,94,.07);border-color:var(--green)}
+.qz-opt.ok .opt-lt,.qz-opt.ok .opt-tx{color:#86efac}
+.qz-opt.ng{background:rgba(239,68,68,.06);border-color:var(--red);animation:shk .28s ease}
+.qz-opt.ng .opt-lt,.qz-opt.ng .opt-tx{color:var(--muted)}
+.qz-opt:disabled{cursor:default}
+@keyframes shk{0%,100%{transform:none}30%{transform:translateX(-5px)}70%{transform:translateX(5px)}}
+.qz-fb{font-size:12px;line-height:1.6;padding:11px 13px;border-radius:5px;
+  border-left:2px solid transparent;display:none;margin-bottom:14px;background:rgba(255,255,255,.02);color:var(--muted2)}
+.qz-fb.show{display:block}
+.qz-fb.ok{border-color:var(--green);color:#86efac}.qz-fb.ok strong{color:#bbf7d0}
+.qz-fb.ng{border-color:var(--red)}.qz-fb.ng strong{color:var(--cream)}
+.qz-nxt{width:100%;background:var(--s2);border:1px solid var(--b3);border-radius:5px;padding:13px;
+  font-family:var(--fh);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cream);cursor:pointer;transition:all .15s;display:none}
+.qz-nxt:hover{background:var(--gold);color:#070707;border-color:var(--gold)}
+.qz-nxt.fin{background:var(--gold);color:#070707;border-color:var(--gold)}
+
+/* ══ RESULT ══ */
+#s-result{min-height:100vh;padding-bottom:60px}
+.r-nav{display:flex;align-items:center;justify-content:space-between;padding:17px 24px;border-bottom:1px solid var(--b2)}
+.r-nav-logo{font-family:var(--fh);font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.r-date{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:.06em}
+.r-hero{padding:32px 24px 24px;max-width:600px;margin:0 auto;text-align:center;animation:up .5s ease both}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.r-nameline{font-family:var(--fm);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);margin-bottom:18px}
+.r-nameline span{color:var(--gold)}
+.r-ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
+.r-ring{width:148px;height:148px}
+.rg-bg{fill:none;stroke:var(--b3);stroke-width:8}
+.rg-fill{fill:none;stroke-width:8;stroke-linecap:round;transform:rotate(-90deg);transform-origin:center;
+  transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);stroke-dasharray:390;stroke-dashoffset:390}
+.r-ring-in{position:absolute;text-align:center}
+.r-big{font-family:var(--fh);font-size:48px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.r-den{font-family:var(--fm);font-size:11px;color:var(--muted2)}
+.r-verdict{padding:0 24px;max-width:600px;margin:18px auto 0;animation:up .5s .1s ease both}
+.v-card{border-radius:8px;padding:17px 19px;position:relative;overflow:hidden;margin-bottom:13px}
+.v-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.vc-full{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.2)}
+.vc-full::before{background:linear-gradient(90deg,transparent,var(--green),transparent)}
+.vc-75{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2)}
+.vc-75::before{background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+.vc-50{background:rgba(90,90,90,.06);border:1px solid rgba(90,90,90,.18)}
+.vc-50::before{background:linear-gradient(90deg,transparent,#555,transparent)}
+.v-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:7px;gap:12px}
+.v-label{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:.02em;line-height:1.1}
+.v-pct{font-family:var(--fh);font-size:42px;font-weight:800;line-height:1;flex-shrink:0}
+.vc-full .v-label,.vc-full .v-pct{color:var(--green)}
+.vc-75  .v-label,.vc-75  .v-pct{color:var(--amber)}
+.vc-50  .v-label,.vc-50  .v-pct{color:var(--muted)}
+.v-desc{font-size:12px;color:var(--muted2);line-height:1.65}
+.r-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 24px;max-width:600px;margin:0 auto 12px;animation:up .5s .18s ease both}
+.st-c{background:var(--s1);border:1px solid var(--b2);border-radius:7px;padding:12px;text-align:center}
+.st-n{font-family:var(--fh);font-size:26px;font-weight:800;line-height:1;margin-bottom:3px}
+.st-l{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.r-cats{padding:0 24px;max-width:600px;margin:0 auto 18px;animation:up .5s .24s ease both}
+.r-cats-ttl{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.cat-row{margin-bottom:9px}
+.cat-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.cat-nm{font-size:12px;color:var(--muted2)}.cat-fr{font-family:var(--fm);font-size:10px;color:var(--muted)}
+.cat-track{height:3px;background:var(--b2);border-radius:2px;overflow:hidden}
+.cat-fill{height:100%;border-radius:2px;width:0%;transition:width .9s ease .3s}
+
+/* OTM panel */
+.otm-wrap{margin:0 auto 14px;max-width:552px;padding:0 24px}
+.otm-panel{background:var(--s1);border:1px solid var(--b3);border-radius:8px;overflow:hidden;animation:up .5s .3s ease both}
+.otm-head{padding:14px 18px;border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:12px}
+.otm-logo-box{width:34px;height:34px;border-radius:6px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-size:12px;font-weight:800;color:#070707}
+.otm-head-txt .otm-ttl{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.02em}
+.otm-head-txt .otm-sub{font-size:11px;color:var(--muted2);margin-top:1px}
+.otm-fields{padding:12px 18px;display:flex;flex-direction:column;gap:6px}
+.otm-f{display:flex;justify-content:space-between;align-items:center;
+  padding:7px 10px;background:rgba(255,255,255,.02);border-radius:4px;border:1px solid var(--b1)}
+.otm-fk{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.otm-fv{font-family:var(--fm);font-size:12px;color:var(--cream);font-weight:500}
+.otm-fv.green{color:var(--green)}.otm-fv.amber{color:var(--amber)}.otm-fv.gr{color:var(--muted2)}
+.otm-fv.big{font-family:var(--fh);font-size:18px;font-weight:800}
+.otm-pending{display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:9px 18px;background:rgba(245,158,11,.05);border-top:1px solid rgba(245,158,11,.14);
+  font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#fbbf24}
+.otm-dot{width:5px;height:5px;border-radius:50%;background:#fbbf24;animation:blink 1.1s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.otm-note{padding:11px 18px;font-size:11px;color:var(--muted2);line-height:1.65;
+  background:rgba(122,158,126,.03);border-top:1px solid rgba(122,158,126,.1)}
+.otm-note strong{color:var(--gold)}
+.otm-btns{display:flex;gap:7px;padding:12px 18px;border-top:1px solid var(--b2)}
+.ob{flex:1;padding:12px;border-radius:4px;border:none;cursor:pointer;
+  font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:all .15s}
+.ob-p{background:var(--gold);color:#070707}.ob-p:hover{background:var(--gold2)}
+.ob-s{background:transparent;color:var(--muted2);border:1px solid var(--b3)}.ob-s:hover{border-color:var(--muted2);color:var(--cream)}
+.r-retry{text-align:center;padding:8px 24px 0;max-width:600px;margin:0 auto}
+.r-retry-sub{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.r-retry-btn{background:transparent;border:1px solid var(--b3);border-radius:4px;
+  padding:10px 18px;font-family:var(--fh);font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);cursor:pointer;transition:all .15s}
+.r-retry-btn:hover{border-color:var(--gold);color:var(--gold)}
+.r-mgr-link{text-align:center;padding:24px 24px 36px}
+.r-mgr-btn{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.r-mgr-btn:hover{color:var(--gold)}
+
+/* ══ MANAGER ══ */
+#s-mgr{min-height:100vh;padding-bottom:60px}
+.m-nav{background:var(--s1);border-bottom:1px solid var(--b2);padding:13px 20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.m-nav-l{display:flex;align-items:center;gap:10px}
+.m-nav-ttl{font-family:var(--fh);font-size:16px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.m-nav-ttl b{color:var(--gold)}
+.m-badge{font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;
+  background:rgba(245,158,11,.1);color:#fbbf24;border:1px solid rgba(245,158,11,.2);border-radius:3px;padding:3px 7px}
+.m-venue-tag{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  background:rgba(122,158,126,.08);color:var(--gold);border:1px solid rgba(122,158,126,.2);border-radius:3px;padding:3px 8px}
+.m-nav-r{display:flex;align-items:center;gap:8px}
+.m-back{background:transparent;border:1px solid var(--b3);border-radius:3px;padding:5px 10px;
+  font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .14s}
+.m-back:hover{color:var(--cream);border-color:var(--muted)}
+.m-body{padding:22px 20px;max-width:900px;margin:0 auto}
+
+.m-tabs{display:flex;gap:0;border-bottom:1px solid var(--b2);margin-bottom:28px;overflow-x:auto}
+.m-tab{background:none;border:none;padding:12px 20px;cursor:pointer;
+  font-family:var(--fm);font-size:10px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s}
+.m-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.m-tab-content{display:none}.m-tab-content.active{display:block}
+
+.m-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:26px}
+.kpi{background:var(--s1);border:1px solid var(--b2);border-radius:7px;padding:13px 15px}
+.kpi-n{font-family:var(--fh);font-size:30px;font-weight:800;line-height:1;margin-bottom:3px}
+.kpi-l{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+.m-sec{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.m-sec::after{content:'';flex:1;height:1px;background:var(--b2)}
+
+.pend-list{display:flex;flex-direction:column;gap:9px;margin-bottom:26px}
+.pc{background:var(--s1);border:1px solid var(--b2);border-radius:8px;overflow:hidden}
+.pc-top{padding:13px 15px;display:flex;align-items:center;gap:13px}
+.pc-av{width:38px;height:38px;border-radius:7px;background:var(--b3);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-size:15px;font-weight:800}
+.pc-info{flex:1;min-width:0}
+.pc-name{font-family:var(--fh);font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-meta{font-family:var(--fm);font-size:10px;color:var(--muted2);margin-top:1px}
+.pc-sc{text-align:right;flex-shrink:0}
+.pc-sc-n{font-family:var(--fh);font-size:28px;font-weight:800;line-height:1}
+.pc-sc-d{font-family:var(--fm);font-size:9px;color:var(--muted)}
+.pc-foot{padding:9px 15px;border-top:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pc-tb{display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border-radius:3px;padding:4px 9px}
+.ptb-full{background:rgba(34,197,94,.1);color:var(--green)}
+.ptb-75{background:rgba(245,158,11,.1);color:var(--amber)}
+.ptb-50{background:rgba(90,90,90,.08);color:var(--muted2)}
+.ptb-dot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0}
+.pc-acts{display:flex;gap:6px}
+.pcb{padding:7px 13px;border-radius:3px;border:none;cursor:pointer;
+  font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .14s}
+.pcb-app{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}.pcb-app:hover{background:rgba(34,197,94,.2)}
+.pcb-dec{background:transparent;color:var(--muted);border:1px solid var(--b3)}.pcb-dec:hover{color:var(--red);border-color:rgba(239,68,68,.3)}
+
+.appr-list{display:flex;flex-direction:column;gap:5px;margin-bottom:26px}
+.ar{display:flex;align-items:center;gap:10px;padding:9px 13px;background:var(--s1);border:1px solid var(--b2);border-radius:6px;flex-wrap:wrap}
+.ar-name{flex:1;min-width:120px;font-size:13px}.ar-name strong{font-weight:500;color:var(--cream)}
+.ar-role{font-size:11px;color:var(--muted);min-width:80px}
+.ar-sc{font-family:var(--fm);font-size:11px;color:var(--muted)}
+.ar-pct{font-family:var(--fm);font-size:11px;letter-spacing:.05em}
+.ar-pct.full{color:var(--green)}.ar-pct.t75{color:var(--amber)}.ar-pct.t50{color:var(--muted)}
+.ar-dt{font-family:var(--fm);font-size:9px;color:var(--muted)}
+.ar-tag{font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(122,158,126,.08);color:var(--gold);border:1px solid rgba(122,158,126,.18);border-radius:3px;padding:2px 6px}
+
+/* ── TIP UPLOAD PANEL ── */
+.tip-upload-panel{background:var(--s1);border:1px solid var(--b3);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.tip-upload-head{padding:16px 20px;border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:10px}
+.tip-upload-icon{width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.tip-upload-title{font-family:var(--fh);font-size:16px;font-weight:700;letter-spacing:.02em}
+.tip-upload-sub{font-size:11px;color:var(--muted2);margin-top:1px}
+.tip-upload-body{padding:20px}
+.tip-week-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.tip-week-meta input,.tip-week-meta select{background:var(--s2);border:1px solid var(--b3);border-radius:4px;
+  padding:10px 12px;font-family:var(--fb);font-size:13px;color:var(--cream);outline:none;width:100%;transition:border-color .15s}
+.tip-week-meta input:focus,.tip-week-meta select:focus{border-color:var(--gold)}
+.tip-week-meta input::placeholder{color:var(--muted)}
+.tip-staff-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;max-height:360px;overflow-y:auto}
+.tip-row{display:grid;grid-template-columns:1fr 140px 80px;gap:8px;align-items:center;
+  padding:8px 12px;background:rgba(255,255,255,.015);border:1px solid var(--b2);border-radius:5px}
+.tip-row-name{font-size:12px;color:var(--cream)}
+.tip-row-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.tip-amount-inp{background:var(--s2);border:1px solid var(--b3);border-radius:4px;padding:8px 10px;
+  font-family:var(--fm);font-size:12px;color:var(--cream);outline:none;width:100%;text-align:right;transition:border-color .15s}
+.tip-amount-inp:focus{border-color:var(--gold)}
+.tip-certified-pct{font-family:var(--fm);font-size:11px;text-align:right}
+.tip-certified-pct.full{color:var(--green)}.tip-certified-pct.t75{color:var(--amber)}.tip-certified-pct.nc{color:var(--muted)}
+.tip-total-bar{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;background:rgba(122,158,126,.05);border:1px solid rgba(122,158,126,.15);border-radius:6px;margin-bottom:12px}
+.tip-total-lbl{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tip-total-val{font-family:var(--fh);font-size:22px;font-weight:800;color:var(--gold)}
+.tip-save-btn{width:100%;background:var(--gold);color:#070707;border:none;border-radius:4px;padding:14px;
+  font-family:var(--fh);font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:all .18s}
+.tip-save-btn:hover{background:var(--gold2)}
+.tip-save-btn:disabled{opacity:.3;cursor:not-allowed}
+.tip-csv-btn{width:100%;background:transparent;color:var(--muted2);border:1px solid var(--b3);border-radius:4px;padding:11px;
+  font-family:var(--fh);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .15s;margin-top:8px}
+.tip-csv-btn:hover{border-color:var(--muted2);color:var(--cream)}
+
+/* Week history */
+.wk-history{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.wk-hist-row{background:var(--s1);border:1px solid var(--b2);border-radius:7px;padding:13px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;cursor:pointer;transition:border-color .15s}
+.wk-hist-row:hover{border-color:var(--b4)}
+.wk-hist-label{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.02em}
+.wk-hist-meta{font-family:var(--fm);font-size:9px;color:var(--muted);margin-top:2px}
+.wk-hist-total{font-family:var(--fh);font-size:22px;font-weight:800;color:var(--gold)}
+.wk-hist-expand{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.wk-hist-expand.open{max-height:600px}
+
+/* Staff list manager view */
+.staff-list-panel{background:var(--s1);border:1px solid var(--b3);border-radius:8px;overflow:hidden;margin-bottom:20px}
+.staff-list-head{padding:14px 18px;border-bottom:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.staff-list-title{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.02em}
+.staff-add-btn{background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2);border-radius:4px;
+  padding:7px 14px;font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.staff-add-btn:hover{background:rgba(122,158,126,.2)}
+.staff-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--b1);flex-wrap:wrap}
+.staff-row:last-child{border-bottom:none}
+.staff-row-name{font-size:13px;color:var(--cream);flex:1;min-width:120px;font-weight:500}
+.staff-row-role{font-size:11px;color:var(--muted);min-width:100px}
+.staff-row-pool{font-family:var(--fm);font-size:9px;letter-spacing:.08em;border-radius:2px;padding:2px 6px}
+.foh{background:rgba(96,165,250,.08);color:var(--blue)}
+.boh{background:rgba(167,139,250,.08);color:var(--violet)}
+.staff-row-del{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:14px;transition:color .15s;padding:2px 6px}
+.staff-row-del:hover{color:var(--red)}
+.staff-add-form{padding:14px 18px;background:rgba(122,158,126,.03);border-top:1px solid rgba(122,158,126,.12);display:none;flex-direction:column;gap:8px}
+.staff-add-form.show{display:flex}
+.staff-add-row{display:grid;grid-template-columns:1fr 1fr 90px auto;gap:8px;align-items:center}
+.saf-inp,.saf-sel{background:var(--s2);border:1px solid var(--b3);border-radius:4px;padding:9px 11px;
+  font-family:var(--fb);font-size:13px;color:var(--cream);outline:none;width:100%;transition:border-color .15s}
+.saf-inp:focus,.saf-sel:focus{border-color:var(--gold)}
+.saf-sel{appearance:none;cursor:pointer;background:var(--s2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a5a5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center}
+.saf-add-btn{background:var(--gold);color:#070707;border:none;border-radius:4px;padding:9px 14px;
+  font-family:var(--fh);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;white-space:nowrap}
+.saf-add-btn:hover{background:var(--gold2)}
+
+/* OTM how-to */
+.how-panel{background:var(--s1);border:1px solid var(--b3);border-radius:8px;padding:18px;margin-bottom:20px}
+.how-hd{display:flex;align-items:center;gap:10px;margin-bottom:15px}
+.how-logo{width:26px;height:26px;border-radius:4px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-size:10px;font-weight:800;color:#070707}
+.how-ttl{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.02em}
+.how-steps{display:flex;flex-direction:column;gap:9px}
+.how-step{display:flex;align-items:flex-start;gap:11px}
+.how-n{width:20px;height:20px;border-radius:50%;flex-shrink:0;
+  background:rgba(122,158,126,.1);border:1px solid rgba(122,158,126,.18);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fm);font-size:9px;color:var(--gold);margin-top:1px}
+.how-tx{font-size:12px;color:var(--muted2);line-height:1.55}.how-tx strong{color:var(--cream)}
+
+.empty{padding:22px;text-align:center;font-family:var(--fm);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  border:1px dashed var(--b3);border-radius:6px}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:var(--cream);color:#070707;font-family:var(--fm);font-size:11px;
+  padding:9px 18px;border-radius:20px;transition:transform .24s ease;z-index:99999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Progression cards */
+#test-cards{display:none;margin-bottom:14px}
+.prog-card{background:var(--s1);border:1px solid var(--b3);border-radius:8px;padding:15px 17px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.prog-card:hover{border-color:rgba(122,158,126,.3)}
+.prog-card-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.prog-card-badge{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;flex-shrink:0}
+
+/* ══ MGR LOGIN ══ */
+#s-mgr-login{min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px}
+.ml-card{width:100%;max-width:400px;text-align:center}
+.ml-logo{font-family:var(--fh);font-size:44px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.02em;text-transform:uppercase;line-height:1;margin-bottom:6px}
+.ml-badge{display:inline-block;font-family:var(--fm);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border:1px solid var(--b3);border-radius:20px;padding:4px 12px;margin-bottom:32px}
+.ml-heading{font-family:var(--fh);font-size:20px;font-weight:700;letter-spacing:.02em;margin-bottom:6px}
+.ml-sub{font-size:12px;color:var(--muted2);margin-bottom:24px;line-height:1.6}
+.ml-err{font-family:var(--fm);font-size:10px;letter-spacing:.08em;color:var(--red);text-align:center;display:none;margin-bottom:10px}
+.ml-back{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:20px;transition:color .15s}
+.ml-back:hover{color:var(--cream)}
+
+/* ══ STAFF PROGRESS TRACKER ══ */
+.sp-wrap{margin-top:20px;border:1px solid var(--b3);border-radius:8px;overflow:hidden}
+.sp-header{background:var(--s2);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b2)}
+.sp-title{font-family:var(--fh);font-size:13px;font-weight:700;letter-spacing:.04em}
+.sp-subtitle{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sp-body{padding:16px}
+.sp-empty{font-size:12px;color:var(--muted);text-align:center;padding:12px 0}
+.sp-stage{margin-bottom:12px}
+.sp-stage:last-child{margin-bottom:0}
+.sp-stage-label{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.sp-bar-wrap{background:var(--b2);border-radius:4px;height:6px;overflow:hidden;margin-bottom:6px}
+.sp-bar{height:100%;border-radius:4px;transition:width .6s ease;background:#8fa87a}
+.sp-bar.pending{background:var(--amber)}
+.sp-bar.declined{background:var(--red)}
+.sp-status-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sp-status-pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border-radius:20px;padding:3px 10px}
+.sp-status-pill.approved{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.sp-status-pill.pending{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.sp-status-pill.declined{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.sp-status-pill.not-started{background:rgba(90,90,90,.08);color:var(--muted);border:1px solid var(--b3)}
+.sp-score{font-family:var(--fm);font-size:10px;color:var(--muted2)}
+.sp-date{font-family:var(--fm);font-size:9px;color:var(--muted)}
+
+@media(max-width:600px){
+  .f-row{grid-template-columns:1fr}
+  .m-kpis{grid-template-columns:repeat(2,1fr)}
+  .tip-row{grid-template-columns:1fr 110px}
+  .tip-certified-pct{display:none}
+  .staff-add-row{grid-template-columns:1fr 1fr}
+  .saf-add-btn{grid-column:span 2}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ VENUE LOGIN ══ -->
+<div id="s-venue" class="screen active">
+
+  <!-- ── HERO ── -->
+  <div class="vh-hero">
+    <div class="vh-grid-lines"></div>
+    <div class="vh-deco-number">T.</div>
+    <div class="vh-hero-inner">
+      <div class="vh-eyebrow">Tip & Training Platform</div>
+      <div class="vh-logo">TIER.</div>
+      <div class="vh-headline">
+        Your knowledge earns<br>your <i>allocation.</i>
+      </div>
+      <p class="vh-desc">
+        Staff complete a structured certification test — Legacy or Master level. Scores go to management for approval. Your OnTheMonee tip allocation updates accordingly. No admin, no guesswork.
+      </p>
+      <div class="vh-features">
+        <div class="vh-pill"><div class="vh-pill-dot"></div>Two-stage certification</div>
+        <div class="vh-pill"><div class="vh-pill-dot"></div>Manager approval workflow</div>
+        <div class="vh-pill"><div class="vh-pill-dot"></div>OTM tip integration</div>
+        <div class="vh-pill"><div class="vh-pill-dot"></div>In-app training</div>
+        <div class="vh-pill"><div class="vh-pill-dot"></div>More time with guests</div>
+      </div>
+      <div class="vh-stats">
+        <div>
+          <div class="vh-stat-n">2<span>×</span></div>
+          <div class="vh-stat-l">Certification stages</div>
+        </div>
+        <div>
+          <div class="vh-stat-n">100<span> questions</span></div>
+          <div class="vh-stat-l">Master assessment</div>
+        </div>
+        <div>
+          <div class="vh-stat-n">3<span>×</span></div>
+          <div class="vh-stat-l">Allocation tiers</div>
+        </div>
+      </div>
+      <div class="vh-ctas">
+        <button class="vh-cta-primary" onclick="scrollToLogin()">Log in to your venue →</button>
+        <button class="vh-cta-secondary" onclick="loadDemoVenue()">
+          Try demo <span class="vh-cta-arrow">→</span>
+        </button>
+        <button class="vh-cta-secondary" onclick="openMgrLogin()" style="opacity:.6">
+          Manager login <span class="vh-cta-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HOW IT WORKS ── -->
+  <div class="vh-how">
+    <div class="vh-step">
+      <div class="vh-step-n">01 · Staff</div>
+      <div class="vh-step-title">Take the test</div>
+      <div class="vh-step-desc">Complete Legacy (40 questions) for 75% allocation, or Master (100 questions) for the full 100%. Do it in your own time, at your own pace.</div>
+    </div>
+    <div class="vh-step">
+      <div class="vh-step-n">02 · Manager</div>
+      <div class="vh-step-title">Review &amp; approve</div>
+      <div class="vh-step-desc">Results appear in the Manager Portal. One tap to approve — the allocation tier is logged and OTM-ready.</div>
+    </div>
+    <div class="vh-step">
+      <div class="vh-step-n">03 · OTM</div>
+      <div class="vh-step-title">Tips distributed</div>
+      <div class="vh-step-desc">Upload the week's gross tips. Certified allocations calculate automatically. Export CSV for OnTheMonee in one click.</div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div id="s-login" class="screen">
+  <div style="min-height:100vh;display:flex;flex-direction:column">
+    <!-- nav -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--b2)">
+      <div style="font-family:var(--fh);font-size:26px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.01em;text-transform:uppercase;cursor:pointer" onclick="show('s-venue')">TIER.</div>
+      <button onclick="show('s-venue')" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--b3);border-radius:3px;padding:5px 12px;cursor:pointer;transition:all .14s" onmouseover="this.style.color='var(--cream)';this.style.borderColor='var(--muted)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--b3)'">← Back</button>
+    </div>
+    <!-- content -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px">
+      <div style="width:100%;max-width:420px">
+        <!-- logo + heading -->
+        <div style="text-align:center;margin-bottom:36px">
+          <div style="font-family:var(--fh);font-size:48px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.02em;text-transform:uppercase;line-height:1;margin-bottom:10px">TIER.</div>
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)">Select your venue to begin</div>
+        </div>
+
+        <div class="venue-input-wrap">
+          <div class="v-grp">
+            <label class="v-lbl">Venue</label>
+            <select class="v-inp v-sel" id="venue-select">
+              <option value="">— Select venue —</option>
+            </select>
+          </div>
+          <div class="v-grp">
+            <label class="v-lbl">Access code</label>
+            <input class="v-inp" type="password" id="venue-code" placeholder="Enter venue code" autocomplete="off">
+          </div>
+        </div>
+        <div class="venue-err" id="venue-err">Incorrect access code — please try again</div>
+        <button class="venue-btn" id="venue-btn" onclick="venueLogin()" disabled>Enter →</button>
+
+        <div class="venue-divider">or</div>
+        <button class="venue-demo-link" onclick="loadDemoVenue()">Try the demo venue →</button>
+        <button class="ml-back" style="margin-top:12px" onclick="sendPasswordReset()">Forgot password?</button>
+
+        <div class="venue-platform-note">
+          Platform managed by OnTheMonee · Venue onboarding: onthemonee.com<br>
+          Staff data is securely stored per venue.
+        </div>
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--b2);text-align:center">
+          <button onclick="openMgrLogin()" style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .15s" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">Manager login →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ LANDING ══ -->
+<div id="s-land" class="screen">
+  <nav class="l-nav">
+    <div class="l-logo" style="font-family:var(--fh);font-size:22px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.01em;text-transform:uppercase">TIER.</div>
+    <div class="l-nav-r">
+      <div class="l-venue-badge" id="venue-name-badge">Venue</div>
+      <button class="l-signout" onclick="signOut()">Change venue</button>
+    </div>
+  </nav>
+  <div style="flex:1;display:flex;flex-direction:column">
+    <div class="l-left">
+      <div class="l-eyebrow">Tip Allocation Assessment</div>
+      <h1 class="l-h1">Earn<br>Your<br><i>Tier.</i></h1>
+      <p class="l-sub">Complete the knowledge test in your own time. Your score goes to management for approval — then your OnTheMonee allocation updates.</p>
+
+      <table class="tier-tbl">
+        <thead><tr><th>Stage</th><th></th><th>Tier</th><th>OTM Alloc.</th></tr></thead>
+        <tbody>
+          <tr class="tr-full">
+            <td><span class="t-score">Master</span></td><td style="width:14px"></td>
+            <td><div class="t-name">Expert</div><div class="t-sub">Deep knowledge &amp; mastery</div></td>
+            <td><span class="t-pct">100%</span></td>
+          </tr>
+          <tr class="tr-75">
+            <td><span class="t-score">Legacy</span></td><td></td>
+            <td><div class="t-name">Proficient</div><div class="t-sub">Foundational competency</div></td>
+            <td><span class="t-pct">75%</span></td>
+          </tr>
+          <tr class="tr-50">
+            <td><span class="t-score">—</span></td><td></td>
+            <td><div class="t-name">Development</div><div class="t-sub">Uncertified — complete Legacy first</div></td>
+            <td><span class="t-pct">50%</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="l-note">Two-stage certification · Legacy (40 questions) unlocks 75% · Master (100 questions) unlocks 100%</p>
+
+      <div class="l-form">
+        <div class="f-row">
+          <div class="f-grp">
+            <label class="f-lbl">Your Name</label>
+            <select class="f-inp f-sel" id="sel-name">
+              <option value="">— Select name —</option>
+            </select>
+          </div>
+          <div class="f-grp">
+            <label class="f-lbl">Role</label>
+            <input class="f-inp f-ro" id="inp-role" type="text" placeholder="Auto-filled" readonly>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-grp">
+            <label class="f-lbl">Pool</label>
+            <input class="f-inp f-ro" id="inp-pool" type="text" placeholder="Auto-filled" readonly>
+          </div>
+          <div class="f-grp">
+            <label class="f-lbl">This week's tips</label>
+            <input class="f-inp f-ro" id="inp-tips" type="text" placeholder="Updated by manager" readonly>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progression cards -->
+      <div id="test-cards">
+        <div class="prog-card" id="card-legacy" onclick="startLegacy()">
+          <div class="prog-card-inner">
+            <div>
+              <div style="font-family:var(--fh);font-size:16px;font-weight:700;letter-spacing:.02em" id="legacy-title">Stage 1 · Legacy</div>
+              <div style="font-size:11px;color:var(--muted2);margin-top:3px" id="legacy-sub">40 questions · Foundational knowledge · Unlocks 75%</div>
+            </div>
+            <div class="prog-card-badge" id="legacy-badge" style="background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2)">Start →</div>
+          </div>
+        </div>
+        <div class="prog-card" id="card-master" style="opacity:.4;pointer-events:none" onclick="startMaster()">
+          <div class="prog-card-inner">
+            <div>
+              <div style="font-family:var(--fh);font-size:16px;font-weight:700;letter-spacing:.02em;color:var(--muted)" id="master-title">Stage 2 · Master</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px" id="master-sub">100 questions · Deep mastery · Unlocks 100%</div>
+            </div>
+            <div class="prog-card-badge" id="master-badge" style="background:rgba(90,90,90,.08);color:var(--muted);border:1px solid var(--b3)">Locked</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:16px">
+        <a href="#" onclick="startDemo();return false;" style="font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:2px">Try a 10-question demo →</a>
+      </div>
+
+      <!-- Staff progress tracker -->
+      <div class="sp-wrap" id="staff-progress" style="display:none">
+        <div class="sp-header">
+          <div>
+            <div class="sp-title">Your Progress</div>
+            <div class="sp-subtitle">Certification status</div>
+          </div>
+        </div>
+        <div class="sp-body" id="sp-body"></div>
+      </div>
+    </div>
+    <div class="l-deco"><div class="l-deco-t">Tip<br>Test</div></div>
+  </div>
+</div>
+
+<!-- ══ DEMO BANNER ══ -->
+<div id="demo-banner" style="display:none;background:rgba(245,158,11,.12);border-bottom:1px solid rgba(245,158,11,.25);padding:9px 24px;text-align:center;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#f59e0b">
+  Demo Preview · 10 Questions · Start with Legacy to earn your Tier
+</div>
+
+<!-- ══ QUIZ ══ -->
+<div id="s-quiz" class="screen">
+  <div class="qz-nav">
+    <button onclick="quitQuiz()" style="background:transparent;border:1px solid var(--b3);border-radius:4px;padding:6px 10px;cursor:pointer;flex-shrink:0;transition:border-color .15s,color .15s;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--b3)';this.style.color='var(--muted)'">Not ready yet</button>
+    <div class="qz-nav-l">
+      <div class="qz-who">Assessment — <span id="qz-namespan"></span></div>
+      <div class="qz-prog-txt" id="qz-progtxt">Q1 of 40</div>
+    </div>
+    <div class="qz-score-wrap">
+      <div class="qz-score-n" id="qz-score">0</div>
+      <div class="qz-score-d">/ 40</div>
+    </div>
+  </div>
+  <div class="qz-track"><div class="qz-bar" id="qz-bar"></div></div>
+  <div class="qz-body" id="qz-body"></div>
+</div>
+
+<!-- ══ RESULT ══ -->
+<div id="s-result" class="screen">
+  <div class="r-nav">
+    <div class="r-nav-logo">Tier · Tip & Training Platform</div>
+    <div class="r-date" id="r-date"></div>
+  </div>
+  <div class="r-hero">
+    <div class="r-nameline">Result for <span id="r-name"></span></div>
+    <div class="r-ring-wrap">
+      <svg class="r-ring" viewBox="0 0 148 148">
+        <circle class="rg-bg" cx="74" cy="74" r="62"/>
+        <circle class="rg-fill" id="rg-fill" cx="74" cy="74" r="62"/>
+      </svg>
+      <div class="r-ring-in">
+        <div class="r-big" id="r-big">0</div>
+        <div class="r-den">/ 40</div>
+      </div>
+    </div>
+  </div>
+  <div class="r-verdict"><div id="r-verdict-inner"></div></div>
+  <div class="r-stats">
+    <div class="st-c"><div class="st-n" id="st-c" style="color:var(--green)">0</div><div class="st-l">Correct</div></div>
+    <div class="st-c"><div class="st-n" id="st-w" style="color:var(--red)">0</div><div class="st-l">Missed</div></div>
+    <div class="st-c"><div class="st-n" id="st-a" style="color:var(--gold)">0%</div><div class="st-l">Accuracy</div></div>
+  </div>
+  <div class="r-cats" id="r-cats"></div>
+  <div class="otm-wrap">
+    <div class="otm-panel">
+      <div class="otm-head">
+        <div class="otm-logo-box">OTM</div>
+        <div class="otm-head-txt">
+          <div class="otm-ttl">OnTheMonee — Tip Tier</div>
+          <div class="otm-sub">Awaiting management approval</div>
+        </div>
+      </div>
+      <div class="otm-fields" id="otm-fields"></div>
+      <div class="otm-pending"><div class="otm-dot"></div>Pending Manager Approval</div>
+      <div class="otm-note" id="otm-note"></div>
+      <div class="otm-btns">
+        <button class="ob ob-p" onclick="copyResult()">Copy for Manager</button>
+        <button class="ob ob-s" onclick="showMgr()">Manager Portal →</button>
+      </div>
+    </div>
+  </div>
+  <div class="r-retry" id="r-retry"></div>
+  <div class="r-mgr-link"><button class="r-mgr-btn" onclick="showMgr()">Management Portal</button></div>
+</div>
+
+<!-- ══ MANAGER ══ -->
+<!-- ══ MGR LOGIN ══ -->
+<div id="s-mgr-login" class="screen">
+  <div style="min-height:100vh;display:flex;flex-direction:column">
+    <!-- nav -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--b2)">
+      <div style="font-family:var(--fh);font-size:26px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.01em;text-transform:uppercase;cursor:pointer" onclick="show('s-venue')">TIER.</div>
+      <button onclick="show('s-venue')" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--b3);border-radius:3px;padding:5px 12px;cursor:pointer;transition:all .14s" onmouseover="this.style.color='var(--cream)';this.style.borderColor='var(--muted)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--b3)'">← Back</button>
+    </div>
+    <!-- content -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px">
+      <div class="ml-card">
+        <div class="ml-logo">TIER.</div>
+        <div class="ml-badge">Manager Access</div>
+        <div class="ml-heading">Manager Portal</div>
+        <div class="ml-sub">Enter your email and password to access approvals, tip uploads and staff management.</div>
+        <div class="v-grp" style="text-align:left;margin-bottom:10px">
+          <label class="v-lbl">Email</label>
+          <input class="v-inp" type="email" id="mgr-email-inp" placeholder="Enter your email" autocomplete="email"
+            onkeydown="if(event.key==='Enter') mgrLoginSubmit()">
+        </div>
+        <div class="v-grp" style="text-align:left;margin-bottom:12px">
+          <label class="v-lbl">Password</label>
+          <input class="v-inp" type="password" id="mgr-code-inp" placeholder="Enter your password" autocomplete="current-password"
+            onkeydown="if(event.key==='Enter') mgrLoginSubmit()">
+        </div>
+        <div class="ml-err" id="mgr-login-err">Incorrect email or password — please try again</div>
+        <button class="venue-btn" onclick="mgrLoginSubmit()">Enter Manager Portal →</button>
+        <button class="ml-back" style="margin-top:12px" onclick="sendPasswordReset()">Forgot password?</button>
+        <div class="venue-platform-note" style="margin-top:20px">
+          Staff? <a href="#" onclick="show('s-venue');return false;" style="color:#8fa87a;text-decoration:none">Log in here →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="s-mgr" class="screen">
+  <div class="m-nav">
+    <div class="m-nav-l">
+      <div class="m-nav-ttl" style="font-family:var(--fh);font-size:20px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.01em;text-transform:uppercase">TIER.</div>
+      <div class="m-badge">Restricted</div>
+      <div class="m-venue-tag" id="mgr-venue-tag">Venue</div>
+    </div>
+    <div class="m-nav-r">
+      <button class="m-back" onclick="mgrBack()">← Back</button>
+    </div>
+  </div>
+
+  <div class="m-body">
+    <!-- Tab bar -->
+    <div class="m-tabs">
+      <button class="m-tab active" onclick="mgrTab(this,'tab-approvals')">Approvals</button>
+      <button class="m-tab" onclick="mgrTab(this,'tab-tips')">Tip Upload</button>
+      <button class="m-tab" onclick="mgrTab(this,'tab-staff')">Staff List</button>
+      <button class="m-tab" onclick="mgrTab(this,'tab-otm')">OTM Guide</button>
+    </div>
+
+    <!-- ── TAB: APPROVALS ── -->
+    <div class="m-tab-content active" id="tab-approvals">
+      <div class="m-kpis">
+        <div class="kpi"><div class="kpi-n" id="kpi-p" style="color:var(--amber)">0</div><div class="kpi-l">Pending</div></div>
+        <div class="kpi"><div class="kpi-n" id="kpi-a" style="color:var(--green)">0</div><div class="kpi-l">Approved</div></div>
+        <div class="kpi"><div class="kpi-n" id="kpi-f" style="color:var(--green)">0</div><div class="kpi-l">Full 100%</div></div>
+        <div class="kpi"><div class="kpi-n" id="kpi-av" style="color:var(--gold)">—</div><div class="kpi-l">Avg Score</div></div>
+      </div>
+      <div class="m-sec">Pending Approval</div>
+      <div class="pend-list" id="pend-list"><div class="empty">No assessments pending</div></div>
+      <div class="m-sec">Approved — OTM Ready</div>
+      <div class="appr-list" id="appr-list"><div class="empty">No approved records yet</div></div>
+    </div>
+
+    <!-- ── TAB: TIP UPLOAD ── -->
+    <div class="m-tab-content" id="tab-tips">
+      <div class="tip-upload-panel">
+        <div class="tip-upload-head">
+          <div class="tip-upload-icon">💰</div>
+          <div>
+            <div class="tip-upload-title">Upload This Week's Tips</div>
+            <div class="tip-upload-sub">Enter each staff member's OTM gross tip amount for the week. Certified allocation is applied automatically.</div>
+          </div>
+        </div>
+        <div class="tip-upload-body">
+          <div class="tip-week-meta">
+            <div>
+              <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:5px">Week ending</div>
+              <input type="date" id="tip-week-end" class="tip-week-meta">
+            </div>
+            <div>
+              <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:5px">Pay date</div>
+              <input type="date" id="tip-pay-date" class="tip-week-meta">
+            </div>
+          </div>
+          <div class="m-sec">Staff · Gross Tip Amounts</div>
+          <div style="font-family:var(--fm);font-size:9px;color:var(--muted);margin-bottom:10px;letter-spacing:.05em">
+            Certified tier shown next to each name. Enter OTM gross amount — allocated amount is calculated automatically.
+          </div>
+          <div class="tip-staff-grid" id="tip-staff-grid"></div>
+          <div class="tip-total-bar">
+            <div class="tip-total-lbl">Total gross entered</div>
+            <div class="tip-total-val" id="tip-total-display">$0.00</div>
+          </div>
+          <button class="tip-save-btn" onclick="saveTipWeek()">Save &amp; Apply to Staff Records →</button>
+          <button class="tip-csv-btn" onclick="exportTipCSV()">Export CSV for OTM Upload</button>
+        </div>
+      </div>
+
+      <div class="m-sec">Previous Weeks</div>
+      <div class="wk-history" id="wk-history"><div class="empty">No weeks uploaded yet</div></div>
+    </div>
+
+    <!-- ── TAB: STAFF LIST ── -->
+    <div class="m-tab-content" id="tab-staff">
+      <div class="staff-list-panel">
+        <div class="staff-list-head">
+          <div class="staff-list-title">Staff Roster</div>
+          <button class="staff-add-btn" onclick="toggleAddStaff()">+ Add Staff</button>
+        </div>
+        <div class="staff-add-form" id="staff-add-form">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Add new staff member</div>
+          <div class="staff-add-row">
+            <input class="saf-inp" id="saf-name" type="text" placeholder="Full name">
+            <input class="saf-inp" id="saf-role" type="text" placeholder="Role (e.g. Wait Staff)">
+            <select class="saf-sel" id="saf-pool">
+              <option value="FOH">FOH</option>
+              <option value="BOH">BOH</option>
+            </select>
+            <button class="saf-add-btn" onclick="addStaffMember()">Add</button>
+          </div>
+        </div>
+        <div id="staff-roster-list"></div>
+      </div>
+    </div>
+
+    <!-- ── TAB: OTM GUIDE ── -->
+    <div class="m-tab-content" id="tab-otm">
+      <div class="how-panel">
+        <div class="how-hd">
+          <div class="how-logo">OTM</div>
+          <div class="how-ttl">Updating Tip Scaling After Approval</div>
+        </div>
+        <div class="how-steps">
+          <div class="how-step"><div class="how-n">1</div><div class="how-tx">Log in to the <strong>OnTheMonee employer portal</strong> at onthemonee.com/employer</div></div>
+          <div class="how-step"><div class="how-n">2</div><div class="how-tx">Go to <strong>Employees → Tip Pool Settings</strong> and find the staff member by name</div></div>
+          <div class="how-step"><div class="how-n">3</div><div class="how-tx">Update their <strong>tip allocation percentage</strong> to match the certified tier — 100%, 75%, or 50%</div></div>
+          <div class="how-step"><div class="how-n">4</div><div class="how-tx">Save. The new rate applies from the <strong>next distribution cycle</strong></div></div>
+          <div class="how-step"><div class="how-n">5</div><div class="how-tx">Return here and click <strong>Approve</strong> to log the change as your audit trail</div></div>
+          <div class="how-step"><div class="how-n">6</div><div class="how-tx">Use <strong>Tip Upload</strong> each week to record gross amounts — the platform tracks allocated vs gross automatically</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════
+// SUPABASE CONFIG
+// ════════════════════════════════════════════════
+const SUPABASE_URL = 'https://uhrsxqiksqvgjdksbxna.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_p_K8ZONW-YW16vvTlB5rsg_mEv_D5Hp';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Keep VENUES as fallback for question bank / local config
+// Venue data now comes from Supabase
+const VENUES = {};
+
+// ════════════════════════════════════════════════
+// QUESTION BANK (generic — replace with venue-specific content)
+// ════════════════════════════════════════════════
+const ALL_QUESTIONS = {
+  service: [
+    {cat:'service', q:'When a guest arrives, what is the very first priority?', options:['Offer the menu immediately','Acknowledge and greet them warmly — even if you\'re busy','Take their drink order','Seat them and walk away'], answer:1, exp:'Every guest must be acknowledged immediately and warmly — even if you\'re occupied.'},
+    {cat:'service', q:'When helping a guest to their seat, what must every team member do?', options:['Walk ahead and point','Pull out chairs and the table for every guest — every time','Simply gesture to the chair','Only assist elderly guests'], answer:1, exp:'Everyone pulls out chairs and tables for guests — every single time, without exception.'},
+    {cat:'service', q:'How should you hold a wine glass when carrying or presenting?', options:['By the bowl for warmth','By the base or stem only','With two hands','Whichever is comfortable'], answer:1, exp:'Always hold wine glasses by the stem or base — never the bowl.'},
+    {cat:'service', q:'What is the correct right-of-way order in the dining room?', options:['Senior staff first','Guests → food → beverages → full hands → exiting','Heaviest load first','Fastest mover'], answer:1, exp:'Guests always have right of way. Then: food → beverages → full hands → exiting.'},
+    {cat:'service', q:'What must be checked before dropping food to a table?', options:['That the chef approved','That correct cutlery is already set — if not, do not drop','That all guests are looking','That sommelier has finished'], answer:1, exp:'If the correct cutlery is not set, you cannot drop food under any circumstances.'},
+    {cat:'service', q:'What is the 50% rule when dropping food?', options:['Drop if 50% of food is ready','If 50% of guests are away, do not drop — return to kitchen','Drop when 50% of table is seated','Split 50/50 between courses'], answer:1, exp:'If 50% of guests are away from the table, return the food to the kitchen.'},
+    {cat:'service', q:'What do you call out when approaching a blind corner?', options:['"Excuse me"','"Coming through"','"Corner"','"Behind"'], answer:2, exp:'Always call "Corner" at a blind corner — without exception.'},
+    {cat:'service', q:'In which direction do you move around the table when clearing?', options:['Anti-clockwise','Clockwise','Most efficient route','Away from kitchen'], answer:1, exp:'Always move clockwise when clearing. Consistency creates seamlessness.'},
+    {cat:'service', q:'Can you carry clean and used items on the same tray?', options:['Yes if careful','No — never mix clean and used on same tray','Yes with covers','Only when short-staffed'], answer:1, exp:'Never carry clean and used items on the same tray.'},
+    {cat:'service', q:'What does "The Swan" mean in fine dining service?', options:['Swan-shaped napkin folds','Effortless on the surface — calm no matter what\'s happening behind the scenes','A specific wine technique','A signature dessert'], answer:1, exp:'The Swan: effortless on the surface, calm and natural no matter what is happening behind the scenes.'},
+    {cat:'service', q:'How many dirty glasses can be removed without a service tray?', options:['None — always use a tray','One — with a service cloth','Two — one each hand','Three if balanced'], answer:1, exp:'One dirty glass may be removed with a service cloth. More than one — always use a service tray.'},
+    {cat:'service', q:'What should you do if food cannot be dropped immediately at a table?', options:['Hold it nearby','Return to the pass right away — food never waits in the dining room','Put it on nearest surface','Ask someone else to wait with it'], answer:1, exp:'Food should never wait in the dining room. Return to the pass immediately.'},
+    {cat:'service', q:'When taking a food order, you should:', options:['Memorise it to seem professional','Always write everything down — accuracy matters more than impression','Use POS handheld only','Ask head waiter to take it'], answer:1, exp:'Always write orders down. Accuracy matters more than the impression of a good memory.'},
+    {cat:'service', q:'What is the phone policy during service?', options:['Phones on silent in pocket','All mobile phones OFF during service','Phones allowed for POS lookups','Phones permitted on breaks only'], answer:1, exp:'All mobile phones OFF during service. Breaches result in disciplinary action.'},
+    {cat:'service', q:'Water service at a fine dining level means:', options:['Refill when asked','Water levels must always be maintained — guests should never have to ask','Top up between courses only','Offer once per seating'], answer:1, exp:'Water always maintained is a Pillar of Luxury — anticipate needs before guests have to ask.'},
+    {cat:'service', q:'When presenting wine, what is the first thing you do?', options:['Open the bottle','Present the label to the person who ordered and confirm the wine','Pour a taste for everyone','Ask if they\'d like ice'], answer:1, exp:'Always present the label to the person who ordered and confirm wine name before opening.'},
+    {cat:'service', q:'After opening wine, the correct next step is:', options:['Pour for all guests','Pour a small taste for the person who ordered, wait for approval','Place on table and let guests pour','Ask if anyone wants a top up'], answer:1, exp:'Pour a small tasting measure for the person who ordered. Wait for approval before pouring for the table.'},
+    {cat:'service', q:'When clearing a table of more than 3 guests, you should:', options:['Clear one by one','Never clear alone — the whole table must be cleared in one go as a team','Ask guests to pass plates','Use a trolley'], answer:1, exp:'Never clear a table of more than 3 guests alone. The entire table must be cleared in one go.'},
+    {cat:'service', q:'What order are food orders typically taken at the table?', options:['Clockwise from nearest guest','Ladies first, then gentlemen, finishing with the host','Person who looks most ready','Alphabetically by dish'], answer:1, exp:'Traditional order: ladies first, then gentlemen, finishing with the host — always guided by the table\'s dynamic.'},
+    {cat:'service', q:'If a guest has a severe allergy, the correct procedure is:', options:['Note on docket only','Flag on docket, communicate verbally to kitchen AND inform a manager','Avoid that ingredient','Ask guest to choose a safe dish'], answer:1, exp:'Flag on docket, communicate verbally to kitchen, AND inform a manager. Never handle allergy situations alone.'},
+  ],
+  hospitality: [
+    {cat:'hospitality', q:'What is upselling in a restaurant context?', options:['Charging more for the same item','Suggesting higher-value items or additions that enhance the guest\'s experience','Lying about dish quality','Pushing items the kitchen needs to clear'], answer:1, exp:'Upselling done well enhances the guest\'s experience — suggest premium options, add-ons or pairings that genuinely suit them.'},
+    {cat:'hospitality', q:'A guest complains their steak is overcooked. The first step is:', options:['Apologise and blame the kitchen','Apologise sincerely, take the plate and inform a manager or chef immediately','Offer a discount','Suggest they order something else'], answer:1, exp:'Apologise sincerely and take immediate action. Inform a manager or head chef — never leave a guest with a problem.'},
+    {cat:'hospitality', q:'What does "mise en place" mean?', options:['The dessert course','Everything in its place — preparation and setup before service','A French garnish technique','The table layout diagram'], answer:1, exp:'"Mise en place" is French for "everything in its place" — thorough preparation before service begins.'},
+    {cat:'hospitality', q:'What is a tasting menu?', options:['A free sample menu','A multi-course menu where the chef selects each course to showcase the kitchen\'s range','A reduced-price lunch menu','A menu for dietary restrictions'], answer:1, exp:'A tasting menu is a multi-course progression curated by the chef — typically 5–10+ courses.'},
+    {cat:'hospitality', q:'What does FOH stand for?', options:['Front of House — the dining room and guest-facing team','Full Order Handling','Front Office Hospitality','Flow of Hours'], answer:0, exp:'FOH = Front of House. BOH = Back of House (kitchen). These pools determine tip allocation splits.'},
+    {cat:'hospitality', q:'What is a sommelier\'s primary role?', options:['Managing the front desk','Expert wine selection, service and pairing recommendations for guests','Head of the kitchen pass','Running the bar'], answer:1, exp:'A sommelier is a trained wine expert responsible for the wine list, service, cellaring and pairing recommendations.'},
+    {cat:'hospitality', q:'What does "86\'d" mean in a restaurant?', options:['A special dish','An item is sold out or unavailable','A table of 86 guests','A kitchen code for medium-rare'], answer:1, exp:'"86\'d" means an item is no longer available — sold out, out of stock, or removed from the menu for the night.'},
+    {cat:'hospitality', q:'What is the "bill drop" etiquette at a fine dining restaurant?', options:['Leave the bill face-up prominently','Present the bill discreetly when requested — never rush guests','Ask repeatedly if they\'re ready','Slip it under the plate'], answer:1, exp:'The bill is presented discreetly and only when requested. Never rush guests or hover after the bill is dropped.'},
+    {cat:'hospitality', q:'What is the correct response if you don\'t know the answer to a guest\'s question?', options:['Guess confidently','Apologise and say you don\'t know, then find out immediately and return','Tell them to look it up','Direct them to another staff member without following up'], answer:1, exp:'Never guess. Apologise, acknowledge you don\'t know, then find the answer and return promptly.'},
+    {cat:'hospitality', q:'What is a "pivot" in table service?', options:['The rotation point for carrying trays','A system for delivering food to the correct guest without asking who ordered what','A wine pouring technique','The staff break schedule'], answer:1, exp:'The pivot system tracks seat positions from a fixed pivot point so food reaches the right guest without asking — essential in fine dining.'},
+    {cat:'hospitality', q:'What is the correct way to crumb a table between courses?', options:['Use a napkin','Use a crumber or folded side plate to sweep crumbs off the tablecloth efficiently and discreetly','Leave it for later','Ask the guest to move their glass'], answer:1, exp:'Crumbing is done between courses with a proper crumber or folded cloth — quietly, quickly and without disrupting guests.'},
+    {cat:'hospitality', q:'How should napkins be handled when a guest leaves the table temporarily?', options:['Leave it as is','Fold the napkin neatly and place it to the left of the cover','Remove the napkin completely','Ask the guest what they prefer'], answer:1, exp:'When a guest excuses themselves, fold their napkin neatly and place it to the left of their cover.'},
+    {cat:'hospitality', q:'What is the key principle of anticipatory service?', options:['Memorising every guest\'s name','Predicting and fulfilling guest needs before they have to ask','Offering every possible menu item','Checking in every five minutes'], answer:1, exp:'Anticipatory service means reading the table and fulfilling needs before guests have to ask — the hallmark of fine dining.'},
+    {cat:'hospitality', q:'What does it mean to "run" a dish?', options:['Cook it quickly','Carry food from the kitchen pass to the correct table','Sprint to another restaurant','A trial dish being tested'], answer:1, exp:'Running a dish means carrying it from the pass to the guest — a key task for all floor staff, not just the section waiter.'},
+    {cat:'hospitality', q:'What is a "hard sell" approach in hospitality and why is it problematic?', options:['Promoting tonight\'s specials with enthusiasm','Aggressively pushing high-margin items regardless of the guest\'s interest — damages trust and experience','Selling the entire menu','Recommending the most expensive item always'], answer:1, exp:'A hard sell approach damages the guest\'s trust and comfort. Recommendations should feel genuine and guest-focused, not commission-driven.'},
+    {cat:'hospitality', q:'What is the role of the maître d\'?', options:['Head of the kitchen','Senior front-of-house manager overseeing the dining room, reservations and service flow','The wine director','The dessert specialist'], answer:1, exp:'The maître d\' is the senior dining room manager — responsible for reservations, guest experience, team direction and service standards.'},
+    {cat:'hospitality', q:'What is "table presence" in service?', options:['The physical layout of the table','How a server carries themselves, communicates and makes guests feel during table interactions','The size of the table','How quickly you get to the table'], answer:1, exp:'Table presence is how you carry yourself, communicate, make eye contact and make guests feel during every visit to the table.'},
+    {cat:'hospitality', q:'How should you approach a table that is deep in conversation?', options:['Interrupt loudly to get attention','Approach quietly, wait for a natural pause or make gentle eye contact before speaking','Stand behind them silently for as long as needed','Send another staff member'], answer:1, exp:'Always wait for a natural pause or use gentle eye contact. Never interrupt a conversation mid-flow.'},
+    {cat:'hospitality', q:'What does "turn time" mean for a restaurant?', options:['How fast the kitchen can cook','How long a table takes from seating to departure — affects how many covers a restaurant can serve','The staff rotation schedule','The time between courses'], answer:1, exp:'Turn time is the total time a table is occupied. Faster turn times = more covers, more revenue — but never at the expense of guest experience.'},
+    {cat:'hospitality', q:'What is the correct response when a guest asks for a recommendation?', options:['Always recommend the most expensive item','Ask one clarifying question about their preference, then give a confident, genuine recommendation','Say everything is great','Say you haven\'t tried the dishes yourself'], answer:1, exp:'A great recommendation starts with one question — understanding their preference — then gives a confident, specific, genuine suggestion.'},
+  ],
+  beverage: [
+    {cat:'beverage', q:'What is the difference between brut and extra brut Champagne?', options:['Brut is sweeter than extra brut','Extra brut is drier (less dosage) than brut','They are identical','Brut is from France, extra brut is not'], answer:1, exp:'Extra brut has less added sugar (dosage) than brut — making it drier and more austere.'},
+    {cat:'beverage', q:'What temperature should red wine generally be served at?', options:['Refrigerator cold (4–7°C)','Slightly below room temperature (16–18°C)','Warm room temperature (22°C+)','The same as white wine'], answer:1, exp:'Most red wines are best at 16–18°C — "cellar temperature" rather than warm room temperature.'},
+    {cat:'beverage', q:'What is the primary purpose of decanting a wine?', options:['To make it look impressive','To aerate the wine and/or separate sediment from older bottles','To chill it faster','To remove sulphites'], answer:1, exp:'Decanting serves two purposes: aerating young wines to open them up, and separating sediment in older bottles.'},
+    {cat:'beverage', q:'What does "dry" mean when describing a wine?', options:['Low alcohol','Little to no residual sugar — not sweet','Made in a dry climate','Light-bodied'], answer:1, exp:'"Dry" means the wine has little to no residual sugar — fermentation has converted most sugars to alcohol.'},
+    {cat:'beverage', q:'What is the correct pour for a glass of wine in a restaurant?', options:['Fill the glass to the top','Fill to approximately one-third — leaving room to swirl and release aroma','Half full','Whatever the guest requests'], answer:1, exp:'A wine glass is typically filled to around one-third — this allows the wine to breathe and the guest to swirl without spilling.'},
+    {cat:'beverage', q:'What is a negroni made from?', options:['Vodka, vermouth, olive brine','Gin, Campari, sweet vermouth in equal parts','Rum, lime, mint, sugar','Bourbon, bitters, sugar, orange'], answer:1, exp:'A Negroni is equal parts gin, Campari and sweet vermouth — stirred and served over ice with an orange peel.'},
+    {cat:'beverage', q:'What does "tannin" refer to in wine?', options:['The acidity of the wine','Naturally occurring compounds from grape skins/seeds that create dryness and structure in the mouth','The sweetness level','The colour pigment'], answer:1, exp:'Tannins are polyphenol compounds from grape skins and seeds (and oak) that create that drying, gripping sensation in the mouth — more prominent in red wines.'},
+    {cat:'beverage', q:'What is the correct way to open a bottle of sparkling wine or Champagne?', options:['Shake and pop for effect','Keep the thumb over the cork, remove the cage, twist the bottle not the cork — slow and controlled','Twist the cork fast','Use a Champagne saber'], answer:1, exp:'Keep your thumb over the cork at all times, remove the cage, then twist the bottle slowly while holding the cork — never pop loudly in a fine dining setting.'},
+    {cat:'beverage', q:'What is the difference between espresso and long black?', options:['They\'re identical','A long black is espresso added to hot water — more volume, same intensity','A long black has milk','Espresso is served cold'], answer:1, exp:'A long black is made by pouring a double shot over hot water. An espresso is a concentrated shot alone.'},
+    {cat:'beverage', q:'What glass would you typically use for a Martini?', options:['Highball glass','Rocks glass','Classic coupe or V-shaped Martini glass','Wine glass'], answer:2, exp:'Martinis are served in a classic V-shaped Martini glass or a coupe — chilled, and without ice in the glass.'},
+  ]
+};
+
+// ════════════════════════════════════════════════
+// PLATFORM STATE
+// ════════════════════════════════════════════════
+let currentVenue = null;   // { id, name, slug }
+let currentUser  = null;   // Supabase auth user
+let currentRole  = null;   // 'staff' | 'manager'
+let venueStaff   = [];
+let sName='', sRole='', sPool='', sTips=0;
+let isDemo=false, quizMode='legacy';
+let QS={qs:[],idx:0,score:0,answered:false,cats:{}};
+let lastRes=null;
+
+// ── UTILS ──
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function toast(msg,d=2300){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),d); }
+function fmtDate(ts){ return new Date(ts).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}); }
+function fmtAUD(n){ return '$'+(+n||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]; } return b; }
+
+function getTier(score, total){
+  const pct = Math.round(score/total*100);
+  if(pct>=90) return {key:'full',pct:'100%',label:'Expert — Full Allocation',cls:'vc-full',col:'var(--green)',
+    desc:'Outstanding. Expert-level knowledge demonstrated. OTM allocation recommended at 100%.'};
+  if(pct>=70) return {key:'75',pct:'75%',label:'Proficient — Standard Allocation',cls:'vc-75',col:'var(--amber)',
+    desc:'Good performance with a solid foundation. OTM allocation recommended at 75%.'};
+  return {key:'50',pct:'50%',label:'Development Level',cls:'vc-50',col:'var(--muted)',
+    desc:'Building your knowledge. 50% allocation applies. Retake when ready.'};
+}
+
+// ── SUPABASE DATA HELPERS ──
+async function getVenueStaff(){
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('staff').select('*').eq('venue_id', currentVenue.id).order('name');
+  if(error){ console.error(error); return []; }
+  return data;
+}
+
+async function getVenuePending(){
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('assessments').select('*')
+    .eq('venue_id', currentVenue.id)
+    .in('status',['pending','declined'])
+    .order('submitted_at', {ascending:false});
+  if(error){ console.error(error); return []; }
+  return data.map(r=>({
+    id:r.id, name:r.staff_name, role:'', pool:'', quizMode:r.quiz_mode,
+    score:r.score, total:r.total, pct:r.pct, tier:r.tier, tierPct:r.tier_pct,
+    tierLabel:r.tier_label, status:r.status, date:new Date(r.submitted_at).getTime()
+  }));
+}
+
+async function getVenueApproved(){
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('assessments').select('*')
+    .eq('venue_id', currentVenue.id)
+    .eq('status','approved')
+    .order('approved_at', {ascending:false});
+  if(error){ console.error(error); return []; }
+  return data.map(r=>({
+    id:r.id, name:r.staff_name, role:'', pool:'', quizMode:r.quiz_mode,
+    score:r.score, total:r.total, pct:r.pct, tier:r.tier, tierPct:r.tier_pct,
+    tierLabel:r.tier_label, status:r.status, date:new Date(r.submitted_at).getTime(),
+    approvedAt:r.approved_at ? new Date(r.approved_at).getTime() : null
+  }));
+}
+
+async function getVenueCerts(){
+  if(!currentVenue) return {};
+  const {data,error} = await sb.from('assessments').select('*')
+    .eq('venue_id', currentVenue.id)
+    .eq('status','approved');
+  if(error){ console.error(error); return {}; }
+  const certs = {};
+  data.forEach(r=>{
+    if(!certs[r.staff_name]) certs[r.staff_name]={};
+    const key = r.quiz_mode === 'master' ? 'master' : 'legacy';
+    certs[r.staff_name][key] = {score:r.score, total:r.total, pct:r.pct, date:new Date(r.approved_at||r.submitted_at).getTime()};
+  });
+  return certs;
+}
+
+async function getVenueWeeks(){
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('tip_weeks').select('*')
+    .eq('venue_id', currentVenue.id)
+    .order('week_end');
+  if(error){ console.error(error); return []; }
+  return data.map(w=>({
+    id:w.id, weekEnd:w.week_end, payDate:w.pay_date,
+    entries:w.entries||{}, total:w.total, savedAt:new Date(w.saved_at).getTime()
+  }));
+}
+
+async function savePendingResult(result){
+  if(!currentVenue) return;
+  // Remove existing pending/declined for same staff+mode
+  await sb.from('assessments').delete()
+    .eq('venue_id', currentVenue.id)
+    .eq('staff_name', result.name)
+    .eq('quiz_mode', result.quizMode)
+    .in('status',['pending','declined']);
+  // Insert new
+  const {error} = await sb.from('assessments').insert({
+    venue_id: currentVenue.id,
+    staff_name: result.name,
+    quiz_mode: result.quizMode,
+    score: result.score,
+    total: result.total,
+    pct: result.pct,
+    tier: result.tier,
+    tier_pct: result.tierPct,
+    tier_label: result.tierLabel,
+    status: 'pending'
+  });
+  if(error) console.error('Save assessment error:', error);
+}
+
+async function approveAssessment(id){
+  const {data,error} = await sb.from('assessments')
+    .update({status:'approved', approved_at: new Date().toISOString()})
+    .eq('id', id)
+    .select()
+    .single();
+  if(error){ console.error(error); return null; }
+  return data;
+}
+
+async function declineAssessment(id){
+  const {error} = await sb.from('assessments')
+    .update({status:'declined'})
+    .eq('id', id);
+  if(error) console.error(error);
+}
+
+async function saveWeek(weekData){
+  if(!currentVenue) return;
+  const {error} = await sb.from('tip_weeks').upsert({
+    venue_id: currentVenue.id,
+    week_end: weekData.weekEnd,
+    pay_date: weekData.payDate || null,
+    entries: weekData.entries,
+    total: weekData.total,
+    saved_at: new Date().toISOString()
+  }, {onConflict:'venue_id,week_end'});
+  if(error) console.error('Save week error:', error);
+}
+
+async function saveStaffMember(member){
+  if(!currentVenue) return;
+  const {error} = await sb.from('staff').insert({
+    venue_id: currentVenue.id,
+    name: member.name,
+    role: member.role,
+    pool: member.pool
+  });
+  if(error) console.error('Add staff error:', error);
+}
+
+async function removeStaffById(id){
+  const {error} = await sb.from('staff').delete().eq('id', id);
+  if(error) console.error('Remove staff error:', error);
+}
+
+// ── AUTH: STAFF LOGIN ──
+function scrollToLogin(){
+  show('s-login');
+  initLoginSelect(); // async but non-blocking — populates dropdown in background
+  setTimeout(()=>document.getElementById('venue-select').focus(),200);
+}
+
+async function initLoginSelect(){
+  const sel = document.getElementById('venue-select');
+  if(!sel) return;
+  sel.innerHTML = '<option value="">— Loading venues... —</option>';
+  sel.disabled = true;
+  document.getElementById('venue-btn').disabled = true;
+  try {
+    const {data,error} = await sb.from('venues').select('id,name,slug').order('name');
+    if(error) throw error;
+    if(!data || !data.length){ sel.innerHTML='<option value="">— No venues found —</option>'; sel.disabled=false; return; }
+    sel.innerHTML = '<option value="">— Select venue —</option>';
+    data.forEach(v=>{
+      const o = document.createElement('option');
+      o.value = v.slug; o.textContent = v.name; o.dataset.id = v.id;
+      sel.appendChild(o);
+    });
+    sel.disabled = false;
+  } catch(e) {
+    console.error('Venue load error:', e);
+    sel.innerHTML='<option value="">— Error loading venues —</option>';
+    sel.disabled = false;
+  }
+  sel.onchange = checkVenueReady;
+  document.getElementById('venue-code').oninput = checkVenueReady;
+  document.getElementById('venue-code').onkeydown = e=>{ if(e.key==='Enter') venueLogin(); };
+  document.getElementById('venue-err').style.display='none';
+}
+
+function checkVenueReady(){
+  const v = document.getElementById('venue-select').value;
+  const c = document.getElementById('venue-code').value;
+  document.getElementById('venue-btn').disabled = !(v && c);
+  document.getElementById('venue-err').style.display='none';
+}
+
+async function venueLogin(){
+  const slug = document.getElementById('venue-select').value;
+  const code = document.getElementById('venue-code').value.trim().toLowerCase();
+  if(!slug || !code){ return; }
+
+  // Look up venue and check staff_code
+  const {data, error} = await sb.from('venues').select('*').eq('slug', slug).single();
+  if(error || !data){
+    document.getElementById('venue-err').style.display='block'; return;
+  }
+  if(!data.staff_code || data.staff_code.toLowerCase() !== code){
+    document.getElementById('venue-err').style.display='block'; return;
+  }
+  await loadVenueBySlug(slug);
+}
+
+async function loadDemoVenue(){
+  await loadVenueBySlug('demo');
+}
+
+async function loadVenueBySlug(slug){
+  const {data,error} = await sb.from('venues').select('*').eq('slug',slug).single();
+  if(error||!data){ toast('Venue not found'); return; }
+  currentVenue = data;
+  venueStaff = await getVenueStaff();
+  document.getElementById('venue-name-badge').textContent = data.name;
+  document.getElementById('mgr-venue-tag').textContent = data.name;
+  await populateStaffDropdown();
+  show('s-land');
+}
+
+async function signOut(){
+  await sb.auth.signOut();
+  currentVenue=null; currentUser=null; currentRole=null;
+  venueStaff=[]; sName=''; sRole=''; sPool=''; sTips=0;
+  const vc=document.getElementById('venue-code');
+  const ve=document.getElementById('venue-err');
+  const vb=document.getElementById('venue-btn');
+  const vs=document.getElementById('venue-select');
+  if(vc) vc.value='';
+  if(ve) ve.style.display='none';
+  if(vb) vb.disabled=true;
+  if(vs) vs.value='';
+  show('s-venue');
+}
+
+// ── AUTH: MANAGER LOGIN ──
+function openMgrLogin(){
+  const vci=document.getElementById('mgr-email-inp');
+  const mci=document.getElementById('mgr-code-inp');
+  const err=document.getElementById('mgr-login-err');
+  if(vci) vci.value='';
+  if(mci) mci.value='';
+  if(err) err.style.display='none';
+  show('s-mgr-login');
+}
+
+async function mgrLoginSubmit(){
+  const email    = document.getElementById('mgr-email-inp').value.trim().toLowerCase();
+  const password = document.getElementById('mgr-code-inp').value.trim();
+  const err = document.getElementById('mgr-login-err');
+  if(!email || !password){ err.style.display='block'; return; }
+
+  // Manager login: real Supabase Auth email + password
+  const {data, error} = await sb.auth.signInWithPassword({email, password});
+
+  if(error){ err.style.display='block'; return; }
+
+  // Verify this user is a manager
+  const {data:profile} = await sb.from('profiles').select('*,venues(*)').eq('id', data.user.id).single();
+  if(!profile || profile.role !== 'manager'){ err.style.display='block'; await sb.auth.signOut(); return; }
+
+  currentUser = data.user;
+  currentRole = 'manager';
+  currentVenue = profile.venues;
+  venueStaff = await getVenueStaff();
+  document.getElementById('mgr-venue-tag').textContent = currentVenue.name;
+
+  err.style.display='none';
+  await renderMgr();
+  show('s-mgr');
+}
+
+function mgrBack(){ show('s-venue'); }
+function goBack(){ lastRes?show('s-result'):show('s-land'); }
+
+// ── RESET PASSWORD ──
+async function sendPasswordReset(){
+  const email = prompt('Enter your email address to receive a reset link:');
+  if(!email) return;
+  const {error} = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.href
+  });
+  if(error){ toast('Could not send reset email — check address'); return; }
+  toast('Reset link sent — check your email ✓', 4000);
+}
+
+// ── STAFF ROSTER ──
+async function populateStaffDropdown(){
+  const sel = document.getElementById('sel-name');
+  sel.innerHTML = '<option value="">— Select name —</option>';
+  venueStaff = await getVenueStaff();
+  const weeks = await getVenueWeeks();
+  const lastWeek = weeks.length ? weeks[weeks.length-1] : null;
+  venueStaff.forEach(s=>{
+    const o = document.createElement('option');
+    o.value = s.name;
+    o.dataset.role = s.role || '';
+    o.dataset.pool = s.pool || '';
+    o.dataset.sid  = s.id;
+    const tips = lastWeek ? (lastWeek.entries[s.name]||0) : 0;
+    o.dataset.tips = tips;
+    o.textContent = s.name;
+    sel.appendChild(o);
+  });
+  sel.onchange = async function(){
+    const o = this.selectedOptions[0];
+    if(!o||!o.value){
+      document.getElementById('test-cards').style.display='none';
+      document.getElementById('staff-progress').style.display='none';
+      return;
+    }
+    document.getElementById('inp-role').value = o.dataset.role||'';
+    document.getElementById('inp-pool').value = o.dataset.pool||'';
+    const t = parseFloat(o.dataset.tips||'0');
+    const weeks = await getVenueWeeks();
+    const lw = weeks.length ? weeks[weeks.length-1] : null;
+    document.getElementById('inp-tips').value = t>0 && lw
+      ? fmtAUD(t)+' (wk ending '+lw.weekEnd+')'
+      : 'No tips uploaded yet';
+    await updateCards(o.value);
+    await renderStaffProgress(o.value);
+  };
+}
+
+// ── CERT HELPERS ──
+async function hasLegacyPass(name){
+  const c = await getVenueCerts();
+  return c[name] && c[name].legacy && c[name].legacy.pct >= 70;
+}
+async function hasMasterPass(name){
+  const c = await getVenueCerts();
+  return c[name] && c[name].master && c[name].master.pct >= 90;
+}
+
+async function getCertifiedTier(name){
+  if(await hasMasterPass(name)) return {key:'full',pct:'100%',mult:1};
+  if(await hasLegacyPass(name)) return {key:'75',pct:'75%',mult:0.75};
+  return {key:'50',pct:'50%',mult:0.5};
+}
+
+// ── STAFF PROGRESS TRACKER ──
+async function renderStaffProgress(name){
+  const wrap = document.getElementById('staff-progress');
+  const body = document.getElementById('sp-body');
+  if(!name){ wrap.style.display='none'; return; }
+
+  const pending = await getVenuePending();
+  const certs   = await getVenueCerts();
+
+  function stageStatus(mode){
+    const cert = certs[name]?.[mode];
+    if(cert) return {status:'approved', score:cert.score, total:cert.total, pct:cert.pct, date:cert.date};
+    const pend = pending.find(r => r.name === name && r.quizMode === mode);
+    if(pend) return {status: pend.status === 'declined' ? 'declined' : 'pending', score:pend.score, total:pend.total, pct:pend.pct, date:pend.date};
+    return {status:'not-started'};
+  }
+
+  const stages = [
+    {key:'legacy', label:'Stage 1 · Legacy', target:'75% allocation'},
+    {key:'master', label:'Stage 2 · Master', target:'100% allocation'},
+  ];
+
+  let html = '';
+  stages.forEach(st => {
+    const s = stageStatus(st.key);
+    const barPct = s.score && s.total ? Math.round((s.score/s.total)*100) : 0;
+    const barClass = s.status === 'approved' ? '' : s.status === 'declined' ? ' declined' : ' pending';
+    const pillLabel = {'approved':'✓ Approved','pending':'⏳ Awaiting approval','declined':'✗ Declined','not-started':'Not started'}[s.status];
+    html += `<div class="sp-stage">
+      <div class="sp-stage-label">${st.label} · ${st.target}</div>
+      ${s.status !== 'not-started' ? `<div class="sp-bar-wrap"><div class="sp-bar${barClass}" style="width:${barPct}%"></div></div>` : ''}
+      <div class="sp-status-row">
+        <span class="sp-status-pill ${s.status}">${pillLabel}</span>
+        ${s.status !== 'not-started' ? `<span class="sp-score">${s.score}/${s.total} (${s.pct}%)</span>` : ''}
+      </div>
+      ${s.date ? `<div class="sp-date" style="margin-top:5px">${s.status==='approved'?'Approved':'Submitted'} ${fmtDate(s.date)}</div>` : ''}
+    </div>`;
+  });
+
+  body.innerHTML = html || '<div class="sp-empty">No submissions yet</div>';
+  wrap.style.display = 'block';
+}
+
+// ── UPDATE TEST CARDS ──
+async function updateCards(name){
+  const cards = document.getElementById('test-cards');
+  if(!name){ cards.style.display='none'; return; }
+  cards.style.display='block';
+  const certs = await getVenueCerts();
+  const pending = await getVenuePending();
+  const legacyDone = !!(certs[name]?.legacy && certs[name].legacy.pct >= 70);
+  const masterDone = !!(certs[name]?.master && certs[name].master.pct >= 90);
+  const lc = certs[name]?.legacy;
+  const mc = certs[name]?.master;
+  const legDeclined = !legacyDone && pending.find(r=>r.name===name && r.quizMode==='legacy' && r.status==='declined');
+  const masDeclined = !masterDone && pending.find(r=>r.name===name && r.quizMode==='master' && r.status==='declined');
+
+  const legCard = document.getElementById('card-legacy');
+  if(legacyDone){
+    legCard.style.borderColor='rgba(34,197,94,.25)'; legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
+    document.getElementById('legacy-title').textContent='Stage 1 · Legacy ✓';
+    document.getElementById('legacy-title').style.color='var(--green)';
+    document.getElementById('legacy-sub').textContent='Passed — '+lc.score+'/'+lc.total+' ('+lc.pct+'%) · '+fmtDate(lc.date)+' · Retake available';
+    document.getElementById('legacy-sub').style.color='var(--green)';
+    document.getElementById('legacy-badge').textContent='Retake';
+    document.getElementById('legacy-badge').style.cssText='background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.2)';
+  } else if(legDeclined){
+    legCard.style.borderColor='rgba(239,68,68,.3)'; legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
+    document.getElementById('legacy-title').textContent='Stage 1 · Legacy — Declined';
+    document.getElementById('legacy-title').style.color='var(--red)';
+    document.getElementById('legacy-sub').textContent='Your submission was not approved. You can retake the test when ready.';
+    document.getElementById('legacy-sub').style.color='rgba(239,68,68,.7)';
+    document.getElementById('legacy-badge').textContent='Try Again →';
+    document.getElementById('legacy-badge').style.cssText='background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25)';
+  } else {
+    legCard.style.borderColor='var(--b3)'; legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
+    document.getElementById('legacy-title').textContent='Stage 1 · Legacy';
+    document.getElementById('legacy-title').style.color='var(--cream)';
+    document.getElementById('legacy-sub').textContent='40 questions · Foundational knowledge · Unlocks 75%';
+    document.getElementById('legacy-sub').style.color='var(--muted2)';
+    document.getElementById('legacy-badge').textContent='Start →';
+    document.getElementById('legacy-badge').style.cssText='background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2)';
+  }
+
+  const masCard = document.getElementById('card-master');
+  if(masterDone){
+    masCard.style.borderColor='rgba(34,197,94,.25)'; masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
+    document.getElementById('master-title').textContent='Stage 2 · Master ✓';
+    document.getElementById('master-title').style.color='var(--green)';
+    document.getElementById('master-sub').textContent='Passed — '+mc.score+'/'+mc.total+' ('+mc.pct+'%) · '+fmtDate(mc.date)+' · Retake available';
+    document.getElementById('master-sub').style.color='var(--green)';
+    document.getElementById('master-badge').textContent='Retake';
+    document.getElementById('master-badge').style.cssText='background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.2)';
+  } else if(masDeclined){
+    masCard.style.borderColor='rgba(239,68,68,.3)'; masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
+    document.getElementById('master-title').textContent='Stage 2 · Master — Declined';
+    document.getElementById('master-title').style.color='var(--red)';
+    document.getElementById('master-sub').textContent='Your submission was not approved. You can retake the test when ready.';
+    document.getElementById('master-sub').style.color='rgba(239,68,68,.7)';
+    document.getElementById('master-badge').textContent='Try Again →';
+    document.getElementById('master-badge').style.cssText='background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25)';
+  } else if(legacyDone){
+    masCard.style.borderColor='rgba(122,158,126,.2)'; masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
+    document.getElementById('master-title').textContent='Stage 2 · Master';
+    document.getElementById('master-title').style.color='var(--cream)';
+    document.getElementById('master-sub').textContent='100 questions · Deep mastery · Unlocks 100%';
+    document.getElementById('master-sub').style.color='var(--muted2)';
+    document.getElementById('master-badge').textContent='Start →';
+    document.getElementById('master-badge').style.cssText='background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2)';
+  } else {
+    masCard.style.borderColor='var(--b2)'; masCard.style.opacity='.4'; masCard.style.pointerEvents='none';
+    document.getElementById('master-title').textContent='Stage 2 · Master';
+    document.getElementById('master-title').style.color='var(--muted)';
+    document.getElementById('master-sub').textContent='Complete Legacy first to unlock';
+    document.getElementById('master-sub').style.color='var(--muted)';
+    document.getElementById('master-badge').textContent='Locked';
+    document.getElementById('master-badge').style.cssText='background:rgba(90,90,90,.08);color:var(--muted);border:1px solid var(--b3)';
+  }
+}
+
+async function clearDeclined(mode){
+  if(!currentVenue || !sName) return;
+  await sb.from('assessments').delete()
+    .eq('venue_id', currentVenue.id)
+    .eq('staff_name', sName)
+    .eq('quiz_mode', mode)
+    .eq('status','declined');
+}
+
+// ── MANAGER PORTAL ──
+function showMgr(){ show('s-mgr-login'); }
+
+async function renderMgr(){
+  const pending  = await getVenuePending();
+  const approved = await getVenueApproved();
+  const all = [...pending,...approved];
+  document.getElementById('kpi-p').textContent = pending.filter(r=>r.status==='pending').length;
+  document.getElementById('kpi-a').textContent = approved.length;
+  document.getElementById('kpi-f').textContent = all.filter(r=>r.tier==='full').length;
+  const sc = all.map(r=>r.pct).filter(Boolean);
+  document.getElementById('kpi-av').textContent = sc.length ? Math.round(sc.reduce((a,b)=>a+b,0)/sc.length)+'%' : '—';
+
+  const pl = document.getElementById('pend-list');
+  const pendingOnly = pending.filter(r=>r.status==='pending');
+  if(!pendingOnly.length){ pl.innerHTML='<div class="empty">No assessments pending</div>'; }
+  else {
+    pl.innerHTML = pendingOnly.map(r=>{
+      const bc=r.tier==='full'?'ptb-full':r.tier==='75'?'ptb-75':'ptb-50';
+      const sc_col=r.pct>=90?'var(--green)':r.pct>=70?'var(--amber)':'var(--muted2)';
+      const ini=r.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'Demo';
+      return `<div class="pc" id="pc${r.id}">
+        <div class="pc-top">
+          <div class="pc-av">${ini}</div>
+          <div class="pc-info">
+            <div class="pc-name">${r.name}</div>
+            <div class="pc-meta">${mLabel} · ${fmtDate(r.date)}</div>
+          </div>
+          <div class="pc-sc"><div class="pc-sc-n" style="color:${sc_col}">${r.score}</div><div class="pc-sc-d">/${r.total}</div></div>
+        </div>
+        <div class="pc-foot">
+          <span class="pc-tb ${bc}"><span class="ptb-dot"></span>${r.tierLabel} — ${r.tierPct}</span>
+          <div class="pc-acts">
+            <button class="pcb pcb-app" onclick="approve('${r.id}')">✓ Approve</button>
+            <button class="pcb pcb-dec" onclick="decline('${r.id}')">Decline</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const al = document.getElementById('appr-list');
+  if(!approved.length){ al.innerHTML='<div class="empty">No approved records yet</div>'; }
+  else {
+    al.innerHTML = approved.map(r=>{
+      const pc=r.tier==='full'?'full':r.tier==='75'?'t75':'t50';
+      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'—';
+      return `<div class="ar">
+        <div class="ar-name"><strong>${r.name}</strong></div>
+        <div class="ar-role">${mLabel}</div>
+        <div class="ar-sc">${r.score}/${r.total}</div>
+        <div class="ar-pct ${pc}">${r.tierPct}</div>
+        <div class="ar-dt">${fmtDate(r.date)}</div>
+        <div class="ar-tag">OTM Ready</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+async function approve(id){
+  const r = await approveAssessment(id);
+  if(!r) return;
+  toast(`Approved ✓`);
+  await renderMgr();
+}
+
+async function decline(id){
+  if(!confirm('Decline this assessment? The staff member will see this and can retake.')) return;
+  await declineAssessment(id);
+  toast('Assessment declined');
+  await renderMgr();
+}
+
+// ── TIP UPLOAD ──
+async function renderTipUpload(){
+  const staff = await getVenueStaff();
+  const grid = document.getElementById('tip-staff-grid');
+  if(!document.getElementById('tip-week-end').value){
+    const today = new Date();
+    const saturday = new Date(today);
+    saturday.setDate(today.getDate() - today.getDay() - 1);
+    document.getElementById('tip-week-end').value = saturday.toISOString().split('T')[0];
+    const payDay = new Date(saturday);
+    payDay.setDate(payDay.getDate() + 4);
+    document.getElementById('tip-pay-date').value = payDay.toISOString().split('T')[0];
+  }
+  const tiers = {};
+  for(const s of staff){ tiers[s.name] = await getCertifiedTier(s.name); }
+  grid.innerHTML = staff.map(s=>{
+    const tier = tiers[s.name];
+    const cls = tier.key==='full'?'full':tier.key==='75'?'t75':'nc';
+    return `<div class="tip-row">
+      <div>
+        <div class="tip-row-name">${s.name}</div>
+        <div class="tip-row-sub">${s.role} · ${s.pool}</div>
+      </div>
+      <input type="number" class="tip-amount-inp" id="tip-${s.name.replace(/\s+/g,'_')}"
+        placeholder="0.00" min="0" step="0.01" oninput="updateTipTotal()">
+      <div class="tip-certified-pct ${cls}">${tier.pct}</div>
+    </div>`;
+  }).join('');
+  updateTipTotal();
+  await renderWeekHistory();
+}
+
+function updateTipTotal(){
+  const inputs = document.querySelectorAll('.tip-amount-inp');
+  let total = 0;
+  inputs.forEach(el=>{ total += parseFloat(el.value||0); });
+  document.getElementById('tip-total-display').textContent = fmtAUD(total);
+}
+
+async function saveTipWeek(){
+  const weekEnd = document.getElementById('tip-week-end').value;
+  const payDate = document.getElementById('tip-pay-date').value;
+  if(!weekEnd){ toast('Please enter week ending date'); return; }
+  const staff = await getVenueStaff();
+  const entries = {};
+  let total = 0;
+  staff.forEach(s=>{
+    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
+    const v = parseFloat(el?.value||0);
+    entries[s.name] = v;
+    total += v;
+  });
+  await saveWeek({weekEnd, payDate, entries, total});
+  await populateStaffDropdown();
+  toast(`Week ending ${weekEnd} saved ✓`);
+  await renderWeekHistory();
+}
+
+async function renderWeekHistory(){
+  const weeks = await getVenueWeeks();
+  const container = document.getElementById('wk-history');
+  const staff = await getVenueStaff();
+  if(!weeks.length){ container.innerHTML='<div class="empty">No weeks uploaded yet</div>'; return; }
+  const tiers = {};
+  for(const s of staff){ tiers[s.name] = await getCertifiedTier(s.name); }
+  container.innerHTML = [...weeks].reverse().map(w=>{
+    const rows = staff.map(s=>{
+      const gross = w.entries[s.name]||0;
+      if(!gross) return '';
+      const tier = tiers[s.name];
+      const alloc = (gross * tier.mult).toFixed(2);
+      return `<div class="tip-row" style="margin:4px 0">
+        <div><div class="tip-row-name">${s.name}</div><div class="tip-row-sub">${s.role}</div></div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--muted2);text-align:right">${fmtAUD(gross)}</div>
+        <div class="tip-certified-pct ${tier.key==='full'?'full':tier.key==='75'?'t75':'nc'}">${fmtAUD(parseFloat(alloc))}</div>
+      </div>`;
+    }).join('');
+    return `<div class="wk-hist-row" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div>
+        <div class="wk-hist-label">Week ending ${w.weekEnd}</div>
+        <div class="wk-hist-meta">Pay date ${w.payDate||'—'} · ${staff.filter(s=>w.entries[s.name]>0).length} staff</div>
+      </div>
+      <div class="wk-hist-total">${fmtAUD(w.total)}</div>
+    </div>
+    <div class="wk-hist-expand">
+      <div style="padding:8px 0">${rows||'<div class="empty">No amounts entered</div>'}</div>
+    </div>`;
+  }).join('');
+}
+
+async function exportTipCSV(){
+  const weekEnd = document.getElementById('tip-week-end').value;
+  const staff = await getVenueStaff();
+  let csv = 'Name,Role,Pool,Gross Tips,Certified Tier,Allocated Amount\n';
+  for(const s of staff){
+    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
+    const gross = parseFloat(el?.value||0);
+    const tier = await getCertifiedTier(s.name);
+    const alloc = (gross * tier.mult).toFixed(2);
+    csv += `"${s.name}","${s.role}","${s.pool}",${gross.toFixed(2)},"${tier.pct}",${alloc}\n`;
+  }
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `tips-${weekEnd||'week'}.csv`;
+  a.click();
+  toast('CSV exported ✓');
+}
+
+// ── STAFF MANAGEMENT ──
+async function renderStaffList(){
+  const staff = await getVenueStaff();
+  const list = document.getElementById('staff-roster-list');
+  if(!staff.length){ list.innerHTML='<div class="empty" style="margin:16px">No staff added yet</div>'; return; }
+  list.innerHTML = staff.map(s=>`
+    <div class="staff-row">
+      <div class="staff-row-name">${s.name}</div>
+      <div class="staff-row-role">${s.role}</div>
+      <span class="staff-row-pool ${s.pool.toLowerCase()}">${s.pool}</span>
+      <button class="staff-row-del" onclick="removeStaff('${s.id}')" title="Remove">✕</button>
+    </div>`).join('');
+}
+
+function toggleAddStaff(){
+  document.getElementById('staff-add-form').classList.toggle('show');
+}
+
+async function addStaffMember(){
+  const name = document.getElementById('saf-name').value.trim();
+  const role = document.getElementById('saf-role').value.trim();
+  const pool = document.getElementById('saf-pool').value;
+  if(!name||!role){ toast('Enter name and role'); return; }
+  const staff = await getVenueStaff();
+  if(staff.find(s=>s.name.toLowerCase()===name.toLowerCase())){ toast('Staff member already exists'); return; }
+  await saveStaffMember({name,role,pool});
+  document.getElementById('saf-name').value='';
+  document.getElementById('saf-role').value='';
+  await renderStaffList();
+  await populateStaffDropdown();
+  toast(`${name} added ✓`);
+}
+
+async function removeStaff(id){
+  const staff = await getVenueStaff();
+  const s = staff.find(x=>x.id===id);
+  if(!s||!confirm(`Remove ${s.name} from the roster?`)) return;
+  await removeStaffById(id);
+  await renderStaffList();
+  await populateStaffDropdown();
+  toast('Staff member removed');
+}
+
+async function mgrTab(btn, id){
+  document.querySelectorAll('.m-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.m-tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='tab-tips') await renderTipUpload();
+  if(id==='tab-staff') await renderStaffList();
+}
+
+// ── BOOT ──
+(function init(){
+  // Check for password reset redirect
+  sb.auth.onAuthStateChange((event, session) => {
+    if(event === 'PASSWORD_RECOVERY'){
+      const newPass = prompt('Enter your new password:');
+      if(newPass){
+        sb.auth.updateUser({password: newPass}).then(({error})=>{
+          if(error) toast('Error updating password');
+          else toast('Password updated ✓', 4000);
+        });
+      }
+    }
+  });
+})();
+
+// ── QUIZ LAUNCH ──
+function _getSelected(){
+  const sel=document.getElementById('sel-name');
+  const o=sel.selectedOptions[0];
+  if(!o||!o.value){ toast('Select your name first'); return null; }
+  sName=o.value; sRole=o.dataset.role; sPool=o.dataset.pool; sTips=parseFloat(o.dataset.tips||'0');
+  return o;
+}
+
+async async function startLegacy(){ if(!_getSelected()) return; await clearDeclined('legacy'); isDemo=false; quizMode='legacy'; _launchQuiz(40); }
+async async async function startMaster(){
+  if(!_getSelected()) return;
+  if(!(await hasLegacyPass(sName))){ toast('Complete Legacy first'); return; }
+  await clearDeclined('master'); isDemo=false; quizMode='master'; _launchQuiz(100);
+}
+async function startDemo(){
+  if(!_getSelected()) return;
+  isDemo=true; quizMode='demo'; _launchQuiz(10);
+}
+
+function _launchQuiz(count){
+  function pick(arr,n){ return shuffle([...arr]).slice(0,Math.min(n,arr.length)); }
+  const all = ALL_QUESTIONS;
+  let qs;
+  if(count<=10){
+    qs = shuffle([...pick(all.service,3),...pick(all.hospitality,4),...pick(all.beverage,3)]).slice(0,10);
+  } else if(count<=40){
+    qs = shuffle([...pick(all.service,16),...pick(all.hospitality,16),...pick(all.beverage,8)]).slice(0,40);
+  } else {
+    qs = shuffle([...pick(all.service,20),...pick(all.hospitality,20),...pick(all.beverage,10),
+      ...pick(all.service,18),...pick(all.hospitality,16),...pick(all.beverage,10),...pick(all.hospitality,6)]).slice(0,100);
+  }
+
+  QS={qs,idx:0,score:0,answered:false,cats:{service:{c:0,t:0},hospitality:{c:0,t:0},beverage:{c:0,t:0}}};
+  const modeLabel = quizMode==='demo'?'Demo':quizMode==='legacy'?'Legacy':'Master';
+  document.getElementById('qz-namespan').textContent=modeLabel+' · '+sName.split(' ')[0];
+  document.getElementById('qz-score').textContent='0';
+  document.querySelector('.qz-score-d').textContent='/ '+qs.length;
+  document.getElementById('demo-banner').style.display=isDemo?'block':'none';
+  show('s-quiz');
+  renderQ();
+}
+
+// ── QUIZ RENDER ──
+const CM={
+  service:{lbl:'Service',cls:'qc-s'},
+  hospitality:{lbl:'Hospitality',cls:'qc-o'},
+  beverage:{lbl:'Beverage',cls:'qc-m'},
+};
+const LTRS=['A','B','C','D'];
+
+function renderQ(){
+  const {qs,idx}=QS, q=qs[idx];
+  const cm=CM[q.cat]||CM.service;
+  document.getElementById('qz-progtxt').textContent=`Q${idx+1} of ${qs.length}`;
+  document.getElementById('qz-bar').style.width=Math.round((idx+1)/qs.length*100)+'%';
+  document.getElementById('qz-body').innerHTML=`
+    <div class="qz-cat ${cm.cls}">${cm.lbl}</div>
+    <div class="qz-qn">Question ${idx+1}</div>
+    <div class="qz-qt">${q.q}</div>
+    <div class="qz-opts">
+      ${q.options.map((o,i)=>`<button class="qz-opt" id="op${i}" onclick="choose(${i})"><span class="opt-lt">${LTRS[i]}</span><span class="opt-tx">${o}</span></button>`).join('')}
+    </div>
+    <div class="qz-fb" id="qz-fb"></div>
+    <button class="qz-nxt${idx+1===qs.length?' fin':''}" id="qz-nxt" onclick="nextQ()">
+      ${idx+1<qs.length?'Next &rarr;':'View Results &rarr;'}
+    </button>`;
+}
+
+function choose(i){
+  if(QS.answered) return;
+  QS.answered=true;
+  const q=QS.qs[QS.idx], ok=i===q.answer;
+  const cat=q.cat||'service';
+  QS.cats[cat]=QS.cats[cat]||{c:0,t:0};
+  QS.cats[cat].t++;
+  document.querySelectorAll('.qz-opt').forEach(b=>b.disabled=true);
+  document.getElementById(`op${q.answer}`).classList.add('ok');
+  if(ok){
+    document.getElementById(`op${i}`).classList.add('ok');
+    QS.score++; QS.cats[cat].c++;
+    const el=document.getElementById('qz-score');
+    el.textContent=QS.score; el.classList.remove('fl'); void el.offsetWidth; el.classList.add('fl');
+    setTimeout(()=>el.classList.remove('fl'),500);
+    document.getElementById('qz-fb').className='qz-fb show ok';
+    document.getElementById('qz-fb').innerHTML=`<strong>✓ Correct.</strong> ${q.exp||''}`;
+  } else {
+    document.getElementById(`op${i}`).classList.add('ng');
+    document.getElementById('qz-fb').className='qz-fb show ng';
+    document.getElementById('qz-fb').innerHTML=`<strong>✗ Not quite.</strong> ${q.exp||''}`;
+  }
+  document.getElementById('qz-nxt').style.display='block';
+}
+
+function nextQ(){ QS.idx++; QS.answered=false; QS.idx>=QS.qs.length?showResult():renderQ(); }
+function quitQuiz(){ document.getElementById('demo-banner').style.display='none'; show('s-land'); }
+
+// ── RESULT ──
+async function showResult(){
+  const score=QS.score, total=QS.qs.length, pct=Math.round(score/total*100);
+  const t=getTier(score,total), ts=Date.now();
+
+  let stageTier, stageLabel;
+  const certs = getVenueCerts();
+
+  if(quizMode==='legacy'){
+    const passed = pct>=70;
+    stageTier = passed?'75':'50';
+    stageLabel = passed?'Legacy Certified — 75%':'Not Yet Passed';
+    // Cert saved to DB when manager approves
+  } else if(quizMode==='master'){
+    const passed = pct>=90;
+    stageTier = passed?'full':'75';
+    stageLabel = passed?'Master Certified — 100%':'Not Yet Passed — Legacy 75% maintained';
+    // Cert saved to DB when manager approves
+  } else {
+    stageTier = t.key; stageLabel = t.label;
+  }
+
+  const tierMap={
+    'full':{key:'full',pct:'100%',label:'Expert — Full Allocation',cls:'vc-full',col:'var(--green)',
+      desc:'Outstanding. Master-level knowledge demonstrated. OTM allocation recommended at 100%.'},
+    '75':{key:'75',pct:'75%',label:'Proficient — Standard Allocation',cls:'vc-75',col:'var(--amber)',
+      desc:'Good foundation. OTM allocation at 75%. Continue studying for Master certification.'},
+    '50':{key:'50',pct:'50%',label:'Development Level',cls:'vc-50',col:'var(--muted)',
+      desc:'Keep building your knowledge. 50% allocation applies. Retake when ready.'}
+  };
+  const tier = tierMap[stageTier];
+
+  lastRes={id:ts,name:sName,role:sRole,pool:sPool,weekTips:sTips,
+    score,total,pct,tier:tier.key,tierPct:tier.pct,tierLabel:stageLabel,
+    cats:JSON.parse(JSON.stringify(QS.cats)),date:ts,status:'pending',quizMode};
+
+  if(quizMode!=='demo'){
+    await savePendingResult(lastRes);
+  }
+
+  document.getElementById('r-date').textContent=fmtDate(ts);
+  document.getElementById('r-name').textContent=sName;
+  document.getElementById('r-big').textContent=score;
+  document.getElementById('st-c').textContent=QS.score;
+  document.getElementById('st-w').textContent=total-QS.score;
+  document.getElementById('st-a').textContent=pct+'%';
+
+  const circ=2*Math.PI*62, ring=document.getElementById('rg-fill');
+  ring.style.strokeDasharray=circ; ring.style.stroke=tier.col; ring.style.strokeDashoffset=circ;
+  document.getElementById('r-big').style.color=tier.col;
+  setTimeout(()=>ring.style.strokeDashoffset=circ*(1-score/total),120);
+
+  document.getElementById('r-verdict-inner').innerHTML=`
+    <div class="v-card ${tier.cls}">
+      <div class="v-top">
+        <div><div class="v-label">${stageLabel}</div><div class="v-desc" style="margin-top:7px">${tier.desc}</div></div>
+        <div class="v-pct">${tier.pct}</div>
+      </div>
+    </div>`;
+
+  const cnm={service:'Service Standards',hospitality:'Hospitality',beverage:'Beverage'};
+  const ccol={service:'var(--violet)',hospitality:'var(--gold)',beverage:'var(--blue)'};
+  let ch='<div class="r-cats-ttl">Category Breakdown</div>';
+  Object.entries(QS.cats).forEach(([cat,s])=>{
+    if(!s.t) return;
+    const p=Math.round(s.c/s.t*100);
+    ch+=`<div class="cat-row">
+      <div class="cat-top"><span class="cat-nm">${cnm[cat]||cat}</span><span class="cat-fr">${s.c}/${s.t} (${p}%)</span></div>
+      <div class="cat-track"><div class="cat-fill" style="background:${ccol[cat]||'var(--muted)'}" data-p="${p}"></div></div>
+    </div>`;
+  });
+  document.getElementById('r-cats').innerHTML=ch;
+  setTimeout(()=>document.querySelectorAll('.cat-fill').forEach(el=>el.style.width=el.dataset.p+'%'),280);
+
+  const vc=tier.key==='full'?'green':tier.key==='75'?'amber':'gr';
+  const tierMult=tier.key==='full'?1:tier.key==='75'?0.75:0.5;
+  const adjTips=(sTips*tierMult).toFixed(2);
+  const modeLabel=quizMode==='demo'?'Demo':quizMode==='legacy'?'Legacy':'Master';
+  document.getElementById('otm-fields').innerHTML=`
+    <div class="otm-f"><span class="otm-fk">Staff Member</span><span class="otm-fv">${sName}</span></div>
+    <div class="otm-f"><span class="otm-fk">Role</span><span class="otm-fv">${sRole}</span></div>
+    <div class="otm-f"><span class="otm-fk">Pool</span><span class="otm-fv">${sPool}</span></div>
+    <div class="otm-f"><span class="otm-fk">Assessment</span><span class="otm-fv">${modeLabel} (${total}q)</span></div>
+    <div class="otm-f"><span class="otm-fk">Score</span><span class="otm-fv">${score}/${total} (${pct}%)</span></div>
+    <div class="otm-f"><span class="otm-fk">Result</span><span class="otm-fv ${vc}">${stageLabel}</span></div>
+    <div class="otm-f"><span class="otm-fk">OTM Tip Allocation</span><span class="otm-fv ${vc} big">${tier.pct}</span></div>
+    ${sTips>0?`<div class="otm-f"><span class="otm-fk">Last week tips (${fmtAUD(sTips)})</span><span class="otm-fv ${vc}">${fmtAUD(parseFloat(adjTips))}</span></div>`:''}
+    <div class="otm-f"><span class="otm-fk">Completed</span><span class="otm-fv">${fmtDate(ts)}</span></div>`;
+
+  const notes={
+    full:`<strong>Ready for approval.</strong> Once approved, update ${sName.split(' ')[0]}'s tip allocation to <strong>100%</strong> in the OnTheMonee portal.`,
+    '75':`<strong>Ready for approval.</strong> Once approved, set allocation to <strong>75%</strong> in OnTheMonee. ${quizMode==='legacy'?'Master test available to unlock 100%.':'Recommend reviewing lower-scoring areas.'}`,
+    '50':`<strong>Development level.</strong> Set allocation to <strong>50%</strong> in OnTheMonee once approved. Retake after studying.`
+  };
+  document.getElementById('otm-note').innerHTML=notes[tier.key];
+
+  const rr=document.getElementById('r-retry');
+  if(quizMode==='demo'){
+    rr.innerHTML=`<div class="r-retry-sub">Ready for the real thing? Start with Legacy.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
+  } else if(quizMode==='legacy'){
+    rr.innerHTML=pct>=70
+      ?`<div class="r-retry-sub">Legacy passed! Master test is now unlocked.</div><button class="r-retry-btn" onclick="show('s-land')">Continue to Master →</button>`
+      :`<div class="r-retry-sub">Score 70%+ to pass Legacy. Study and retake.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
+  } else {
+    rr.innerHTML=pct>=90
+      ?`<div class="r-retry-sub">Master certified! Full 100% allocation unlocked.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Home</button>`
+      :`<div class="r-retry-sub">Score 90%+ to pass Master. Legacy 75% maintained.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
+  }
+  document.querySelector('.r-den').textContent='/ '+total;
+  document.getElementById('demo-banner').style.display='none';
+  show('s-result');
+}
+
+function copyResult(){
+  if(!lastRes) return;
+  const r=lastRes;
+  const tierMult=r.tier==='full'?1:r.tier==='75'?0.75:0.5;
+  const mLabel=r.quizMode==='legacy'?'Legacy (40 questions)':r.quizMode==='master'?'Master (100 questions)':'Demo (10 questions)';
+  const txt=`TIP & TRAINING PLATFORM — ${(VENUES[currentVenue]||{name:''}).name.toUpperCase()}
+─────────────────────────────
+Staff      : ${r.name}
+Role       : ${r.role} (${r.pool})
+Assessment : ${mLabel}
+Score      : ${r.score}/${r.total} (${r.pct}%)
+Result     : ${r.tierLabel}
+OTM Alloc. : ${r.tierPct}
+${r.weekTips>0?'Last Wk Tips: '+fmtAUD(r.weekTips)+' → '+fmtAUD(r.weekTips*tierMult)+' at '+r.tierPct:''}
+Completed  : ${fmtDate(r.date)}
+Status     : PENDING APPROVAL
+─────────────────────────────
+ACTION: Update ${r.name.split(' ')[0]}'s tip scaling to ${r.tierPct} in OnTheMonee portal.`;
+  navigator.clipboard.writeText(txt).then(()=>toast('Copied to clipboard ✓')).catch(()=>toast('Copy manually from screen'));
+}
+
+// ── MANAGER PORTAL ──
+function showMgr(){ show('s-mgr-login'); }
+
+function openMgrLogin(){
+  // Clear fields
+  const vci = document.getElementById('mgr-venue-code-inp');
+  const mci = document.getElementById('mgr-code-inp');
+  const err = document.getElementById('mgr-login-err');
+  if(vci) vci.value='';
+  if(mci) mci.value='';
+  if(err) err.style.display='none';
+  show('s-mgr-login');
+}
+
+function mgrLoginSubmit(){
+  const venueCode = document.getElementById('mgr-venue-code-inp').value.trim().toLowerCase();
+  const mgrCode   = document.getElementById('mgr-code-inp').value.trim().toLowerCase();
+  const err = document.getElementById('mgr-login-err');
+
+  if(!venueCode || !mgrCode){ err.style.display='block'; return; }
+
+
+function goBack(){ lastRes?show('s-result'):show('s-land'); }
+function mgrBack(){ show('s-venue'); }
+
+
+</script>
+</body>
+</html>
