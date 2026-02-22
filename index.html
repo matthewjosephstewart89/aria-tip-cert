@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Tier · Tip Certification</title>
+<title>Tier · Tip & Training Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,500;0,700;0,800;1,300;1,700;1,800&family=Barlow:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -23,16 +23,177 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
 
 .screen{display:none!important}.screen.active{display:block!important}
-#s-land.screen.active{display:flex!important}
+#s-venue.screen.active,#s-land.screen.active{display:flex!important}
+
+/* ══ VENUE SCREEN ══ */
+#s-venue{min-height:100vh;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;overflow-x:hidden}
+
+/* Hero */
+.vh-hero{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start;
+  padding:60px 48px 80px;overflow:hidden;
+}
+.vh-hero::before{
+  content:'';position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 70% 40%, rgba(143,168,122,.07) 0%, transparent 65%),
+             radial-gradient(ellipse 50% 80% at 10% 80%, rgba(143,168,122,.04) 0%, transparent 60%);
+}
+.vh-grid-lines{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.vh-grid-lines::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(143,168,122,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(143,168,122,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.vh-deco-number{
+  position:absolute;right:-20px;top:50%;transform:translateY(-50%);
+  font-family:var(--fh);font-size:clamp(200px,30vw,380px);font-weight:800;font-style:italic;
+  line-height:1;letter-spacing:-.04em;color:transparent;
+  -webkit-text-stroke:1px rgba(143,168,122,.07);
+  pointer-events:none;user-select:none;
+  animation:fadeUp 1.2s ease both .6s;
+}
+.vh-hero-inner{position:relative;z-index:1;max-width:700px}
+.vh-eyebrow{
+  font-family:var(--fm);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:#8fa87a;display:flex;align-items:center;gap:12px;margin-bottom:28px;
+  animation:fadeUp .7s ease both .1s;
+}
+.vh-eyebrow::before{content:'';width:24px;height:1px;background:#8fa87a}
+.vh-logo{
+  font-family:var(--fh);font-size:clamp(72px,14vw,130px);font-weight:800;font-style:italic;
+  letter-spacing:-.02em;text-transform:uppercase;line-height:.9;
+  color:#8fa87a;margin-bottom:28px;
+  animation:fadeUp .8s ease both .2s;
+}
+.vh-headline{
+  font-family:var(--fh);font-size:clamp(22px,4vw,36px);font-weight:700;
+  line-height:1.18;letter-spacing:.01em;color:var(--cream);margin-bottom:20px;
+  animation:fadeUp .8s ease both .3s;
+}
+.vh-headline i{font-style:italic;color:#8fa87a}
+.vh-desc{
+  font-size:14px;color:var(--muted2);line-height:1.8;max-width:480px;
+  margin-bottom:44px;animation:fadeUp .8s ease both .4s;
+}
+
+/* Feature pills */
+.vh-features{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:44px;
+  animation:fadeUp .8s ease both .45s;
+}
+.vh-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--b3);border-radius:20px;padding:7px 14px;
+  font-size:11px;color:var(--muted2);background:rgba(255,255,255,.02);
+  transition:border-color .2s,color .2s;
+}
+.vh-pill-dot{width:5px;height:5px;border-radius:50%;background:#8fa87a;flex-shrink:0}
+
+/* Stats row */
+.vh-stats{
+  display:flex;gap:36px;margin-bottom:52px;
+  animation:fadeUp .8s ease both .5s;flex-wrap:wrap;
+}
+.vh-stat-n{
+  font-family:var(--fh);font-size:42px;font-weight:800;line-height:1;
+  color:var(--cream);letter-spacing:-.02em;
+}
+.vh-stat-n span{color:#8fa87a}
+.vh-stat-l{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+/* CTA row */
+.vh-ctas{display:flex;align-items:center;gap:14px;flex-wrap:wrap;animation:fadeUp .8s ease both .55s}
+.vh-cta-primary{
+  background:#8fa87a;color:#070707;border:none;border-radius:4px;
+  padding:15px 28px;font-family:var(--fh);font-size:14px;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  transition:all .18s;text-decoration:none;display:inline-block;
+}
+.vh-cta-primary:hover{background:#a8c5a0;transform:translateY(-1px)}
+.vh-cta-secondary{
+  font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:7px;transition:color .15s;padding:0;
+}
+.vh-cta-secondary:hover{color:var(--cream)}
+.vh-cta-arrow{font-size:14px;transition:transform .2s}
+.vh-cta-secondary:hover .vh-cta-arrow{transform:translateX(4px)}
+
+/* How it works strip */
+.vh-how{
+  position:relative;z-index:1;
+  border-top:1px solid var(--b2);
+  padding:40px 48px;display:grid;
+  grid-template-columns:repeat(3,1fr);gap:0;
+  background:rgba(255,255,255,.01);
+  animation:fadeUp .8s ease both .65s;
+}
+.vh-step{padding:0 28px 0 0;border-right:1px solid var(--b2)}
+.vh-step:first-child{padding-left:0}
+.vh-step:last-child{border-right:none;padding-right:0;padding-left:28px}
+.vh-step:nth-child(2){padding:0 28px}
+.vh-step-n{
+  font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:#8fa87a;margin-bottom:10px;
+}
+.vh-step-title{font-family:var(--fh);font-size:17px;font-weight:700;letter-spacing:.02em;margin-bottom:7px}
+.vh-step-desc{font-size:11px;color:var(--muted2);line-height:1.7}
+
+/* Login panel */
+.vh-login-section{
+  background:var(--s1);border-top:1px solid var(--b2);
+  padding:60px 48px;display:flex;align-items:flex-start;justify-content:center;
+  animation:fadeUp .8s ease both .2s;
+}
+.venue-card{width:100%;max-width:400px;text-align:center}
+.venue-tagline{font-family:var(--fm);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
+.venue-heading{font-family:var(--fh);font-size:20px;font-weight:700;letter-spacing:.02em;margin-bottom:6px}
+.venue-sub{font-size:12px;color:var(--muted2);margin-bottom:24px;line-height:1.6}
+.venue-input-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.v-grp{display:flex;flex-direction:column;gap:5px;text-align:left}
+.v-lbl{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2)}
+.v-inp{background:var(--s2);border:1px solid var(--b3);border-radius:4px;padding:13px 16px;
+  font-family:var(--fb);font-size:14px;color:var(--cream);outline:none;width:100%;transition:border-color .15s}
+.v-inp::placeholder{color:var(--muted)}
+.v-inp:focus{border-color:#8fa87a}
+.v-sel{appearance:none;-webkit-appearance:none;cursor:pointer;
+  background:var(--s2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a5a5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center}
+.v-sel option{background:#161616;color:var(--cream)}
+.venue-btn{width:100%;background:#8fa87a;color:#070707;border:none;border-radius:4px;padding:16px;
+  font-family:var(--fh);font-size:15px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:all .18s;margin-bottom:12px}
+.venue-btn:hover:not(:disabled){background:#a8c5a0}
+.venue-btn:disabled{opacity:.3;cursor:not-allowed}
+.venue-err{font-family:var(--fm);font-size:10px;letter-spacing:.08em;color:var(--red);text-align:center;display:none;margin-top:4px}
+.venue-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);font-family:var(--fm);font-size:9px;letter-spacing:.1em}
+.venue-divider::before,.venue-divider::after{content:'';flex:1;height:1px;background:var(--b2)}
+.venue-demo-link{font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  background:none;border:1px solid var(--b3);border-radius:4px;padding:10px 18px;cursor:pointer;transition:all .15s;width:100%}
+.venue-demo-link:hover{border-color:#8fa87a;color:#8fa87a}
+.venue-platform-note{font-family:var(--fm);font-size:9px;letter-spacing:.06em;color:var(--muted);margin-top:28px;line-height:1.7;text-align:center}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media(max-width:700px){
+  .vh-hero{padding:48px 24px 60px}
+  .vh-how{grid-template-columns:1fr;padding:32px 24px;gap:24px}
+  .vh-step{border-right:none;border-bottom:1px solid var(--b2);padding:0 0 24px!important}
+  .vh-step:last-child{border-bottom:none;padding-bottom:0!important}
+  .vh-stats{gap:24px}
+  .vh-login-section{padding:48px 24px}
+  .vh-deco-number{display:none}
+}
 
 /* ══ LANDING ══ */
-#s-land{min-height:100vh;display:flex;flex-direction:column}
+#s-land{min-height:100vh;flex-direction:column}
 .l-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--b2)}
 .l-logo{font-family:var(--fh);font-size:18px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
 .l-logo b{color:var(--gold)}
-.l-logo img,.r-nav-logo img,.m-nav-ttl img{filter:sepia(1) saturate(2.5) hue-rotate(80deg) brightness(.85)}
-.r-retry-btn:hover{border-color:var(--gold);color:var(--gold)}
-.l-badge{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);border:1px solid var(--b3);border-radius:3px;padding:3px 8px}
+.l-venue-badge{font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  background:rgba(122,158,126,.08);color:var(--gold);border:1px solid rgba(122,158,126,.2);border-radius:3px;padding:3px 9px}
+.l-nav-r{display:flex;align-items:center;gap:10px}
+.l-signout{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);background:none;border:1px solid var(--b3);border-radius:3px;padding:4px 10px;cursor:pointer;transition:all .14s}
+.l-signout:hover{border-color:var(--muted);color:var(--cream)}
 
 .l-content{flex:1;display:grid;grid-template-columns:1fr;padding:0}
 .l-left{padding:42px 24px 40px;max-width:580px}
@@ -69,6 +230,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .f-sel option{background:#161616;color:var(--cream)}
 .f-ro{color:var(--muted2)!important;cursor:default}
 
+/* ── New staff entry fields ── */
+.f-new-staff{background:rgba(122,158,126,.04);border:1px solid rgba(122,158,126,.15);border-radius:6px;padding:14px;margin-top:6px;display:none;flex-direction:column;gap:8px}
+.f-new-staff.show{display:flex}
+.f-new-staff-ttl{font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+
 .l-cta{width:100%;background:var(--gold);color:#070707;border:none;border-radius:4px;padding:16px;
   font-family:var(--fh);font-size:15px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:all .18s}
 .l-cta:hover:not(:disabled){background:var(--gold2)}
@@ -94,7 +260,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .qz-score-n.fl{color:var(--green)}
 .qz-score-d{font-family:var(--fm);font-size:9px;color:var(--muted)}
 .qz-track{height:2px;background:var(--b2)}.qz-bar{height:100%;background:var(--gold);transition:width .3s ease;width:0%}
-
 .qz-body{padding:24px 20px;max-width:600px;margin:0 auto}
 .qz-cat{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;
   letter-spacing:.16em;text-transform:uppercase;border-radius:3px;padding:3px 9px;margin-bottom:13px}
@@ -105,7 +270,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .qc-o{background:rgba(255,255,255,.04);color:var(--muted2)}
 .qz-qn{font-family:var(--fm);font-size:10px;color:var(--muted);margin-bottom:5px}
 .qz-qt{font-family:var(--fh);font-size:23px;font-weight:700;line-height:1.22;color:var(--cream);margin-bottom:20px;letter-spacing:.01em}
-
 .qz-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .qz-opt{background:var(--s1);border:1px solid var(--b3);border-radius:6px;padding:12px 14px;
   display:flex;align-items:flex-start;gap:11px;cursor:pointer;text-align:left;width:100%;transition:all .13s}
@@ -118,13 +282,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .qz-opt.ng .opt-lt,.qz-opt.ng .opt-tx{color:var(--muted)}
 .qz-opt:disabled{cursor:default}
 @keyframes shk{0%,100%{transform:none}30%{transform:translateX(-5px)}70%{transform:translateX(5px)}}
-
 .qz-fb{font-size:12px;line-height:1.6;padding:11px 13px;border-radius:5px;
   border-left:2px solid transparent;display:none;margin-bottom:14px;background:rgba(255,255,255,.02);color:var(--muted2)}
 .qz-fb.show{display:block}
 .qz-fb.ok{border-color:var(--green);color:#86efac}.qz-fb.ok strong{color:#bbf7d0}
 .qz-fb.ng{border-color:var(--red)}.qz-fb.ng strong{color:var(--cream)}
-
 .qz-nxt{width:100%;background:var(--s2);border:1px solid var(--b3);border-radius:5px;padding:13px;
   font-family:var(--fh);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
   color:var(--cream);cursor:pointer;transition:all .15s;display:none}
@@ -136,12 +298,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .r-nav{display:flex;align-items:center;justify-content:space-between;padding:17px 24px;border-bottom:1px solid var(--b2)}
 .r-nav-logo{font-family:var(--fh);font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .r-date{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:.06em}
-
 .r-hero{padding:32px 24px 24px;max-width:600px;margin:0 auto;text-align:center;animation:up .5s ease both}
 @keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .r-nameline{font-family:var(--fm);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);margin-bottom:18px}
 .r-nameline span{color:var(--gold)}
-
 .r-ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px}
 .r-ring{width:148px;height:148px}
 .rg-bg{fill:none;stroke:var(--b3);stroke-width:8}
@@ -150,7 +310,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .r-ring-in{position:absolute;text-align:center}
 .r-big{font-family:var(--fh);font-size:48px;font-weight:800;line-height:1;letter-spacing:-.03em}
 .r-den{font-family:var(--fm);font-size:11px;color:var(--muted2)}
-
 .r-verdict{padding:0 24px;max-width:600px;margin:18px auto 0;animation:up .5s .1s ease both}
 .v-card{border-radius:8px;padding:17px 19px;position:relative;overflow:hidden;margin-bottom:13px}
 .v-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
@@ -167,12 +326,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .vc-75  .v-label,.vc-75  .v-pct{color:var(--amber)}
 .vc-50  .v-label,.vc-50  .v-pct{color:var(--muted)}
 .v-desc{font-size:12px;color:var(--muted2);line-height:1.65}
-
 .r-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 24px;max-width:600px;margin:0 auto 12px;animation:up .5s .18s ease both}
 .st-c{background:var(--s1);border:1px solid var(--b2);border-radius:7px;padding:12px;text-align:center}
 .st-n{font-family:var(--fh);font-size:26px;font-weight:800;line-height:1;margin-bottom:3px}
 .st-l{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-
 .r-cats{padding:0 24px;max-width:600px;margin:0 auto 18px;animation:up .5s .24s ease both}
 .r-cats-ttl{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 .cat-row{margin-bottom:9px}
@@ -211,7 +368,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
   font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:all .15s}
 .ob-p{background:var(--gold);color:#070707}.ob-p:hover{background:var(--gold2)}
 .ob-s{background:transparent;color:var(--muted2);border:1px solid var(--b3)}.ob-s:hover{border-color:var(--muted2);color:var(--cream)}
-
 .r-retry{text-align:center;padding:8px 24px 0;max-width:600px;margin:0 auto}
 .r-retry-sub{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
 .r-retry-btn{background:transparent;border:1px solid var(--b3);border-radius:4px;
@@ -226,18 +382,26 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 /* ══ MANAGER ══ */
 #s-mgr{min-height:100vh;padding-bottom:60px}
 .m-nav{background:var(--s1);border-bottom:1px solid var(--b2);padding:13px 20px;
-  display:flex;align-items:center;justify-content:space-between}
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .m-nav-l{display:flex;align-items:center;gap:10px}
 .m-nav-ttl{font-family:var(--fh);font-size:16px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
 .m-nav-ttl b{color:var(--gold)}
 .m-badge{font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;
   background:rgba(245,158,11,.1);color:#fbbf24;border:1px solid rgba(245,158,11,.2);border-radius:3px;padding:3px 7px}
+.m-venue-tag{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  background:rgba(122,158,126,.08);color:var(--gold);border:1px solid rgba(122,158,126,.2);border-radius:3px;padding:3px 8px}
 .m-nav-r{display:flex;align-items:center;gap:8px}
-.m-nav-otm{font-family:var(--fm);font-size:9px;color:var(--muted2)}
 .m-back{background:transparent;border:1px solid var(--b3);border-radius:3px;padding:5px 10px;
   font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .14s}
 .m-back:hover{color:var(--cream);border-color:var(--muted)}
-.m-body{padding:22px 20px;max-width:780px;margin:0 auto}
+.m-body{padding:22px 20px;max-width:900px;margin:0 auto}
+
+.m-tabs{display:flex;gap:0;border-bottom:1px solid var(--b2);margin-bottom:28px;overflow-x:auto}
+.m-tab{background:none;border:none;padding:12px 20px;cursor:pointer;
+  font-family:var(--fm);font-size:10px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s}
+.m-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.m-tab-content{display:none}.m-tab-content.active{display:block}
 
 .m-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:26px}
 .kpi{background:var(--s1);border:1px solid var(--b2);border-radius:7px;padding:13px 15px}
@@ -260,10 +424,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .pc-sc{text-align:right;flex-shrink:0}
 .pc-sc-n{font-family:var(--fh);font-size:28px;font-weight:800;line-height:1}
 .pc-sc-d{font-family:var(--fm);font-size:9px;color:var(--muted)}
-.pc-foot{padding:9px 15px;border-top:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pc-foot{padding:9px 15px;border-top:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .pc-tb{display:inline-flex;align-items:center;gap:5px;
-  font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
-  border-radius:3px;padding:4px 9px}
+  font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border-radius:3px;padding:4px 9px}
 .ptb-full{background:rgba(34,197,94,.1);color:var(--green)}
 .ptb-75{background:rgba(245,158,11,.1);color:var(--amber)}
 .ptb-50{background:rgba(90,90,90,.08);color:var(--muted2)}
@@ -285,6 +448,79 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .ar-tag{font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;
   background:rgba(122,158,126,.08);color:var(--gold);border:1px solid rgba(122,158,126,.18);border-radius:3px;padding:2px 6px}
 
+/* ── TIP UPLOAD PANEL ── */
+.tip-upload-panel{background:var(--s1);border:1px solid var(--b3);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.tip-upload-head{padding:16px 20px;border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:10px}
+.tip-upload-icon{width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.tip-upload-title{font-family:var(--fh);font-size:16px;font-weight:700;letter-spacing:.02em}
+.tip-upload-sub{font-size:11px;color:var(--muted2);margin-top:1px}
+.tip-upload-body{padding:20px}
+.tip-week-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.tip-week-meta input,.tip-week-meta select{background:var(--s2);border:1px solid var(--b3);border-radius:4px;
+  padding:10px 12px;font-family:var(--fb);font-size:13px;color:var(--cream);outline:none;width:100%;transition:border-color .15s}
+.tip-week-meta input:focus,.tip-week-meta select:focus{border-color:var(--gold)}
+.tip-week-meta input::placeholder{color:var(--muted)}
+.tip-staff-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;max-height:360px;overflow-y:auto}
+.tip-row{display:grid;grid-template-columns:1fr 140px 80px;gap:8px;align-items:center;
+  padding:8px 12px;background:rgba(255,255,255,.015);border:1px solid var(--b2);border-radius:5px}
+.tip-row-name{font-size:12px;color:var(--cream)}
+.tip-row-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.tip-amount-inp{background:var(--s2);border:1px solid var(--b3);border-radius:4px;padding:8px 10px;
+  font-family:var(--fm);font-size:12px;color:var(--cream);outline:none;width:100%;text-align:right;transition:border-color .15s}
+.tip-amount-inp:focus{border-color:var(--gold)}
+.tip-certified-pct{font-family:var(--fm);font-size:11px;text-align:right}
+.tip-certified-pct.full{color:var(--green)}.tip-certified-pct.t75{color:var(--amber)}.tip-certified-pct.nc{color:var(--muted)}
+.tip-total-bar{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;background:rgba(122,158,126,.05);border:1px solid rgba(122,158,126,.15);border-radius:6px;margin-bottom:12px}
+.tip-total-lbl{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tip-total-val{font-family:var(--fh);font-size:22px;font-weight:800;color:var(--gold)}
+.tip-save-btn{width:100%;background:var(--gold);color:#070707;border:none;border-radius:4px;padding:14px;
+  font-family:var(--fh);font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:all .18s}
+.tip-save-btn:hover{background:var(--gold2)}
+.tip-save-btn:disabled{opacity:.3;cursor:not-allowed}
+.tip-csv-btn{width:100%;background:transparent;color:var(--muted2);border:1px solid var(--b3);border-radius:4px;padding:11px;
+  font-family:var(--fh);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .15s;margin-top:8px}
+.tip-csv-btn:hover{border-color:var(--muted2);color:var(--cream)}
+
+/* Week history */
+.wk-history{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.wk-hist-row{background:var(--s1);border:1px solid var(--b2);border-radius:7px;padding:13px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;cursor:pointer;transition:border-color .15s}
+.wk-hist-row:hover{border-color:var(--b4)}
+.wk-hist-label{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.02em}
+.wk-hist-meta{font-family:var(--fm);font-size:9px;color:var(--muted);margin-top:2px}
+.wk-hist-total{font-family:var(--fh);font-size:22px;font-weight:800;color:var(--gold)}
+.wk-hist-expand{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.wk-hist-expand.open{max-height:600px}
+
+/* Staff list manager view */
+.staff-list-panel{background:var(--s1);border:1px solid var(--b3);border-radius:8px;overflow:hidden;margin-bottom:20px}
+.staff-list-head{padding:14px 18px;border-bottom:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.staff-list-title{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.02em}
+.staff-add-btn{background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2);border-radius:4px;
+  padding:7px 14px;font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.staff-add-btn:hover{background:rgba(122,158,126,.2)}
+.staff-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--b1);flex-wrap:wrap}
+.staff-row:last-child{border-bottom:none}
+.staff-row-name{font-size:13px;color:var(--cream);flex:1;min-width:120px;font-weight:500}
+.staff-row-role{font-size:11px;color:var(--muted);min-width:100px}
+.staff-row-pool{font-family:var(--fm);font-size:9px;letter-spacing:.08em;border-radius:2px;padding:2px 6px}
+.foh{background:rgba(96,165,250,.08);color:var(--blue)}
+.boh{background:rgba(167,139,250,.08);color:var(--violet)}
+.staff-row-del{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:14px;transition:color .15s;padding:2px 6px}
+.staff-row-del:hover{color:var(--red)}
+.staff-add-form{padding:14px 18px;background:rgba(122,158,126,.03);border-top:1px solid rgba(122,158,126,.12);display:none;flex-direction:column;gap:8px}
+.staff-add-form.show{display:flex}
+.staff-add-row{display:grid;grid-template-columns:1fr 1fr 90px auto;gap:8px;align-items:center}
+.saf-inp,.saf-sel{background:var(--s2);border:1px solid var(--b3);border-radius:4px;padding:9px 11px;
+  font-family:var(--fb);font-size:13px;color:var(--cream);outline:none;width:100%;transition:border-color .15s}
+.saf-inp:focus,.saf-sel:focus{border-color:var(--gold)}
+.saf-sel{appearance:none;cursor:pointer;background:var(--s2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a5a5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center}
+.saf-add-btn{background:var(--gold);color:#070707;border:none;border-radius:4px;padding:9px 14px;
+  font-family:var(--fh);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;white-space:nowrap}
+.saf-add-btn:hover{background:var(--gold2)}
+
 /* OTM how-to */
 .how-panel{background:var(--s1);border:1px solid var(--b3);border-radius:8px;padding:18px;margin-bottom:20px}
 .how-hd{display:flex;align-items:center;gap:10px;margin-bottom:15px}
@@ -301,26 +537,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
   font-family:var(--fm);font-size:9px;color:var(--gold);margin-top:1px}
 .how-tx{font-size:12px;color:var(--muted2);line-height:1.55}.how-tx strong{color:var(--cream)}
 
-/* Week report panel */
-.week-panel{background:var(--s1);border:1px solid var(--b3);border-radius:8px;overflow:hidden;margin-bottom:20px}
-.wk-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--b2)}
-.wk-ttl{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.02em}
-.wk-sub{font-family:var(--fm);font-size:9px;color:var(--muted);letter-spacing:.06em}
-.wk-kpis{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--b2)}
-.wk-k{padding:12px 18px;border-right:1px solid var(--b2)}.wk-k:last-child{border-right:none}
-.wk-kn{font-family:var(--fh);font-size:22px;font-weight:800;color:var(--gold);margin-bottom:1px}
-.wk-kl{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.wk-scroll{max-height:240px;overflow-y:auto}
-.wk-row{display:flex;align-items:center;justify-content:space-between;padding:8px 18px;border-bottom:1px solid var(--b1)}
-.wk-row:last-child{border-bottom:none}
-.wk-nm{font-size:12px;color:var(--muted2);flex:1}.wk-nm strong{color:var(--cream);font-weight:500}
-.wk-rl{font-size:11px;color:var(--muted);min-width:80px;text-align:right}
-.wk-tp{font-family:var(--fm);font-size:11px;color:var(--gold);min-width:72px;text-align:right;font-weight:500}
-.wk-pool{font-family:var(--fm);font-size:9px;letter-spacing:.08em;
-  border-radius:2px;padding:2px 5px;margin-left:6px;flex-shrink:0}
-.wk-pool.foh{background:rgba(96,165,250,.08);color:var(--blue)}
-.wk-pool.boh{background:rgba(167,139,250,.08);color:var(--violet)}
-
 .empty{padding:22px;text-align:center;font-family:var(--fm);font-size:10px;
   letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
   border:1px dashed var(--b3);border-radius:6px}
@@ -331,27 +547,152 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
   padding:9px 18px;border-radius:20px;transition:transform .24s ease;z-index:99999;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
-@media(max-width:440px){
+/* Progression cards */
+#test-cards{display:none;margin-bottom:14px}
+.prog-card{background:var(--s1);border:1px solid var(--b3);border-radius:8px;padding:15px 17px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.prog-card:hover{border-color:rgba(122,158,126,.3)}
+.prog-card-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.prog-card-badge{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;flex-shrink:0}
+
+@media(max-width:600px){
   .f-row{grid-template-columns:1fr}
   .m-kpis{grid-template-columns:repeat(2,1fr)}
-  .r-stats{grid-template-columns:repeat(3,1fr)}
-  .ar{flex-wrap:wrap}
+  .tip-row{grid-template-columns:1fr 110px}
+  .tip-certified-pct{display:none}
+  .staff-add-row{grid-template-columns:1fr 1fr}
+  .saf-add-btn{grid-column:span 2}
 }
 </style>
 </head>
 <body>
 
-<!-- LANDING -->
-<div id="s-land" class="screen active">
+<!-- ══ VENUE LOGIN ══ -->
+<div id="s-venue" class="screen active">
+
+  <!-- ── HERO ── -->
+  <div class="vh-hero">
+    <div class="vh-grid-lines"></div>
+    <div class="vh-deco-number">T.</div>
+    <div class="vh-hero-inner">
+      <div class="vh-eyebrow">Tip & Training Platform</div>
+      <div class="vh-logo">TIER.</div>
+      <div class="vh-headline">
+        Your knowledge earns<br>your <i>allocation.</i>
+      </div>
+      <p class="vh-desc">
+        Staff complete a structured certification test — Legacy or Master level. Scores go to management for approval. Your OnTheMonee tip allocation updates accordingly. No admin, no guesswork.
+      </p>
+      <div class="vh-features">
+        <div class="vh-pill"><div class="vh-pill-dot"></div>Two-stage certification</div>
+        <div class="vh-pill"><div class="vh-pill-dot"></div>Manager approval workflow</div>
+        <div class="vh-pill"><div class="vh-pill-dot"></div>OTM tip integration</div>
+        <div class="vh-pill"><div class="vh-pill-dot"></div>In-app training</div>
+        <div class="vh-pill"><div class="vh-pill-dot"></div>More time with guests</div>
+      </div>
+      <div class="vh-stats">
+        <div>
+          <div class="vh-stat-n">2<span>×</span></div>
+          <div class="vh-stat-l">Certification stages</div>
+        </div>
+        <div>
+          <div class="vh-stat-n">100<span> questions</span></div>
+          <div class="vh-stat-l">Master assessment</div>
+        </div>
+        <div>
+          <div class="vh-stat-n">3<span>×</span></div>
+          <div class="vh-stat-l">Allocation tiers</div>
+        </div>
+      </div>
+      <div class="vh-ctas">
+        <button class="vh-cta-primary" onclick="scrollToLogin()">Log in to your venue →</button>
+        <button class="vh-cta-secondary" onclick="loadDemoVenue()">
+          Try demo <span class="vh-cta-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HOW IT WORKS ── -->
+  <div class="vh-how">
+    <div class="vh-step">
+      <div class="vh-step-n">01 · Staff</div>
+      <div class="vh-step-title">Take the test</div>
+      <div class="vh-step-desc">Complete Legacy (40 questions) for 75% allocation, or Master (100 questions) for the full 100%. Do it in your own time, at your own pace.</div>
+    </div>
+    <div class="vh-step">
+      <div class="vh-step-n">02 · Manager</div>
+      <div class="vh-step-title">Review &amp; approve</div>
+      <div class="vh-step-desc">Results appear in the Manager Portal. One tap to approve — the allocation tier is logged and OTM-ready.</div>
+    </div>
+    <div class="vh-step">
+      <div class="vh-step-n">03 · OTM</div>
+      <div class="vh-step-title">Tips distributed</div>
+      <div class="vh-step-desc">Upload the week's gross tips. Certified allocations calculate automatically. Export CSV for OnTheMonee in one click.</div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div id="s-login" class="screen">
+  <div style="min-height:100vh;display:flex;flex-direction:column">
+    <!-- nav -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--b2)">
+      <div style="font-family:var(--fh);font-size:26px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.01em;text-transform:uppercase;cursor:pointer" onclick="show('s-venue')">TIER.</div>
+      <button onclick="show('s-venue')" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--b3);border-radius:3px;padding:5px 12px;cursor:pointer;transition:all .14s" onmouseover="this.style.color='var(--cream)';this.style.borderColor='var(--muted)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--b3)'">← Back</button>
+    </div>
+    <!-- content -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px">
+      <div style="width:100%;max-width:420px">
+        <!-- logo + heading -->
+        <div style="text-align:center;margin-bottom:36px">
+          <div style="font-family:var(--fh);font-size:48px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.02em;text-transform:uppercase;line-height:1;margin-bottom:10px">TIER.</div>
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)">Select your venue to begin</div>
+        </div>
+
+        <div class="venue-input-wrap">
+          <div class="v-grp">
+            <label class="v-lbl">Venue</label>
+            <select class="v-inp v-sel" id="venue-select">
+              <option value="">— Select venue —</option>
+            </select>
+          </div>
+          <div class="v-grp">
+            <label class="v-lbl">Access code</label>
+            <input class="v-inp" type="password" id="venue-code" placeholder="Enter venue code" autocomplete="off">
+          </div>
+        </div>
+        <div class="venue-err" id="venue-err">Incorrect access code — please try again</div>
+        <button class="venue-btn" id="venue-btn" onclick="venueLogin()" disabled>Enter →</button>
+
+        <div class="venue-divider">or</div>
+        <button class="venue-demo-link" onclick="loadDemoVenue()">Try the demo venue →</button>
+
+        <div class="venue-platform-note">
+          Platform managed by OnTheMonee · Venue onboarding: onthemonee.com<br>
+          Staff data is isolated per venue and session-scoped.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ LANDING ══ -->
+<div id="s-land" class="screen">
   <nav class="l-nav">
-    <div class="l-logo"><img src="data:image/png;base64,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" alt="Tier" style="height:22px;vertical-align:middle;margin-right:10px;"><span style="font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);vertical-align:middle">Tip Certification</span></div>
-    <div class="l-badge">OTM Integration</div>
+    <div class="l-logo" style="font-family:var(--fh);font-size:22px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.01em;text-transform:uppercase">TIER.</div>
+    <div class="l-nav-r">
+      <div class="l-venue-badge" id="venue-name-badge">Venue</div>
+      <button class="l-signout" onclick="signOut()">Change venue</button>
+    </div>
   </nav>
   <div style="flex:1;display:flex;flex-direction:column">
     <div class="l-left">
       <div class="l-eyebrow">Tip Allocation Assessment</div>
       <h1 class="l-h1">Earn<br>Your<br><i>Tier.</i></h1>
-      <p class="l-sub">Complete the knowledge test in your own time. No rostered shift. Your score goes to management for approval — then your OnTheMonee allocation updates.</p>
+      <p class="l-sub">Complete the knowledge test in your own time. Your score goes to management for approval — then your OnTheMonee allocation updates.</p>
 
       <table class="tier-tbl">
         <thead><tr><th>Stage</th><th></th><th>Tier</th><th>OTM Alloc.</th></tr></thead>
@@ -374,66 +715,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         </tbody>
       </table>
 
-      <p class="l-note">Two-stage certification · Legacy (40q) unlocks 75% · Master (100q) unlocks 100%</p>
+      <p class="l-note">Two-stage certification · Legacy (40 questions) unlocks 75% · Master (100 questions) unlocks 100%</p>
 
       <div class="l-form">
         <div class="f-row">
           <div class="f-grp">
             <label class="f-lbl">Your Name</label>
             <select class="f-inp f-sel" id="sel-name">
-  <option value="">— Select name —</option>
-  <option value="Demo User" data-role="Demo Staff" data-pool="FOH" data-tips="540.00">⚡ Demo User</option>
-  <option value="Aayush Mool" data-role="Bartender" data-pool="FOH" data-tips="758.01">Aayush Mool</option>
-  <option value="Abhijit Dallakoti" data-role="Bartender" data-pool="FOH" data-tips="342.22">Abhijit Dallakoti</option>
-  <option value="Alessandro Iervasi" data-role="Chef De Partie" data-pool="BOH" data-tips="336.43">Alessandro Iervasi</option>
-  <option value="Alma Solomon" data-role="Apprentice Chef" data-pool="BOH" data-tips="199.91">Alma Solomon</option>
-  <option value="Anabella Spreafico" data-role="Assistant Manager" data-pool="FOH" data-tips="309.04">Anabella Spreafico</option>
-  <option value="Antoine Pedusseau" data-role="Wait Staff" data-pool="FOH" data-tips="168.22">Antoine Pedusseau</option>
-  <option value="Ashlie Hanrahan" data-role="Assistant Manager" data-pool="FOH" data-tips="862.41">Ashlie Hanrahan</option>
-  <option value="Brando Rippa" data-role="Senior Chef de Partie" data-pool="BOH" data-tips="427.8">Brando Rippa</option>
-  <option value="Catalina Cuevas Llana" data-role="General Manager" data-pool="FOH" data-tips="1042.03">Catalina Cuevas Llana</option>
-  <option value="Christopher Hoy" data-role="Assistant Head Sommelier" data-pool="FOH" data-tips="847.55">Christopher Hoy</option>
-  <option value="Clarissa Roque" data-role="Chef De Partie" data-pool="BOH" data-tips="317.83">Clarissa Roque</option>
-  <option value="Connor Black" data-role="Senior Sous Chef" data-pool="FOH" data-tips="1042.03">Connor Black</option>
-  <option value="Deborah Divitt" data-role="Restaurant Manager" data-pool="FOH" data-tips="1042.03">Deborah Divitt</option>
-  <option value="Emily Pickering" data-role="Wait Staff" data-pool="FOH" data-tips="872.32">Emily Pickering</option>
-  <option value="Eric Poiret" data-role="Wait Staff" data-pool="FOH" data-tips="552.54">Eric Poiret</option>
-  <option value="Eriko Itagaki" data-role="Chef De Partie" data-pool="BOH" data-tips="322.87">Eriko Itagaki</option>
-  <option value="Eunjin Choi" data-role="Wait Staff" data-pool="FOH" data-tips="410.07">Eunjin Choi</option>
-  <option value="Freddy McLaughlin-Clear" data-role="Chef De Partie" data-pool="BOH" data-tips="253.97">Freddy McLaughlin-Clear</option>
-  <option value="Gary Doyle" data-role="Senior Sous Chef" data-pool="FOH" data-tips="511.11">Gary Doyle</option>
-  <option value="Georgia Ricci" data-role="Host" data-pool="FOH" data-tips="312.01">Georgia Ricci</option>
-  <option value="Jan Sebastian Brogren" data-role="Sommelier" data-pool="FOH" data-tips="856.14">Jan Sebastian Brogren</option>
-  <option value="Jason Rhodes" data-role="Wait Staff" data-pool="FOH" data-tips="1073.39">Jason Rhodes</option>
-  <option value="Jordan Cowan" data-role="Host" data-pool="FOH" data-tips="79.4">Jordan Cowan</option>
-  <option value="Kilijah Grentell" data-role="Apprentice Chef" data-pool="BOH" data-tips="208.36">Kilijah Grentell</option>
-  <option value="Kyle Lenci" data-role="Sommelier" data-pool="FOH" data-tips="1008.35">Kyle Lenci</option>
-  <option value="Liwen Lou" data-role="Sommelier" data-pool="FOH" data-tips="777.89">Liwen Lou</option>
-  <option value="Lorena Actis Danna" data-role="Chef De Partie" data-pool="BOH" data-tips="134.38">Lorena Actis Danna</option>
-  <option value="Louise Massih" data-role="Supervisor" data-pool="FOH" data-tips="1074.05">Louise Massih</option>
-  <option value="Lucas Sumner" data-role="Mob Ready Apprentice" data-pool="BOH" data-tips="82.09">Lucas Sumner</option>
-  <option value="Maria Acosta Hernandez" data-role="Wait Staff" data-pool="FOH" data-tips="330.24">Maria Acosta Hernandez</option>
-  <option value="Mason Black" data-role="Chef De Partie" data-pool="BOH" data-tips="288.69">Mason Black</option>
-  <option value="Matilde Santini" data-role="Wait Staff" data-pool="FOH" data-tips="421.79">Matilde Santini</option>
-  <option value="Michelle Kandou" data-role="Wait Staff" data-pool="FOH" data-tips="927.79">Michelle Kandou</option>
-  <option value="Milo Barran" data-role="Chef De Partie" data-pool="BOH" data-tips="338.35">Milo Barran</option>
-  <option value="Miroslava Mrazikova" data-role="Sommelier" data-pool="FOH" data-tips="865.71">Miroslava Mrazikova</option>
-  <option value="Nicole Richards" data-role="Wait Staff" data-pool="FOH" data-tips="807.27">Nicole Richards</option>
-  <option value="Nisha Basnet" data-role="Wait Staff" data-pool="FOH" data-tips="1109.05">Nisha Basnet</option>
-  <option value="Nishant Shekher" data-role="Chef De Partie" data-pool="BOH" data-tips="308.67">Nishant Shekher</option>
-  <option value="Paulina Vallejos Vergara" data-role="Wait Staff" data-pool="FOH" data-tips="455.64">Paulina Vallejos Vergara</option>
-  <option value="Salvatore Persico" data-role="Head Sommelier" data-pool="FOH" data-tips="693.69">Salvatore Persico</option>
-  <option value="Seokwoo Yang" data-role="Chef De Partie" data-pool="BOH" data-tips="372.43">Seokwoo Yang</option>
-  <option value="Simran Kshetry" data-role="Bartender" data-pool="FOH" data-tips="487.73">Simran Kshetry</option>
-  <option value="Sofia Carrizales Cruz" data-role="Wait Staff" data-pool="FOH" data-tips="431.07">Sofia Carrizales Cruz</option>
-  <option value="Sujan Pant" data-role="Bartender" data-pool="FOH" data-tips="901.04">Sujan Pant</option>
-  <option value="Thomas Bull" data-role="Chef De Partie" data-pool="BOH" data-tips="459.08">Thomas Bull</option>
-  <option value="Thomas Gorringe" data-role="Head Chef" data-pool="BOH" data-tips="633.7">Thomas Gorringe</option>
-  <option value="Victor Jardine" data-role="Junior Sous Chef" data-pool="BOH" data-tips="122.77">Victor Jardine</option>
-  <option value="Vincenzo Parise" data-role="Chef De Partie" data-pool="BOH" data-tips="463.96">Vincenzo Parise</option>
-  <option value="Washington Felipe Henrique De Araujo" data-role="Wait Staff" data-pool="FOH" data-tips="137.84">Washington Felipe Henrique De Araujo</option>
-  <option value="Wirayudha Kurniawan" data-role="Demi Chef" data-pool="BOH" data-tips="219.04">Wirayudha Kurniawan</option>
-</select>
+              <option value="">— Select name —</option>
+            </select>
           </div>
           <div class="f-grp">
             <label class="f-lbl">Role</label>
@@ -446,70 +736,68 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
             <input class="f-inp f-ro" id="inp-pool" type="text" placeholder="Auto-filled" readonly>
           </div>
           <div class="f-grp">
-            <label class="f-lbl">Last Week's Tips</label>
-            <input class="f-inp f-ro" id="inp-tips" type="text" placeholder="Auto-filled" readonly>
+            <label class="f-lbl">This week's tips</label>
+            <input class="f-inp f-ro" id="inp-tips" type="text" placeholder="Updated by manager" readonly>
           </div>
         </div>
       </div>
 
       <!-- Progression cards -->
-      <div id="test-cards" style="display:none;margin-bottom:14px">
-        <!-- Legacy card -->
-        <div id="card-legacy" style="background:var(--s1);border:1px solid var(--b3);border-radius:8px;padding:15px 17px;margin-bottom:8px;cursor:pointer;transition:border-color .15s" onclick="startLegacy()">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div id="test-cards">
+        <div class="prog-card" id="card-legacy" onclick="startLegacy()">
+          <div class="prog-card-inner">
             <div>
               <div style="font-family:var(--fh);font-size:16px;font-weight:700;letter-spacing:.02em" id="legacy-title">Stage 1 · Legacy</div>
               <div style="font-size:11px;color:var(--muted2);margin-top:3px" id="legacy-sub">40 questions · Foundational knowledge · Unlocks 75%</div>
             </div>
-            <div id="legacy-badge" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;flex-shrink:0;background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2)">Start →</div>
+            <div class="prog-card-badge" id="legacy-badge" style="background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2)">Start →</div>
           </div>
         </div>
-        <!-- Master card -->
-        <div id="card-master" style="background:var(--s1);border:1px solid var(--b2);border-radius:8px;padding:15px 17px;opacity:.4;pointer-events:none;transition:all .15s">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div class="prog-card" id="card-master" style="opacity:.4;pointer-events:none" onclick="startMaster()">
+          <div class="prog-card-inner">
             <div>
               <div style="font-family:var(--fh);font-size:16px;font-weight:700;letter-spacing:.02em;color:var(--muted)" id="master-title">Stage 2 · Master</div>
               <div style="font-size:11px;color:var(--muted);margin-top:3px" id="master-sub">100 questions · Deep mastery · Unlocks 100%</div>
             </div>
-            <div id="master-badge" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;flex-shrink:0;background:rgba(90,90,90,.08);color:var(--muted);border:1px solid var(--b3)">Locked</div>
+            <div class="prog-card-badge" id="master-badge" style="background:rgba(90,90,90,.08);color:var(--muted);border:1px solid var(--b3)">Locked</div>
           </div>
         </div>
       </div>
 
-      <div style="text-align:center;margin-top:16px;">
-        <a href="#" onclick="startDemo();return false;" style="font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:2px;" onmouseover="this.style.color='#7a9e7e'" onmouseout="this.style.color='var(--muted)'">Try the 10-question demo →</a>
+      <div style="text-align:center;margin-top:16px">
+        <a href="#" onclick="startDemo();return false;" style="font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:2px">Try a 10-question demo →</a>
       </div>
     </div>
     <div class="l-deco"><div class="l-deco-t">Tip<br>Test</div></div>
   </div>
 </div>
 
-<!-- DEMO BANNER (shown when in demo mode) -->
+<!-- ══ DEMO BANNER ══ -->
 <div id="demo-banner" style="display:none;background:rgba(245,158,11,.12);border-bottom:1px solid rgba(245,158,11,.25);padding:9px 24px;text-align:center;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#f59e0b">
   Demo Preview · 10 Questions · Start with Legacy to earn your Tier
 </div>
 
-<!-- QUIZ -->
+<!-- ══ QUIZ ══ -->
 <div id="s-quiz" class="screen">
   <div class="qz-nav">
     <button onclick="quitQuiz()" style="background:transparent;border:1px solid var(--b3);border-radius:4px;padding:6px 10px;cursor:pointer;flex-shrink:0;transition:border-color .15s,color .15s;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--b3)';this.style.color='var(--muted)'">Not ready yet</button>
     <div class="qz-nav-l">
       <div class="qz-who">Assessment — <span id="qz-namespan"></span></div>
-      <div class="qz-prog-txt" id="qz-progtxt">Q1 of 100</div>
+      <div class="qz-prog-txt" id="qz-progtxt">Q1 of 40</div>
     </div>
     <div class="qz-score-wrap">
       <div class="qz-score-n" id="qz-score">0</div>
-      <div class="qz-score-d">/ 100</div>
+      <div class="qz-score-d">/ 40</div>
     </div>
   </div>
   <div class="qz-track"><div class="qz-bar" id="qz-bar"></div></div>
   <div class="qz-body" id="qz-body"></div>
 </div>
 
-<!-- RESULT -->
+<!-- ══ RESULT ══ -->
 <div id="s-result" class="screen">
   <div class="r-nav">
-    <div class="r-nav-logo"><img src="data:image/png;base64,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" alt="Tier" style="height:18px;vertical-align:middle;margin-right:8px;"><span style="font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);vertical-align:middle">Tip Certification</span></div>
+    <div class="r-nav-logo">Tier · Tip & Training Platform</div>
     <div class="r-date" id="r-date"></div>
   </div>
   <div class="r-hero">
@@ -521,7 +809,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </svg>
       <div class="r-ring-in">
         <div class="r-big" id="r-big">0</div>
-        <div class="r-den">/ 100</div>
+        <div class="r-den">/ 40</div>
       </div>
     </div>
   </div>
@@ -546,7 +834,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       <div class="otm-note" id="otm-note"></div>
       <div class="otm-btns">
         <button class="ob ob-p" onclick="copyResult()">Copy for Manager</button>
-        <button class="ob ob-s" onclick="showMgr()">Manager Portal &rarr;</button>
+        <button class="ob ob-s" onclick="showMgr()">Manager Portal →</button>
       </div>
     </div>
   </div>
@@ -554,59 +842,119 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
   <div class="r-mgr-link"><button class="r-mgr-btn" onclick="showMgr()">Management Portal</button></div>
 </div>
 
-<!-- MANAGER -->
+<!-- ══ MANAGER ══ -->
 <div id="s-mgr" class="screen">
   <div class="m-nav">
     <div class="m-nav-l">
-      <div class="m-nav-ttl"><img src="data:image/png;base64,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" alt="Tier" style="height:20px;vertical-align:middle;margin-right:8px;"><span style="font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);vertical-align:middle">Manager</span></div>
+      <div class="m-nav-ttl" style="font-family:var(--fh);font-size:20px;font-weight:800;font-style:italic;color:#8fa87a;letter-spacing:-.01em;text-transform:uppercase">TIER.</div>
       <div class="m-badge">Restricted</div>
+      <div class="m-venue-tag" id="mgr-venue-tag">Venue</div>
     </div>
     <div class="m-nav-r">
-      <div class="m-nav-otm">onthemonee.com</div>
-      <button class="m-back" onclick="goBack()">&#8592; Back</button>
+      <button class="m-back" onclick="goBack()">← Back</button>
     </div>
   </div>
+
   <div class="m-body">
-
-    <div class="m-kpis">
-      <div class="kpi"><div class="kpi-n" id="kpi-p" style="color:var(--amber)">0</div><div class="kpi-l">Pending</div></div>
-      <div class="kpi"><div class="kpi-n" id="kpi-a" style="color:var(--green)">0</div><div class="kpi-l">Approved</div></div>
-      <div class="kpi"><div class="kpi-n" id="kpi-f" style="color:var(--green)">0</div><div class="kpi-l">Full 100%</div></div>
-      <div class="kpi"><div class="kpi-n" id="kpi-av" style="color:var(--gold)">—</div><div class="kpi-l">Avg Score</div></div>
+    <!-- Tab bar -->
+    <div class="m-tabs">
+      <button class="m-tab active" onclick="mgrTab(this,'tab-approvals')">Approvals</button>
+      <button class="m-tab" onclick="mgrTab(this,'tab-tips')">Tip Upload</button>
+      <button class="m-tab" onclick="mgrTab(this,'tab-staff')">Staff List</button>
+      <button class="m-tab" onclick="mgrTab(this,'tab-otm')">OTM Guide</button>
     </div>
 
-    <div class="m-sec">Pending Approval</div>
-    <div class="pend-list" id="pend-list"><div class="empty">No assessments pending</div></div>
-
-    <div class="m-sec">Approved — OTM Ready</div>
-    <div class="appr-list" id="appr-list"><div class="empty">No approved records yet</div></div>
-
-    <div class="m-sec">Last Week · 09–15 Feb 2026</div>
-    <div class="week-panel">
-      <div class="wk-hd">
-        <div class="wk-ttl">OnTheMonee Tip Report</div>
-        <div class="wk-sub">Paid 19/02/2026 &nbsp;·&nbsp; $27,000.00 gross &nbsp;·&nbsp; 50 staff</div>
+    <!-- ── TAB: APPROVALS ── -->
+    <div class="m-tab-content active" id="tab-approvals">
+      <div class="m-kpis">
+        <div class="kpi"><div class="kpi-n" id="kpi-p" style="color:var(--amber)">0</div><div class="kpi-l">Pending</div></div>
+        <div class="kpi"><div class="kpi-n" id="kpi-a" style="color:var(--green)">0</div><div class="kpi-l">Approved</div></div>
+        <div class="kpi"><div class="kpi-n" id="kpi-f" style="color:var(--green)">0</div><div class="kpi-l">Full 100%</div></div>
+        <div class="kpi"><div class="kpi-n" id="kpi-av" style="color:var(--gold)">—</div><div class="kpi-l">Avg Score</div></div>
       </div>
-      <div class="wk-kpis">
-        <div class="wk-k"><div class="wk-kn">50</div><div class="wk-kl">Staff Paid</div></div>
-        <div class="wk-k"><div class="wk-kn">$27k</div><div class="wk-kl">Gross Tips</div></div>
-        <div class="wk-k"><div class="wk-kn">$540</div><div class="wk-kl">Avg / Person</div></div>
-      </div>
-      <div class="wk-scroll" id="wk-scroll"></div>
+      <div class="m-sec">Pending Approval</div>
+      <div class="pend-list" id="pend-list"><div class="empty">No assessments pending</div></div>
+      <div class="m-sec">Approved — OTM Ready</div>
+      <div class="appr-list" id="appr-list"><div class="empty">No approved records yet</div></div>
     </div>
 
-    <div class="m-sec">OnTheMonee — How to Apply</div>
-    <div class="how-panel">
-      <div class="how-hd">
-        <div class="how-logo">OTM</div>
-        <div class="how-ttl">Updating Tip Scaling After Approval</div>
+    <!-- ── TAB: TIP UPLOAD ── -->
+    <div class="m-tab-content" id="tab-tips">
+      <div class="tip-upload-panel">
+        <div class="tip-upload-head">
+          <div class="tip-upload-icon">💰</div>
+          <div>
+            <div class="tip-upload-title">Upload This Week's Tips</div>
+            <div class="tip-upload-sub">Enter each staff member's OTM gross tip amount for the week. Certified allocation is applied automatically.</div>
+          </div>
+        </div>
+        <div class="tip-upload-body">
+          <div class="tip-week-meta">
+            <div>
+              <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:5px">Week ending</div>
+              <input type="date" id="tip-week-end" class="tip-week-meta">
+            </div>
+            <div>
+              <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:5px">Pay date</div>
+              <input type="date" id="tip-pay-date" class="tip-week-meta">
+            </div>
+          </div>
+          <div class="m-sec">Staff · Gross Tip Amounts</div>
+          <div style="font-family:var(--fm);font-size:9px;color:var(--muted);margin-bottom:10px;letter-spacing:.05em">
+            Certified tier shown next to each name. Enter OTM gross amount — allocated amount is calculated automatically.
+          </div>
+          <div class="tip-staff-grid" id="tip-staff-grid"></div>
+          <div class="tip-total-bar">
+            <div class="tip-total-lbl">Total gross entered</div>
+            <div class="tip-total-val" id="tip-total-display">$0.00</div>
+          </div>
+          <button class="tip-save-btn" onclick="saveTipWeek()">Save &amp; Apply to Staff Records →</button>
+          <button class="tip-csv-btn" onclick="exportTipCSV()">Export CSV for OTM Upload</button>
+        </div>
       </div>
-      <div class="how-steps">
-        <div class="how-step"><div class="how-n">1</div><div class="how-tx">Log in to the <strong>OnTheMonee employer portal</strong> at onthemonee.com/employer</div></div>
-        <div class="how-step"><div class="how-n">2</div><div class="how-tx">Go to <strong>Employees &rarr; Tip Pool Settings</strong> and find the staff member by name</div></div>
-        <div class="how-step"><div class="how-n">3</div><div class="how-tx">Update their <strong>tip allocation percentage</strong> to match the certified tier — 100%, 75%, or 50%</div></div>
-        <div class="how-step"><div class="how-n">4</div><div class="how-tx">Save. The new rate applies from the <strong>next distribution cycle</strong></div></div>
-        <div class="how-step"><div class="how-n">5</div><div class="how-tx">Return here and click <strong>Approve</strong> to log the change as your audit trail</div></div>
+
+      <div class="m-sec">Previous Weeks</div>
+      <div class="wk-history" id="wk-history"><div class="empty">No weeks uploaded yet</div></div>
+    </div>
+
+    <!-- ── TAB: STAFF LIST ── -->
+    <div class="m-tab-content" id="tab-staff">
+      <div class="staff-list-panel">
+        <div class="staff-list-head">
+          <div class="staff-list-title">Staff Roster</div>
+          <button class="staff-add-btn" onclick="toggleAddStaff()">+ Add Staff</button>
+        </div>
+        <div class="staff-add-form" id="staff-add-form">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Add new staff member</div>
+          <div class="staff-add-row">
+            <input class="saf-inp" id="saf-name" type="text" placeholder="Full name">
+            <input class="saf-inp" id="saf-role" type="text" placeholder="Role (e.g. Wait Staff)">
+            <select class="saf-sel" id="saf-pool">
+              <option value="FOH">FOH</option>
+              <option value="BOH">BOH</option>
+            </select>
+            <button class="saf-add-btn" onclick="addStaffMember()">Add</button>
+          </div>
+        </div>
+        <div id="staff-roster-list"></div>
+      </div>
+    </div>
+
+    <!-- ── TAB: OTM GUIDE ── -->
+    <div class="m-tab-content" id="tab-otm">
+      <div class="how-panel">
+        <div class="how-hd">
+          <div class="how-logo">OTM</div>
+          <div class="how-ttl">Updating Tip Scaling After Approval</div>
+        </div>
+        <div class="how-steps">
+          <div class="how-step"><div class="how-n">1</div><div class="how-tx">Log in to the <strong>OnTheMonee employer portal</strong> at onthemonee.com/employer</div></div>
+          <div class="how-step"><div class="how-n">2</div><div class="how-tx">Go to <strong>Employees → Tip Pool Settings</strong> and find the staff member by name</div></div>
+          <div class="how-step"><div class="how-n">3</div><div class="how-tx">Update their <strong>tip allocation percentage</strong> to match the certified tier — 100%, 75%, or 50%</div></div>
+          <div class="how-step"><div class="how-n">4</div><div class="how-tx">Save. The new rate applies from the <strong>next distribution cycle</strong></div></div>
+          <div class="how-step"><div class="how-n">5</div><div class="how-tx">Return here and click <strong>Approve</strong> to log the change as your audit trail</div></div>
+          <div class="how-step"><div class="how-n">6</div><div class="how-tx">Use <strong>Tip Upload</strong> each week to record gross amounts — the platform tracks allocated vs gross automatically</div></div>
+        </div>
       </div>
     </div>
 
@@ -616,391 +964,377 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 <div class="toast" id="toast"></div>
 
 <script>
-// ── STAFF DATA (from OTM report 09-15 Feb 2026) ──
-const STAFF = [{"name": "Nisha Basnet", "role": "Wait Staff", "pool": "FOH", "weekTips": 1109.05}, {"name": "Louise Massih", "role": "Supervisor", "pool": "FOH", "weekTips": 1074.05}, {"name": "Jason Rhodes", "role": "Wait Staff", "pool": "FOH", "weekTips": 1073.39}, {"name": "Catalina Cuevas Llana", "role": "General Manager", "pool": "FOH", "weekTips": 1042.03}, {"name": "Connor Black", "role": "Senior Sous Chef", "pool": "FOH", "weekTips": 1042.03}, {"name": "Deborah Divitt", "role": "Restaurant Manager", "pool": "FOH", "weekTips": 1042.03}, {"name": "Kyle Lenci", "role": "Sommelier", "pool": "FOH", "weekTips": 1008.35}, {"name": "Michelle Kandou", "role": "Wait Staff", "pool": "FOH", "weekTips": 927.79}, {"name": "Sujan Pant", "role": "Bartender", "pool": "FOH", "weekTips": 901.04}, {"name": "Emily Pickering", "role": "Wait Staff", "pool": "FOH", "weekTips": 872.32}, {"name": "Miroslava Mrazikova", "role": "Sommelier", "pool": "FOH", "weekTips": 865.71}, {"name": "Ashlie Hanrahan", "role": "Assistant Manager", "pool": "FOH", "weekTips": 862.41}, {"name": "Jan Sebastian Brogren", "role": "Sommelier", "pool": "FOH", "weekTips": 856.14}, {"name": "Christopher Hoy", "role": "Assistant Head Sommelier", "pool": "FOH", "weekTips": 847.55}, {"name": "Nicole Richards", "role": "Wait Staff", "pool": "FOH", "weekTips": 807.27}, {"name": "Liwen Lou", "role": "Sommelier", "pool": "FOH", "weekTips": 777.89}, {"name": "Aayush Mool", "role": "Bartender", "pool": "FOH", "weekTips": 758.01}, {"name": "Salvatore Persico", "role": "Head Sommelier", "pool": "FOH", "weekTips": 693.69}, {"name": "Thomas Gorringe", "role": "Head Chef", "pool": "BOH", "weekTips": 633.7}, {"name": "Eric Poiret", "role": "Wait Staff", "pool": "FOH", "weekTips": 552.54}, {"name": "Gary Doyle", "role": "Senior Sous Chef", "pool": "FOH", "weekTips": 511.11}, {"name": "Simran Kshetry", "role": "Bartender", "pool": "FOH", "weekTips": 487.73}, {"name": "Vincenzo Parise", "role": "Chef De Partie", "pool": "BOH", "weekTips": 463.96}, {"name": "Thomas Bull", "role": "Chef De Partie", "pool": "BOH", "weekTips": 459.08}, {"name": "Paulina Vallejos Vergara", "role": "Wait Staff", "pool": "FOH", "weekTips": 455.64}, {"name": "Sofia Carrizales Cruz", "role": "Wait Staff", "pool": "FOH", "weekTips": 431.07}, {"name": "Brando Rippa", "role": "Senior Chef de Partie", "pool": "BOH", "weekTips": 427.8}, {"name": "Matilde Santini", "role": "Wait Staff", "pool": "FOH", "weekTips": 421.79}, {"name": "Eunjin Choi", "role": "Wait Staff", "pool": "FOH", "weekTips": 410.07}, {"name": "Seokwoo Yang", "role": "Chef De Partie", "pool": "BOH", "weekTips": 372.43}, {"name": "Abhijit Dallakoti", "role": "Bartender", "pool": "FOH", "weekTips": 342.22}, {"name": "Milo Barran", "role": "Chef De Partie", "pool": "BOH", "weekTips": 338.35}, {"name": "Alessandro Iervasi", "role": "Chef De Partie", "pool": "BOH", "weekTips": 336.43}, {"name": "Maria Acosta Hernandez", "role": "Wait Staff", "pool": "FOH", "weekTips": 330.24}, {"name": "Eriko Itagaki", "role": "Chef De Partie", "pool": "BOH", "weekTips": 322.87}, {"name": "Clarissa Roque", "role": "Chef De Partie", "pool": "BOH", "weekTips": 317.83}, {"name": "Georgia Ricci", "role": "Host", "pool": "FOH", "weekTips": 312.01}, {"name": "Anabella Spreafico", "role": "Assistant Manager", "pool": "FOH", "weekTips": 309.04}, {"name": "Nishant Shekher", "role": "Chef De Partie", "pool": "BOH", "weekTips": 308.67}, {"name": "Mason Black", "role": "Chef De Partie", "pool": "BOH", "weekTips": 288.69}, {"name": "Freddy McLaughlin-Clear", "role": "Chef De Partie", "pool": "BOH", "weekTips": 253.97}, {"name": "Wirayudha Kurniawan", "role": "Demi Chef", "pool": "BOH", "weekTips": 219.04}, {"name": "Kilijah Grentell", "role": "Apprentice Chef", "pool": "BOH", "weekTips": 208.36}, {"name": "Alma Solomon", "role": "Apprentice Chef", "pool": "BOH", "weekTips": 199.91}, {"name": "Antoine Pedusseau", "role": "Wait Staff", "pool": "FOH", "weekTips": 168.22}, {"name": "Washington Felipe Henrique De Araujo", "role": "Wait Staff", "pool": "FOH", "weekTips": 137.84}, {"name": "Lorena Actis Danna", "role": "Chef De Partie", "pool": "BOH", "weekTips": 134.38}, {"name": "Victor Jardine", "role": "Junior Sous Chef", "pool": "BOH", "weekTips": 122.77}, {"name": "Lucas Sumner", "role": "Mob Ready Apprentice", "pool": "BOH", "weekTips": 82.09}, {"name": "Jordan Cowan", "role": "Host", "pool": "FOH", "weekTips": 79.4}];
+// ════════════════════════════════════════════════
+// PLATFORM VENUE CONFIG
+// Add new venues here — each gets isolated storage
+// ════════════════════════════════════════════════
+const VENUES = {
+  'demo': {
+    name: 'Demo Venue',
+    code: 'demo',
+    staff: [
+      {name:'Alex Thompson', role:'Wait Staff', pool:'FOH'},
+      {name:'Jordan Lee', role:'Bartender', pool:'FOH'},
+      {name:'Sam Nguyen', role:'Supervisor', pool:'FOH'},
+      {name:'Casey Williams', role:'Chef De Partie', pool:'BOH'},
+      {name:'Riley Chen', role:'Host', pool:'FOH'},
+      {name:'Morgan Davis', role:'Sommelier', pool:'FOH'},
+      {name:'Taylor Smith', role:'Demi Chef', pool:'BOH'},
+      {name:'Jamie Brown', role:'Assistant Manager', pool:'FOH'},
+    ]
+  },
+  // Add new venues below:
+  // 'venue-slug': {
+  //   name: 'Venue Display Name',
+  //   code: 'secretcode',
+  //   staff: [{name:'...', role:'...', pool:'FOH'}]
+  // },
+};
 
-// ── QUESTION BANK ──
-const hatsAllQuestions = {
-
-  // ── FOOD QUESTIONS ──
-
-  entree: [
-    {cat:'entree', q:'What type of base is used for the Caviar snack?', options:['Rye crispbread','Pressed Sebago potato','Brioche toast','Buckwheat blini'], answer:1, exp:'Sebago potato grated, mixed with vegan butter and starch, pressed and fried until crisp.'},
-    {cat:'entree', q:'At what exact temperature is the egg yolk jam in the Caviar snack cooked?', options:['63°C','68°C','70°C','75°C'], answer:2, exp:'Cooked sous vide at exactly 70°C for one hour, then blended with chardonnay vinegar.'},
-    {cat:'entree', q:'Where does the Black River Oscietra caviar originate?', options:['Tasmania, Australia','Iran, Caspian Sea','Uruguay, South America','Norway, North Sea'], answer:2, exp:'Black River is the first caviar farm established in the southern hemisphere, located in Uruguay.'},
-    {cat:'entree', q:'What condiment accompanies the Sydney Rock Oysters?', options:['Champagne mignonette','Merlot mignonette','Horseradish cream','Ponzu dressing'], answer:1, exp:'Merlot mignonette — shallots, merlot vinegar, honey and cracked pepper.'},
-    {cat:'entree', q:'Sydney Rock Oysters are endemic to Australia. What is the most southern extent of their natural range?', options:['Merimbula, NSW','Wingan Inlet, VIC','Coffin Bay, SA','Albany, WA'], answer:1, exp:'Found in sheltered estuaries from Hervey Bay QLD to Wingan Inlet VIC.'},
-    {cat:'entree', q:'What citrus dresses the Blue Swimmer Crab?', options:['Yuzu','Lemon','Lime','Mandarin'], answer:2, exp:'The crab is lightly dressed with lime juice, lime zest and olive oil.'},
-    {cat:'entree', q:'Taramasalata is made from which ingredient?', options:['Smoked trout roe','Smoked cod roe','Cured salmon roe','Sea urchin'], answer:1, exp:'A Greek/Eastern Mediterranean emulsion made from smoked cod roe — briny and umami-packed.'},
-    {cat:'entree', q:'The Yellowfin Tuna dressing is split with mandarin balsamic vinegar from where?', options:['Japan','Jeju Island, South Korea','China','Taiwan'], answer:1, exp:'The mandarin balsamic comes from Jeju Island, South Korea.'},
-    {cat:'entree', q:'What native Australian citrus features in the Yellowfin Tuna dish?', options:['Davidson plum','Quandong','Finger lime','Lemon myrtle'], answer:2, exp:'Finger lime pearls burst with a fresh citrusy pop and hint of pepper.'},
-    {cat:'entree', q:'The herb in the Yellowfin Tuna is from the mint family — what is it called?', options:['Perilla (shiso)','Vietnamese mint','Thai basil','Lemon balm'], answer:0, exp:'Shiso (perilla) — a soft purple herb from the mint family with a delicate floral flavour.'},
-    {cat:'entree', q:'Which oil finishes the Yellowfin Tuna dressing?', options:['Truffle oil','Nasturtium oil','Dill oil','Chive oil'], answer:1, exp:'The dressing is split with mandarin balsamic vinegar and nasturtium oil.'},
-    {cat:'entree', q:'What does the kohlrabi undergo before being plated in the Blue Swimmer Crab dish?', options:['It is served raw','It is roasted','It is pickled and shaved','It is charred'], answer:2, exp:'Kohlrabi is pickled and shaved; cucumber is lightly pickled and thinly sliced underneath.'},
-    {cat:'entree', q:'The bread at Aria is made by which bakery?', options:['Iggy\'s','Bourke Street Bakery','Sonoma','Brickfields'], answer:2, exp:'Sonoma makes the long-fermented sourdough exclusively for Aria using white, wholemeal and ancient grain flours.'},
-    {cat:'entree', q:'What fat content does CopperTree Farm butter have?', options:['80–82%','82–84%','84–85%','86–88%'], answer:2, exp:'84–85% fat content — giving it a clean, fresh flavour with natural acidity.'},
-    {cat:'entree', q:'What vinegar is blended into the Caviar egg yolk jam?', options:['Champagne vinegar','Chardonnay vinegar','Rice wine vinegar','White balsamic'], answer:1, exp:'The egg is blended with chardonnay vinegar until silky smooth after being cooked at 70°C.'},
-    {cat:'entree', q:'Where is Yellowfin Tuna sourced from?', options:['Port Stephens only','Bermagui, Mooloolaba or Spencer Gulf','Hervey Bay only','Eden, NSW'], answer:1, exp:'Sashimi grade, line caught from Bermagui, Mooloolaba or Spencer Gulf depending on the day\'s market.'},
-    {cat:'entree', q:'What pearls are scattered through the Blue Swimmer Crab dish?', options:['Sturgeon caviar','Flying fish roe','Yarra Valley Caviar smoked salmon roe','Lumpfish roe'], answer:2, exp:'Yarra Valley Caviar smoked salmon roe pearls feature alongside the taramasalata.'},
-    {cat:'entree', q:'The asparagus in the vegetarian entrée comes from which region?', options:['Mildura, VIC','Koo Wee Rup, VIC','Stanthorpe, QLD','Riverland, SA'], answer:1, exp:'Green asparagus from Koo Wee Rup, Victoria — Australia\'s largest asparagus growing region.'},
-    {cat:'entree', q:'Jurassic quail is presented how many ways in the quail entrée?', options:['One — roasted whole','Two — breast on crown and leg pressé','Three — breast, leg and wing','Two — both legs only'], answer:1, exp:'Two ways: quail breast pan roasted on the crown blushing pink, and quail leg pressé (deboned, layered with chicken mousse, pressed and caramelised).'},
-    {cat:'entree', q:'What is the quail leg pressé in the quail entrée?', options:['Confit quail leg sliced','Deboned legs layered with chicken mousse, steamed, pressed then pan roasted','Slow-roasted leg shredded','Deep fried quail drumstick'], answer:1, exp:'Deboned quail legs layered with chicken mousse, steamed, pressed and pan roasted until caramelised.'},
-  ],
-
-  main: [
-    {cat:'main', q:'What breed is the Kinross KS7 lamb?', options:['Merino','Dorper','Hampshire Downs','Suffolk'], answer:2, exp:'The near-extinct Hampshire Downs breed from Kinross Station, Holbrook NSW — prized for exceptional marbling.'},
-    {cat:'main', q:'Where is Kinross Station located?', options:['Orange, NSW','Holbrook, NSW','Wagga Wagga, NSW','Armidale, NSW'], answer:1, exp:'Kinross Station is in Holbrook in the southern NSW tablelands.'},
-    {cat:'main', q:'What offal component features in the Kinross Lamb dish?', options:['Liver','Kidney','Sweetbreads (thymus gland)','Heart'], answer:2, exp:'Sweetbreads — the thymus gland — creamy, sweet and delicate with none of the strong iron flavour of liver.'},
-    {cat:'main', q:'The Kinross lamb sauce is seasoned with which condiment?', options:['Pickled capers','Fermented mint gel','Dried mushroom powder','Smoked paprika oil'], answer:1, exp:'Roasted lamb bones and chicken stock reduced and seasoned with fermented mint gel.'},
-    {cat:'main', q:'The Maremma Duck is named after what?', options:['An Italian coastal region','A breed of sheepdog','A French cooking technique','A Tasmanian farm'], answer:1, exp:'The Maremma is a breed of Italian sheepdog that guards the flock on the farm at Taralga, NSW.'},
-    {cat:'main', q:'How long is the Maremma Duck dry aged?', options:['3–5 days','1–2 weeks','3–4 weeks','48 hours'], answer:1, exp:'Dry aged for 1–2 weeks to dry the skin, then glazed with thyme honey and fennel pollen.'},
-    {cat:'main', q:'What is the Maremma Duck glazed with before serving?', options:['Orange blossom honey','Thyme honey','Lavender honey','Raw cane sugar'], answer:1, exp:'Glazed with thyme honey and finished with fennel pollen.'},
-    {cat:'main', q:'What happens to the Maremma Duck legs and livers?', options:['Served separately','Confited and sliced','Minced and stuffed into the neck skin as a sausage','Discarded'], answer:2, exp:'No-waste approach: minced duck legs and livers stuffed into the neck skin, steamed then caramelised.'},
-    {cat:'main', q:'What fruit features in the Maremma Duck dish?', options:['Blackberry','Tasmanian cherry','Quince','Blood orange'], answer:1, exp:'Pickled Tasmanian cherry pairs with the duck alongside rhubarb two ways and onion soubise.'},
-    {cat:'main', q:'What is the Maremma Duck sauce made from?', options:['Veal stock and thyme','Roasted duck bones, red currant jelly and cherry vinegar','Chicken stock and port','Butter and cognac'], answer:1, exp:'Roasted duck bones, red currant jelly and house-made cherry vinegar.'},
-    {cat:'main', q:'How many beef cuts are available on the menu?', options:['One','Two','Three','Four'], answer:2, exp:'Three cuts: O\'Connor Angus fillet (pan roasted), Blackmore 9+ wagyu rump cap, Chauvel wagyu striploin.'},
-    {cat:'main', q:'The Angus beef fillet is from which producer?', options:['Blackmore','O\'Connor','Rangers Valley','Chauvel'], answer:1, exp:'The O\'Connor Angus fillet is pan roasted while the wagyu cuts are grilled over charcoal.'},
-    {cat:'main', q:'What wagyu score is the Blackmore rump cap?', options:['7+','8+','9+','10+'], answer:2, exp:'Blackmore 9+ wagyu rump cap — one of three beef options, grilled over charcoal.'},
-    {cat:'main', q:'The black garlic purée is fermented for how long?', options:['1 week','2 weeks','3 weeks','1 month'], answer:3, exp:'Fermented for a full month, developing sweet, umami-rich depth.'},
-    {cat:'main', q:'What is cavolo nero also known as?', options:['Red cabbage','Tuscan or black cabbage','Chinese broccoli','Savoy cabbage'], answer:1, exp:'Also known as Tuscan kale or black cabbage — blanched and dressed in garlic oil.'},
-    {cat:'main', q:'The confit shiitake in the Beef dish is cooked in which oil?', options:['Truffle oil','Sesame oil','Kombu oil','Chilli oil'], answer:2, exp:'Confit in kombu oil until tender, then finished in koji butter.'},
-    {cat:'main', q:'What is the beef sauce finished with?', options:['Red wine and butter','Malt and sherry vinegar','Truffle and port','Soy and mirin'], answer:1, exp:'Malt and sherry vinegar beef sauce brings acidity and depth.'},
-    {cat:'main', q:'What vegetable purée accompanies the Kinross Lamb?', options:['Pea purée','Cauliflower purée','Zucchini purée','Potato purée'], answer:2, exp:'Zucchini purée is plated alongside the lamb, sweetbreads, fermented mint gel and cime di rapa.'},
-    {cat:'main', q:'What is the Marron in the WA Black Marron dish?', options:['A type of ocean crab','The largest Australian freshwater crayfish','A deep-sea lobster','A species of giant prawn'], answer:1, exp:'Western Australian Marron (Cherax cainii) — the largest Australian freshwater crayfish, third largest globally, with sweet flavour similar to lobster.'},
-    {cat:'main', q:'What grains crumb the carrot in the Marron dish?', options:['Breadcrumbs and panko','Puffed quinoa, buckwheat, amaranth and sorghum','Crushed hazelnuts','Polenta and semolina'], answer:1, exp:'Baby heirloom carrot is crumbed in puffed grains — quinoa, buckwheat, amaranth and sorghum.'},
-    {cat:'main', q:'The Marron tails are cooked on what?', options:['Pan seared in butter','Steamed then plated','Charcoal BBQ then glazed in marron shell oil','Deep fried'], answer:2, exp:'Tails skewered to keep straight, seared on the charcoal BBQ and glazed in marron shell oil.'},
-    {cat:'main', q:'The agnolotti in the vegetarian pasta dish is filled with what?', options:['Ricotta and spinach','Burraduc buffalo curd','Goat cheese and herbs','Pumpkin and sage'], answer:1, exp:'Hand-made agnolotti filled with Burraduc buffalo curd (Dolcenina) — lightly seasoned and whipped.'},
-    {cat:'main', q:'Where is Burraduc, the buffalo dairy farm, located?', options:['Hunter Valley, NSW','Bungwahl, near the NSW central coast','Yarra Valley, VIC','Margaret River, WA'], answer:1, exp:'Burraduc is a buffalo dairy farm in Bungwahl, near the NSW central coast — winner of Producer of the Year.'},
-    {cat:'main', q:'What finishing spice is added to the Maremma Duck skin?', options:['Five spice','Fennel pollen','Sumac','Ras el hanout'], answer:1, exp:'Fennel pollen is added alongside the thyme honey glaze.'},
-    {cat:'main', q:'Which cut of beef is pan roasted rather than charcoal grilled?', options:['Wagyu rump cap','Wagyu striploin','Angus fillet','All are charcoal grilled'], answer:2, exp:'The O\'Connor Angus fillet is pan roasted; the two wagyu cuts are grilled over charcoal.'},
-    {cat:'main', q:'What butter is the confit shiitake finished in?', options:['Truffle butter','Brown butter','Koji butter','Herb butter'], answer:2, exp:'Confit in kombu oil then finished in koji butter for an umami hit.'},
-    {cat:'main', q:'What accompanies the Kinross Lamb alongside the purée?', options:['Asparagus and hollandaise','Cime di rapa and yellow squash','Peas and mint','Broccoli and anchovy'], answer:1, exp:'Cime di rapa (bitter Italian greens) and yellow squash accompany the lamb.'},
-    {cat:'main', q:'The Marron sauce is made from shells reduced with what?', options:['Cream and butter','Crème fraîche, fennel flower vinegar and lime juice, split with tarragon oil','White wine and shallots','Saffron and fish stock'], answer:1, exp:'Reduced with crème fraîche, fennel flower vinegar and lime juice, split with tarragon oil.'},
-    {cat:'main', q:'Rhubarb in the Duck dish is served how?', options:['Raw only','Roasted only','Two ways','As a jus'], answer:2, exp:'Rhubarb is served two ways alongside the pickled Tasmanian cherry and onion soubise.'},
-    {cat:'main', q:'What is onion soubise?', options:['A caramelised onion chutney','A slowly cooked onion and butter purée','Pickled shallots','Deep fried onion rings'], answer:1, exp:'Classical French preparation — onions slowly cooked in butter until soft and creamy.'},
-  ],
-
-  dessert: [
-    {cat:'dessert', q:'Which two mango varieties are used in the Mango Soufflé base?', options:['Kensington Pride and R2E2','Kesar and Alphonso','Bowen and Nam Doc Mai','Tommy Atkins and Keitt'], answer:1, exp:'Kesar and Alphonso mangoes blended with passionfruit and lemon for complexity.'},
-    {cat:'dessert', q:'What must never happen with the Mango Soufflé?', options:['It must not be pre-made','It must never be kept waiting — it collapses quickly','It must never be reheated','It must not touch cream'], answer:1, exp:'Made to order and collapses quickly — it must be delivered to the table immediately.'},
-    {cat:'dessert', q:'The Mango Soufflé is accompanied by what in the ramekin?', options:['Crème brûlée','Elderflower crème diplomat with mango sorbet','Clotted cream','Vanilla ice cream'], answer:1, exp:'Elderflower crème diplomat — crème anglaise folded with whipped cream and elderflower — plus mango sorbet.'},
-    {cat:'dessert', q:'What percentage is the Valrhona chocolate in the Milk Chocolate dessert?', options:['28%','35%','40%','55%'], answer:1, exp:'Valrhona 35% milk chocolate mousse built in a mould with multiple texture layers.'},
-    {cat:'dessert', q:'What is Pedro Ximenez?', options:['A Spanish red wine','A rich Spanish sherry from sun-dried Palomino grapes','A Portuguese port','An Italian amaro'], answer:1, exp:'Rich dark Spanish sherry from sun-dried Palomino grapes — used as a gel on the dessert.'},
-    {cat:'dessert', q:'What flour makes the Milk Chocolate dessert base gluten free?', options:['Rice flour','Almond flour','Buckwheat flour','Tapioca starch'], answer:2, exp:'Buckwheat flour sponge base layered with chewy caramel.'},
-    {cat:'dessert', q:'What does "namelaka" mean in Japanese?', options:['Silky smooth','Extremely creamy','Lightly frozen','Cloud-like'], answer:1, exp:'Namelaka means "extremely creamy" — made with coconut purée and dairy-free white chocolate.'},
-    {cat:'dessert', q:'Which three citrus fruits feature in the Matcha, Coconut & Citrus dessert?', options:['Yuzu, lime and grapefruit','Navel orange, yuzu and mandarin','Lemon, lime and yuzu','Kalamansi, bergamot and orange'], answer:1, exp:'Navel orange, yuzu and mandarin prepared as a confit for the top layer.'},
-    {cat:'dessert', q:'What chocolate is the Matcha dessert dipped in?', options:['Valrhona dark','Valrhona white','Valrhona yuzu','Valrhona milk'], answer:2, exp:'The entire dessert is dipped in Valrhona yuzu chocolate and finished with desiccated coconut.'},
-    {cat:'dessert', q:'Where does the goat cheese for the Summer Berries dessert come from?', options:['Woodside Cheese','Meredith Farms','Milawa Cheese','Section 28'], answer:1, exp:'Meredith Farms chevre combined with Valrhona white chocolate to make the panna cotta.'},
-    {cat:'dessert', q:'What is the flower-based gel in the Summer Berries dessert made from?', options:['Rose water','Lavender liqueur','Crème de violette liqueur','Elderflower liqueur'], answer:2, exp:'Crème de violette — a liqueur distilled from flowers — set with agar and gelatine.'},
-    {cat:'dessert', q:'How is the strawberry decoration on the Summer Berries dessert made?', options:['Fresh sliced strawberries','Strawberry compote','Strawberry purée dehydrated into a crisp tuile sheet','Freeze-dried powder'], answer:2, exp:'Strawberry purée dehydrated into a crisp tuile sheet used as finishing décor.'},
-    {cat:'dessert', q:'What is at the centre of the Milk Chocolate dessert?', options:['Hazelnut praline','Half-sphere cremeux of crème anglaise, hazelnut paste and white chocolate','Liquid caramel','Dark ganache'], answer:1, exp:'The cremeux is crème anglaise blended with hazelnut paste and white chocolate — rich and silky.'},
-    {cat:'dessert', q:'The Matcha, Coconut & Citrus requires no modifications to be what?', options:['Gluten free','Nut free','Dairy free','Vegan'], answer:2, exp:'Made entirely without dairy — the namelaka uses coconut and dairy-free white chocolate.'},
-    {cat:'dessert', q:'The lime confit in the Mango Soufflé is made how?', options:['Zest only cured in sugar','Entire fruit — peel blanched three times then cooked with sugar and pectin','Juice and sugar reduced to a gel','Freeze-dried lime powder'], answer:1, exp:'Entire fruit used: peel blanched three times to remove bitterness, then cooked with sugar and pectin.'},
-  ],
-
-  other: [
-    {cat:'other', q:'What is the Sonoma bakery named after?', options:['A French village','A small town in central western NSW — Bellata','A Californian wine region','The founding baker\'s mother'], answer:1, exp:'Sonoma takes its name from Bellata, a small town in central western NSW.'},
-    {cat:'other', q:'Aria has held two Chef Hats since which year?', options:['1999','2003','2005','2010'], answer:2, exp:'Aria earned its second Chef Hat in 2005 and has maintained it every year since.'},
-    {cat:'other', q:'Who is the current Executive Chef at Aria?', options:['Matt Moran','Peter Gilmore','Tom Gorringe','Neil Perry'], answer:2, exp:'Tom Gorringe, originally from the Southern Highlands, leads the kitchen with a focus on seasonal Australian produce.'},
-    {cat:'other', q:'When did Aria open?', options:['January 1997','September 1999','March 2001','June 2005'], answer:1, exp:'Aria opened at 1 Macquarie Street, East Circular Quay in September 1999.'},
-    {cat:'other', q:'What does the name "Aria" refer to?', options:['An Italian word for air','A musical term for a solo voice','A harbour navigation term','Matt Moran\'s daughter\'s name'], answer:1, exp:'Named after the musical term for a solo voice — reflecting the harmony of food and service.'},
-    {cat:'other', q:'What is the Aria Margarita made with?', options:['Don Julio Reposado, triple sec, lime','Patron El Alto Tequila, Aria Curacao, fresh lime','Patron Silver, Cointreau, lemon juice','Grey Goose, blue curacao, lime'], answer:1, exp:'Patron El Alto Tequila, Aria Curacao and fresh lime, served in a rocks glass with a native plum salt half rim. $45.'},
-    {cat:'other', q:'What surcharge applies on public holidays?', options:['10%','20%','5%','15%'], answer:3, exp:'A 15% surcharge applies on public holidays. A 1% surcharge also applies to all credit card payments.'},
-    {cat:'other', q:'The Nitro Gin Fizz is served in what glass?', options:['Highball','Nick & Nora','Tulip','White coupe'], answer:2, exp:'The Nitro Gin Fizz is whipped via ISI into a frozen tulip glass, garnished with rhubarb dust.'},
-    {cat:'other', q:'What is the Rose Moon Spritz garnished with?', options:['Raspberry and rose petal','Purple basil sprig','Orange wedge','Watermelon slice'], answer:1, exp:'The Rose Moon Spritz is served in a wine glass with cubed ice, garnished with a purple basil sprig.'},
-    {cat:'other', q:'How many points does the Good Food Guide award for food quality?', options:['5 points','8 points','10 points','12 points'], answer:2, exp:'Food is worth 10 of 20 points — the most important category in the GFG scoring system.'},
-    {cat:'other', q:'Where is Aria located?', options:['19 George Street, The Rocks','1 Macquarie Street, East Circular Quay','6 Cowper Wharf, Woolloomooloo','107 George Street, Sydney'], answer:1, exp:'1 Macquarie Street, East Circular Quay — with views of the Opera House and Harbour Bridge.'},
-    {cat:'other', q:'The Espresso Martini at Aria contains which unusual ingredient?', options:['Kahlúa','Chinola Passionfruit','Baileys Irish Cream','Frangelico'], answer:1, exp:'Grey Goose, Chinola Passionfruit, cinnamon sherry maple and cold brew — giving it a unique tropical depth.'},
-  ],
-
-  // ── SERVICE QUESTIONS (sequence of service) ──
+// ════════════════════════════════════════════════
+// QUESTION BANK (generic — replace with venue-specific content)
+// ════════════════════════════════════════════════
+const ALL_QUESTIONS = {
   service: [
-    // Arrival & Greeting
-    {cat:'service', q:'When a guest arrives, what is the very first priority?', options:['Offer the menu immediately','Acknowledge and greet them warmly — even if you\'re busy','Take their drink order','Seat them and walk away'], answer:1, exp:'Every guest must be acknowledged immediately and warmly — even if you\'re occupied. Eye contact and a smile come before anything else.'},
-    {cat:'service', q:'When helping a guest to their seat, what must every team member do?', options:['Walk ahead and point to the table','Pull out chairs and the table for every guest — every time without exception','Simply gesture to the chair','Only assist elderly or disabled guests'], answer:1, exp:'Everyone pulls out chairs and tables for guests — every single time, without exception. This is a Pillar of Luxury.'},
-    {cat:'service', q:'What is placed on the table first before guests are seated?', options:['The menu','Bread and butter','Water is offered and poured before the menu is presented','Napkins are folded on laps'], answer:2, exp:'Water is always offered immediately upon seating. Guests should never have to ask for water — this is a Pillar of Luxury.'},
-    // Taking Orders
-    {cat:'service', q:'When taking a food order at Aria, you should:', options:['Memorise it to seem more professional','Always write everything down — accuracy matters more than impression','Use the POS handheld only','Ask the head waiter to take it'], answer:1, exp:'Always write orders down at Aria. Accuracy matters more than the impression of a good memory.'},
-    {cat:'service', q:'If a guest has a severe allergy, what is the correct procedure?', options:['Note it on the docket only','Flag on the docket, communicate verbally to the kitchen AND inform a manager','Simply avoid that ingredient','Ask the guest to choose a safe dish'], answer:1, exp:'Flag on the docket, communicate verbally to the kitchen, AND inform a manager. Never handle allergy situations alone.'},
-    {cat:'service', q:'In what order are food orders typically taken at the table?', options:['Clockwise from the nearest guest','Ladies first, then gentlemen, finishing with the host','Start with the person who looks most ready','Alphabetically by dish'], answer:1, exp:'The traditional order is ladies first, then gentlemen, finishing with the host — always be guided by the table\'s dynamic.'},
-    // Wine & Beverage
-    {cat:'service', q:'When presenting wine to a table, what is the first thing you do?', options:['Open the bottle','Present the label to the person who ordered and confirm the wine','Pour a taste for everyone','Ask if they\'d like ice'], answer:1, exp:'Always present the label to the person who ordered, confirm the wine name and vintage before opening.'},
-    {cat:'service', q:'After opening wine, what is the correct next step?', options:['Pour for all guests immediately','Pour a small taste for the person who ordered, wait for their approval','Place on the table and let guests pour','Ask if anyone would like a top up'], answer:1, exp:'Pour a small tasting measure for the person who ordered. Wait for their approval before pouring for the rest of the table.'},
-    {cat:'service', q:'How should you hold a wine glass when carrying or presenting?', options:['By the bowl for warmth','By the base or stem only','With two hands, one on bowl','Whichever is most comfortable'], answer:1, exp:'Always hold wine glasses by the stem or base — never the bowl. Prevents fingerprints and keeps wine at temperature.'},
-    {cat:'service', q:'If a guest declines wine, what should you still offer?', options:['Nothing further','Still or sparkling water, and non-alcoholic options','Just still water','A cocktail instead'], answer:1, exp:'Always offer still or sparkling water and mention non-alcoholic options — mocktails, juices or soft drinks.'},
-    {cat:'service', q:'When should sides of ice be replaced?', options:['After 30 minutes','When the guest asks','Before they become sides of water — proactively','At each course change'], answer:2, exp:'Replace ice proactively before it fully melts. Served in a rocks glass with small tongs, handle towards the guest, to the right.'},
-    // Dropping Food
-    {cat:'service', q:'What must be checked before dropping food to a table?', options:['That the chef has approved the dish','That the correct cutlery is already set — if not, do not drop the food','That all guests are looking','That the sommelier has finished'], answer:1, exp:'If the correct cutlery is not set, you cannot drop food under any circumstances. This is non-negotiable.'},
-    {cat:'service', q:'What is the 50% rule when dropping food?', options:['Drop if at least 50% of the food is ready','If 50% of guests at a table are away, do not drop — return to the kitchen unless directed otherwise','Always drop when 50% of the table is seated','Split orders 50/50 between courses'], answer:1, exp:'If 50% of guests are away from the table, return the food to the kitchen unless directed otherwise by Chef or the section waiter.'},
-    {cat:'service', q:'If a sommelier is already at a table when you arrive with food, you should:', options:['Interrupt and drop the food quickly','Ask the sommelier to move','Wait until they finish or signal you in — only one service at a time','Walk away and come back later'], answer:2, exp:'Only one service at a time. Wait back until the sommelier finishes or signals you in.'},
-    {cat:'service', q:'What does "drop in sync" mean?', options:['Drop all food at once at the pass','Arrive at the table at the same time as teammates and drop in one fluid motion','Drop the food and sync the POS system','Synchronise menu delivery with food'], answer:1, exp:'Arrive at the table simultaneously as a team and drop in one fluid motion. Discuss positions and dishes before leaving the kitchen.'},
-    // Traffic Flow
-    {cat:'service', q:'What do you call out when approaching a blind corner?', options:['"Excuse me"','"Coming through"','"Corner"','"Behind"'], answer:2, exp:'Always call "Corner" at a blind corner — without exception. Safety and awareness are non-negotiable.'},
-    {cat:'service', q:'What do you call out when close to someone but out of their sight?', options:['"Corner"','"Behind"','"Excuse me"','"Coming past"'], answer:1, exp:'Call "Behind" when you are close but out of sight. Call "Up" or "Down" on the stairs.'},
-    {cat:'service', q:'What is the correct right-of-way order in the dining room?', options:['Senior staff first, then juniors, then guests','Guests first → carrying food for guests → carrying beverages → full hands → exiting','Heaviest load has right of way','Whoever is moving fastest'], answer:1, exp:'Guests always have right of way. Then: carrying food for guests → carrying beverages → full hands → exiting the dining room.'},
-    {cat:'service', q:'What is "The Bubble" in service terms?', options:['A glass of sparkling water on arrival','The personal space between guests — minimise interruptions and do as much as possible per visit','The foam on a cappuccino','The zone at the kitchen pass'], answer:1, exp:'The bubble is the sacred space between guests. Minimise interruptions, do as much as possible per visit, always approach from the front.'},
-    // Clearing
-    {cat:'service', q:'In which direction do you move around the table when clearing?', options:['Anti-clockwise','Clockwise','Whichever is most efficient','Away from the kitchen'], answer:1, exp:'Always move clockwise when clearing. Consistency creates seamlessness.'},
-    {cat:'service', q:'When clearing a table of more than 3 guests, what must you do?', options:['Clear one by one as you go','Never clear alone — the whole table must be cleared in one go as a team','Ask guests to pass their plates to one end','Use a trolley'], answer:1, exp:'Never clear a table of more than 3 guests alone. The entire table must be cleared in one go — no tower of plates.'},
-    {cat:'service', q:'What signals that a table is ready to be reset in H&L POS?', options:['All guests have paid the bill','Lamp and flowers placed together at the "top" of the table after clearing','The runner physically tells the manager','Tables are turned in POS automatically'], answer:1, exp:'After clearing, crumb, adjust chairs, remove all glassware and linen, then place lamp and flowers together at the "top" to signal ready. Then clear in H&L POS.'},
-    {cat:'service', q:'Can you carry clean and used items on the same tray?', options:['Yes, if you\'re careful','No — never mix clean and used items on the same tray','Yes, if covers are used','Only when short-staffed'], answer:1, exp:'Never carry clean and used items on the same tray. Set all clean glasses first before removing dirty ones.'},
-    // Guest Management
-    {cat:'service', q:'What should you do if a guest appears intoxicated?', options:['Continue serving as normal','Quietly inform a manager immediately — do not serve further alcohol without approval','Cut them off without saying anything','Ask them to leave'], answer:1, exp:'Always inform a manager quietly and immediately. Never cut off a guest without manager involvement.'},
-    {cat:'service', q:'Which of these is a Pillar of Luxury at Aria?', options:['Guests must always ask for what they need','Water levels must always be maintained — guests should never have to ask for water','Menus are only presented when guests request them','Chairs are only pulled out for elderly guests'], answer:1, exp:'Water always maintained is one of the five Pillars of Luxury — anticipate needs before guests have to ask.'},
-    {cat:'service', q:'What does "The Swan" mean in Aria\'s Pillars of Luxury?', options:['Serving swan-shaped napkin folds','Gliding effortlessly — calm and natural on the surface no matter what\'s happening behind the scenes','A specific wine service technique','The name of Aria\'s signature dessert'], answer:1, exp:'The Swan: effortless on the surface. Every move looks natural and calm, no matter what\'s happening behind the scenes.'},
-    {cat:'service', q:'What is the phone policy during service at Aria?', options:['Phones on silent in your pocket','All mobile phones OFF during service — breaches result in disciplinary action','Phones allowed for POS and menu lookups','Phones permitted on breaks only'], answer:1, exp:'All mobile phones OFF during service. Personal calls only in emergencies with manager approval. Breaches result in disciplinary action.'},
-    {cat:'service', q:'When should you NOT cut through the middle of the dining room?', options:['Only during peak service','Never — always stay in traffic lanes','Only when carrying food','Only at lunch service'], answer:1, exp:'Never cut through the middle of the dining room. Stay in the traffic lanes at all times. No grouping with more than one staff member.'},
-    {cat:'service', q:'How many dirty glasses can be removed without using a service tray?', options:['None — always use a tray','One — with a service cloth','Two — one in each hand','Three if balanced carefully'], answer:1, exp:'One dirty glass may be removed with a service cloth. More than one — always use a service tray.'},
-    {cat:'service', q:'What is the correct action if food cannot be dropped immediately upon arriving at a table?', options:['Hold it and wait nearby','Return the food to the pass right away — food never waits in the dining room','Put it down on the nearest surface','Ask another staff member to wait with it'], answer:1, exp:'Food should never wait in the dining room. If you can\'t drop immediately, return it to the pass right away.'},
+    {cat:'service', q:'When a guest arrives, what is the very first priority?', options:['Offer the menu immediately','Acknowledge and greet them warmly — even if you\'re busy','Take their drink order','Seat them and walk away'], answer:1, exp:'Every guest must be acknowledged immediately and warmly — even if you\'re occupied.'},
+    {cat:'service', q:'When helping a guest to their seat, what must every team member do?', options:['Walk ahead and point','Pull out chairs and the table for every guest — every time','Simply gesture to the chair','Only assist elderly guests'], answer:1, exp:'Everyone pulls out chairs and tables for guests — every single time, without exception.'},
+    {cat:'service', q:'How should you hold a wine glass when carrying or presenting?', options:['By the bowl for warmth','By the base or stem only','With two hands','Whichever is comfortable'], answer:1, exp:'Always hold wine glasses by the stem or base — never the bowl.'},
+    {cat:'service', q:'What is the correct right-of-way order in the dining room?', options:['Senior staff first','Guests → food → beverages → full hands → exiting','Heaviest load first','Fastest mover'], answer:1, exp:'Guests always have right of way. Then: food → beverages → full hands → exiting.'},
+    {cat:'service', q:'What must be checked before dropping food to a table?', options:['That the chef approved','That correct cutlery is already set — if not, do not drop','That all guests are looking','That sommelier has finished'], answer:1, exp:'If the correct cutlery is not set, you cannot drop food under any circumstances.'},
+    {cat:'service', q:'What is the 50% rule when dropping food?', options:['Drop if 50% of food is ready','If 50% of guests are away, do not drop — return to kitchen','Drop when 50% of table is seated','Split 50/50 between courses'], answer:1, exp:'If 50% of guests are away from the table, return the food to the kitchen.'},
+    {cat:'service', q:'What do you call out when approaching a blind corner?', options:['"Excuse me"','"Coming through"','"Corner"','"Behind"'], answer:2, exp:'Always call "Corner" at a blind corner — without exception.'},
+    {cat:'service', q:'In which direction do you move around the table when clearing?', options:['Anti-clockwise','Clockwise','Most efficient route','Away from kitchen'], answer:1, exp:'Always move clockwise when clearing. Consistency creates seamlessness.'},
+    {cat:'service', q:'Can you carry clean and used items on the same tray?', options:['Yes if careful','No — never mix clean and used on same tray','Yes with covers','Only when short-staffed'], answer:1, exp:'Never carry clean and used items on the same tray.'},
+    {cat:'service', q:'What does "The Swan" mean in fine dining service?', options:['Swan-shaped napkin folds','Effortless on the surface — calm no matter what\'s happening behind the scenes','A specific wine technique','A signature dessert'], answer:1, exp:'The Swan: effortless on the surface, calm and natural no matter what is happening behind the scenes.'},
+    {cat:'service', q:'How many dirty glasses can be removed without a service tray?', options:['None — always use a tray','One — with a service cloth','Two — one each hand','Three if balanced'], answer:1, exp:'One dirty glass may be removed with a service cloth. More than one — always use a service tray.'},
+    {cat:'service', q:'What should you do if food cannot be dropped immediately at a table?', options:['Hold it nearby','Return to the pass right away — food never waits in the dining room','Put it on nearest surface','Ask someone else to wait with it'], answer:1, exp:'Food should never wait in the dining room. Return to the pass immediately.'},
+    {cat:'service', q:'When taking a food order, you should:', options:['Memorise it to seem professional','Always write everything down — accuracy matters more than impression','Use POS handheld only','Ask head waiter to take it'], answer:1, exp:'Always write orders down. Accuracy matters more than the impression of a good memory.'},
+    {cat:'service', q:'What is the phone policy during service?', options:['Phones on silent in pocket','All mobile phones OFF during service','Phones allowed for POS lookups','Phones permitted on breaks only'], answer:1, exp:'All mobile phones OFF during service. Breaches result in disciplinary action.'},
+    {cat:'service', q:'Water service at a fine dining level means:', options:['Refill when asked','Water levels must always be maintained — guests should never have to ask','Top up between courses only','Offer once per seating'], answer:1, exp:'Water always maintained is a Pillar of Luxury — anticipate needs before guests have to ask.'},
+    {cat:'service', q:'When presenting wine, what is the first thing you do?', options:['Open the bottle','Present the label to the person who ordered and confirm the wine','Pour a taste for everyone','Ask if they\'d like ice'], answer:1, exp:'Always present the label to the person who ordered and confirm wine name before opening.'},
+    {cat:'service', q:'After opening wine, the correct next step is:', options:['Pour for all guests','Pour a small taste for the person who ordered, wait for approval','Place on table and let guests pour','Ask if anyone wants a top up'], answer:1, exp:'Pour a small tasting measure for the person who ordered. Wait for approval before pouring for the table.'},
+    {cat:'service', q:'When clearing a table of more than 3 guests, you should:', options:['Clear one by one','Never clear alone — the whole table must be cleared in one go as a team','Ask guests to pass plates','Use a trolley'], answer:1, exp:'Never clear a table of more than 3 guests alone. The entire table must be cleared in one go.'},
+    {cat:'service', q:'What order are food orders typically taken at the table?', options:['Clockwise from nearest guest','Ladies first, then gentlemen, finishing with the host','Person who looks most ready','Alphabetically by dish'], answer:1, exp:'Traditional order: ladies first, then gentlemen, finishing with the host — always guided by the table\'s dynamic.'},
+    {cat:'service', q:'If a guest has a severe allergy, the correct procedure is:', options:['Note on docket only','Flag on docket, communicate verbally to kitchen AND inform a manager','Avoid that ingredient','Ask guest to choose a safe dish'], answer:1, exp:'Flag on docket, communicate verbally to kitchen, AND inform a manager. Never handle allergy situations alone.'},
+  ],
+  hospitality: [
+    {cat:'hospitality', q:'What is upselling in a restaurant context?', options:['Charging more for the same item','Suggesting higher-value items or additions that enhance the guest\'s experience','Lying about dish quality','Pushing items the kitchen needs to clear'], answer:1, exp:'Upselling done well enhances the guest\'s experience — suggest premium options, add-ons or pairings that genuinely suit them.'},
+    {cat:'hospitality', q:'A guest complains their steak is overcooked. The first step is:', options:['Apologise and blame the kitchen','Apologise sincerely, take the plate and inform a manager or chef immediately','Offer a discount','Suggest they order something else'], answer:1, exp:'Apologise sincerely and take immediate action. Inform a manager or head chef — never leave a guest with a problem.'},
+    {cat:'hospitality', q:'What does "mise en place" mean?', options:['The dessert course','Everything in its place — preparation and setup before service','A French garnish technique','The table layout diagram'], answer:1, exp:'"Mise en place" is French for "everything in its place" — thorough preparation before service begins.'},
+    {cat:'hospitality', q:'What is a tasting menu?', options:['A free sample menu','A multi-course menu where the chef selects each course to showcase the kitchen\'s range','A reduced-price lunch menu','A menu for dietary restrictions'], answer:1, exp:'A tasting menu is a multi-course progression curated by the chef — typically 5–10+ courses.'},
+    {cat:'hospitality', q:'What does FOH stand for?', options:['Front of House — the dining room and guest-facing team','Full Order Handling','Front Office Hospitality','Flow of Hours'], answer:0, exp:'FOH = Front of House. BOH = Back of House (kitchen). These pools determine tip allocation splits.'},
+    {cat:'hospitality', q:'What is a sommelier\'s primary role?', options:['Managing the front desk','Expert wine selection, service and pairing recommendations for guests','Head of the kitchen pass','Running the bar'], answer:1, exp:'A sommelier is a trained wine expert responsible for the wine list, service, cellaring and pairing recommendations.'},
+    {cat:'hospitality', q:'What does "86\'d" mean in a restaurant?', options:['A special dish','An item is sold out or unavailable','A table of 86 guests','A kitchen code for medium-rare'], answer:1, exp:'"86\'d" means an item is no longer available — sold out, out of stock, or removed from the menu for the night.'},
+    {cat:'hospitality', q:'What is the "bill drop" etiquette at a fine dining restaurant?', options:['Leave the bill face-up prominently','Present the bill discreetly when requested — never rush guests','Ask repeatedly if they\'re ready','Slip it under the plate'], answer:1, exp:'The bill is presented discreetly and only when requested. Never rush guests or hover after the bill is dropped.'},
+    {cat:'hospitality', q:'What is the correct response if you don\'t know the answer to a guest\'s question?', options:['Guess confidently','Apologise and say you don\'t know, then find out immediately and return','Tell them to look it up','Direct them to another staff member without following up'], answer:1, exp:'Never guess. Apologise, acknowledge you don\'t know, then find the answer and return promptly.'},
+    {cat:'hospitality', q:'What is a "pivot" in table service?', options:['The rotation point for carrying trays','A system for delivering food to the correct guest without asking who ordered what','A wine pouring technique','The staff break schedule'], answer:1, exp:'The pivot system tracks seat positions from a fixed pivot point so food reaches the right guest without asking — essential in fine dining.'},
+    {cat:'hospitality', q:'What is the correct way to crumb a table between courses?', options:['Use a napkin','Use a crumber or folded side plate to sweep crumbs off the tablecloth efficiently and discreetly','Leave it for later','Ask the guest to move their glass'], answer:1, exp:'Crumbing is done between courses with a proper crumber or folded cloth — quietly, quickly and without disrupting guests.'},
+    {cat:'hospitality', q:'How should napkins be handled when a guest leaves the table temporarily?', options:['Leave it as is','Fold the napkin neatly and place it to the left of the cover','Remove the napkin completely','Ask the guest what they prefer'], answer:1, exp:'When a guest excuses themselves, fold their napkin neatly and place it to the left of their cover.'},
+    {cat:'hospitality', q:'What is the key principle of anticipatory service?', options:['Memorising every guest\'s name','Predicting and fulfilling guest needs before they have to ask','Offering every possible menu item','Checking in every five minutes'], answer:1, exp:'Anticipatory service means reading the table and fulfilling needs before guests have to ask — the hallmark of fine dining.'},
+    {cat:'hospitality', q:'What does it mean to "run" a dish?', options:['Cook it quickly','Carry food from the kitchen pass to the correct table','Sprint to another restaurant','A trial dish being tested'], answer:1, exp:'Running a dish means carrying it from the pass to the guest — a key task for all floor staff, not just the section waiter.'},
+    {cat:'hospitality', q:'What is a "hard sell" approach in hospitality and why is it problematic?', options:['Promoting tonight\'s specials with enthusiasm','Aggressively pushing high-margin items regardless of the guest\'s interest — damages trust and experience','Selling the entire menu','Recommending the most expensive item always'], answer:1, exp:'A hard sell approach damages the guest\'s trust and comfort. Recommendations should feel genuine and guest-focused, not commission-driven.'},
+    {cat:'hospitality', q:'What is the role of the maître d\'?', options:['Head of the kitchen','Senior front-of-house manager overseeing the dining room, reservations and service flow','The wine director','The dessert specialist'], answer:1, exp:'The maître d\' is the senior dining room manager — responsible for reservations, guest experience, team direction and service standards.'},
+    {cat:'hospitality', q:'What is "table presence" in service?', options:['The physical layout of the table','How a server carries themselves, communicates and makes guests feel during table interactions','The size of the table','How quickly you get to the table'], answer:1, exp:'Table presence is how you carry yourself, communicate, make eye contact and make guests feel during every visit to the table.'},
+    {cat:'hospitality', q:'How should you approach a table that is deep in conversation?', options:['Interrupt loudly to get attention','Approach quietly, wait for a natural pause or make gentle eye contact before speaking','Stand behind them silently for as long as needed','Send another staff member'], answer:1, exp:'Always wait for a natural pause or use gentle eye contact. Never interrupt a conversation mid-flow.'},
+    {cat:'hospitality', q:'What does "turn time" mean for a restaurant?', options:['How fast the kitchen can cook','How long a table takes from seating to departure — affects how many covers a restaurant can serve','The staff rotation schedule','The time between courses'], answer:1, exp:'Turn time is the total time a table is occupied. Faster turn times = more covers, more revenue — but never at the expense of guest experience.'},
+    {cat:'hospitality', q:'What is the correct response when a guest asks for a recommendation?', options:['Always recommend the most expensive item','Ask one clarifying question about their preference, then give a confident, genuine recommendation','Say everything is great','Say you haven\'t tried the dishes yourself'], answer:1, exp:'A great recommendation starts with one question — understanding their preference — then gives a confident, specific, genuine suggestion.'},
+  ],
+  beverage: [
+    {cat:'beverage', q:'What is the difference between brut and extra brut Champagne?', options:['Brut is sweeter than extra brut','Extra brut is drier (less dosage) than brut','They are identical','Brut is from France, extra brut is not'], answer:1, exp:'Extra brut has less added sugar (dosage) than brut — making it drier and more austere.'},
+    {cat:'beverage', q:'What temperature should red wine generally be served at?', options:['Refrigerator cold (4–7°C)','Slightly below room temperature (16–18°C)','Warm room temperature (22°C+)','The same as white wine'], answer:1, exp:'Most red wines are best at 16–18°C — "cellar temperature" rather than warm room temperature.'},
+    {cat:'beverage', q:'What is the primary purpose of decanting a wine?', options:['To make it look impressive','To aerate the wine and/or separate sediment from older bottles','To chill it faster','To remove sulphites'], answer:1, exp:'Decanting serves two purposes: aerating young wines to open them up, and separating sediment in older bottles.'},
+    {cat:'beverage', q:'What does "dry" mean when describing a wine?', options:['Low alcohol','Little to no residual sugar — not sweet','Made in a dry climate','Light-bodied'], answer:1, exp:'"Dry" means the wine has little to no residual sugar — fermentation has converted most sugars to alcohol.'},
+    {cat:'beverage', q:'What is the correct pour for a glass of wine in a restaurant?', options:['Fill the glass to the top','Fill to approximately one-third — leaving room to swirl and release aroma','Half full','Whatever the guest requests'], answer:1, exp:'A wine glass is typically filled to around one-third — this allows the wine to breathe and the guest to swirl without spilling.'},
+    {cat:'beverage', q:'What is a negroni made from?', options:['Vodka, vermouth, olive brine','Gin, Campari, sweet vermouth in equal parts','Rum, lime, mint, sugar','Bourbon, bitters, sugar, orange'], answer:1, exp:'A Negroni is equal parts gin, Campari and sweet vermouth — stirred and served over ice with an orange peel.'},
+    {cat:'beverage', q:'What does "tannin" refer to in wine?', options:['The acidity of the wine','Naturally occurring compounds from grape skins/seeds that create dryness and structure in the mouth','The sweetness level','The colour pigment'], answer:1, exp:'Tannins are polyphenol compounds from grape skins and seeds (and oak) that create that drying, gripping sensation in the mouth — more prominent in red wines.'},
+    {cat:'beverage', q:'What is the correct way to open a bottle of sparkling wine or Champagne?', options:['Shake and pop for effect','Keep the thumb over the cork, remove the cage, twist the bottle not the cork — slow and controlled','Twist the cork fast','Use a Champagne saber'], answer:1, exp:'Keep your thumb over the cork at all times, remove the cage, then twist the bottle slowly while holding the cork — never pop loudly in a fine dining setting.'},
+    {cat:'beverage', q:'What is the difference between espresso and long black?', options:['They\'re identical','A long black is espresso added to hot water — more volume, same intensity','A long black has milk','Espresso is served cold'], answer:1, exp:'A long black is made by pouring a double shot over hot water. An espresso is a concentrated shot alone.'},
+    {cat:'beverage', q:'What glass would you typically use for a Martini?', options:['Highball glass','Rocks glass','Classic coupe or V-shaped Martini glass','Wine glass'], answer:2, exp:'Martinis are served in a classic V-shaped Martini glass or a coupe — chilled, and without ice in the glass.'},
   ]
 };
 
-// ── STATE ──
+// ════════════════════════════════════════════════
+// PLATFORM STATE
+// ════════════════════════════════════════════════
+let currentVenue = null;
+let venueStaff = [];
 let sName='', sRole='', sPool='', sTips=0;
-let isDemo = false;
-let quizMode = 'legacy'; // 'legacy', 'master', or 'demo'
-let QS = {qs:[],idx:0,score:0,answered:false,cats:{}};
-let pending, approved;
-try {
-  pending  = JSON.parse(sessionStorage.getItem('atc_pend')||'[]');
-  approved = JSON.parse(sessionStorage.getItem('atc_appr')||'[]');
-} catch(e) { pending = []; approved = []; }
-let lastRes  = null;
+let isDemo=false, quizMode='legacy';
+let QS={qs:[],idx:0,score:0,answered:false,cats:{}};
+let lastRes=null;
 
-// Certification store: {name: {legacy:{score,total,pct,date}, master:{...}}}
-let certStore = {};
-try { certStore = JSON.parse(sessionStorage.getItem('atc_certs')||'{}'); } catch(e){ certStore={}; }
-const saveCerts = ()=> { try { sessionStorage.setItem('atc_certs', JSON.stringify(certStore)); } catch(e){} };
+// Per-venue storage keys
+const vKey = k => `tier_${currentVenue}_${k}`;
+function vGet(k){ try{ return JSON.parse(sessionStorage.getItem(vKey(k))||'null'); }catch(e){ return null; } }
+function vSet(k,v){ try{ sessionStorage.setItem(vKey(k), JSON.stringify(v)); }catch(e){} }
 
-const savePend = ()=> { try { sessionStorage.setItem('atc_pend', JSON.stringify(pending)); } catch(e){} };
-const saveAppr = ()=> { try { sessionStorage.setItem('atc_appr', JSON.stringify(approved)); } catch(e){} };
+function getVenuePending(){ return vGet('pending') || []; }
+function getVenueApproved(){ return vGet('approved') || []; }
+function savePending(p){ vSet('pending', p); }
+function saveApproved(a){ vSet('approved', a); }
+function getVenueCerts(){ return vGet('certs') || {}; }
+function saveVenueCerts(c){ vSet('certs', c); }
+function getVenueStaff(){ return vGet('staff') || venueStaff; }
+function saveVenueStaff(s){ vSet('staff', s); venueStaff = s; }
+function getVenueWeeks(){ return vGet('weeks') || []; }
+function saveVenueWeeks(w){ vSet('weeks', w); }
 
 // ── UTILS ──
-function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); if(id==='s-land' && sName) updateCards(sName); }
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
 function toast(msg,d=2300){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),d); }
 function fmtDate(ts){ return new Date(ts).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}); }
-function fmtAUD(n){ return '$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+function fmtAUD(n){ return '$'+(+n||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
 function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]; } return b; }
 
 function getTier(score, total){
-  const t = total || (isDemo ? 10 : 100);
-  const hi = Math.round(t * 0.9), mid = Math.round(t * 0.7);
-  if(score>=hi) return {key:'full',pct:'100%',label:'Expert — Full Allocation',cls:'vc-full',col:'var(--green)',
-    desc:'Outstanding. You have demonstrated expert-level knowledge across the full Tier menu, allergens, and service standards. OTM allocation recommended at 100%.'};
-  if(score>=mid) return {key:'75',pct:'75%',label:'Proficient — Standard Allocation',cls:'vc-75',col:'var(--amber)',
-    desc:'Good performance with a solid foundation. Some areas to strengthen. OTM allocation recommended at 75%. Review the training hub and retake when ready.'};
+  const pct = Math.round(score/total*100);
+  if(pct>=90) return {key:'full',pct:'100%',label:'Expert — Full Allocation',cls:'vc-full',col:'var(--green)',
+    desc:'Outstanding. Expert-level knowledge demonstrated. OTM allocation recommended at 100%.'};
+  if(pct>=70) return {key:'75',pct:'75%',label:'Proficient — Standard Allocation',cls:'vc-75',col:'var(--amber)',
+    desc:'Good performance with a solid foundation. OTM allocation recommended at 75%. Study and retake Master when ready.'};
   return {key:'50',pct:'50%',label:'Development Level',cls:'vc-50',col:'var(--muted)',
-    desc:"You're building your knowledge. Focus on the Tier Training Hub — menus, allergens and service sequence. 50% allocation applies. Eligible to retake after 7 days."};
+    desc:"Building your knowledge. 50% allocation applies. Focus on training materials and retake when ready."};
 }
 
-// ── CHECK CERTIFICATION STATUS ──
-function hasLegacyPass(name){
-  const c = certStore[name];
-  return c && c.legacy && c.legacy.pct >= 70;
-}
-function hasMasterPass(name){
-  const c = certStore[name];
-  return c && c.master && c.master.pct >= 90;
-}
+// ── VENUE LOGIN ──
+// initVenueSelect is now called lazily by initLoginSelect() when login screen opens
+// Boot: just verify VENUES object is ready
+(function initVenueSelect(){
+  // Called on page load - s-login select populated lazily via initLoginSelect()
+})();
 
-// ── UPDATE PROGRESSION CARDS ──
-function updateCards(name){
-  const cards = document.getElementById('test-cards');
-  if(!name){ cards.style.display='none'; return; }
-  cards.style.display='block';
-
-  const legacyDone = hasLegacyPass(name);
-  const masterDone = hasMasterPass(name);
-  const lc = certStore[name]?.legacy;
-  const mc = certStore[name]?.master;
-
-  // Legacy card
-  const legCard = document.getElementById('card-legacy');
-  const legTitle = document.getElementById('legacy-title');
-  const legSub = document.getElementById('legacy-sub');
-  const legBadge = document.getElementById('legacy-badge');
-
-  if(legacyDone){
-    legCard.style.borderColor='rgba(34,197,94,.25)';
-    legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
-    legCard.onclick=function(){ startLegacy(); };
-    legTitle.textContent='Stage 1 · Legacy ✓';
-    legTitle.style.color='var(--green)';
-    legSub.textContent='Passed — '+lc.score+'/'+lc.total+' ('+lc.pct+'%) · '+fmtDate(lc.date)+' · Retake available';
-    legSub.style.color='var(--green)';
-    legBadge.textContent='Retake';
-    legBadge.style.background='rgba(34,197,94,.08)';
-    legBadge.style.color='var(--green)';
-    legBadge.style.borderColor='rgba(34,197,94,.2)';
-  } else {
-    legCard.style.borderColor='var(--b3)';
-    legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
-    legCard.onclick=function(){ startLegacy(); };
-    legTitle.textContent='Stage 1 · Legacy';
-    legTitle.style.color='var(--cream)';
-    legSub.textContent='40 questions · Foundational knowledge · Unlocks 75%';
-    legSub.style.color='var(--muted2)';
-    legBadge.textContent='Start →';
-    legBadge.style.background='rgba(122,158,126,.1)';
-    legBadge.style.color='var(--gold)';
-    legBadge.style.borderColor='rgba(122,158,126,.2)';
-  }
-
-  // Master card
-  const masCard = document.getElementById('card-master');
-  const masTitle = document.getElementById('master-title');
-  const masSub = document.getElementById('master-sub');
-  const masBadge = document.getElementById('master-badge');
-
-  if(masterDone){
-    masCard.style.borderColor='rgba(34,197,94,.25)';
-    masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
-    masCard.onclick=function(){ startMaster(); };
-    masTitle.textContent='Stage 2 · Master ✓';
-    masTitle.style.color='var(--green)';
-    masSub.textContent='Passed — '+mc.score+'/'+mc.total+' ('+mc.pct+'%) · '+fmtDate(mc.date)+' · Retake available';
-    masSub.style.color='var(--green)';
-    masBadge.textContent='Retake';
-    masBadge.style.background='rgba(34,197,94,.08)';
-    masBadge.style.color='var(--green)';
-    masBadge.style.borderColor='rgba(34,197,94,.2)';
-  } else if(legacyDone){
-    masCard.style.borderColor='rgba(122,158,126,.2)';
-    masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
-    masCard.onclick=function(){ startMaster(); };
-    masTitle.textContent='Stage 2 · Master';
-    masTitle.style.color='var(--cream)';
-    masSub.textContent='100 questions · Deep mastery · Unlocks 100%';
-    masSub.style.color='var(--muted2)';
-    masBadge.textContent='Start →';
-    masBadge.style.background='rgba(122,158,126,.1)';
-    masBadge.style.color='var(--gold)';
-    masBadge.style.borderColor='rgba(122,158,126,.2)';
-  } else {
-    masCard.style.borderColor='var(--b2)';
-    masCard.style.opacity='.4'; masCard.style.pointerEvents='none';
-    masCard.onclick=null;
-    masTitle.textContent='Stage 2 · Master';
-    masTitle.style.color='var(--muted)';
-    masSub.textContent='Complete Legacy first to unlock';
-    masSub.style.color='var(--muted)';
-    masBadge.textContent='Locked';
-    masBadge.style.background='rgba(90,90,90,.08)';
-    masBadge.style.color='var(--muted)';
-    masBadge.style.borderColor='var(--b3)';
-  }
-}
-
-// ── LANDING INIT ──
-(function(){
-  var sel = document.getElementById('sel-name');
+function initLoginSelect(){
+  // Mirror the VENUES into the login screen select
+  const sel = document.getElementById('venue-select');
   if(!sel) return;
-  sel.addEventListener('change', function(){
-    var o = this.selectedOptions[0];
+  sel.innerHTML = '<option value="">— Select venue —</option>';
+  Object.keys(VENUES).forEach(k=>{
+    const o = document.createElement('option');
+    o.value = k; o.textContent = VENUES[k].name;
+    sel.appendChild(o);
+  });
+  sel.onchange = checkVenueReady;
+  document.getElementById('venue-code').oninput = checkVenueReady;
+  document.getElementById('venue-code').onkeydown = e=>{ if(e.key==='Enter') venueLogin(); };
+  document.getElementById('venue-err').style.display='none';
+  document.getElementById('venue-btn').disabled=true;
+}
+
+function scrollToLogin(){
+  // Re-populate the login screen select before showing
+  initLoginSelect();
+  show('s-login');
+  setTimeout(()=>document.getElementById('venue-select').focus(),200);
+}
+
+function checkVenueReady(){
+  const v = document.getElementById('venue-select').value;
+  const c = document.getElementById('venue-code').value;
+  document.getElementById('venue-btn').disabled = !(v && c);
+  document.getElementById('venue-err').style.display='none';
+}
+
+function venueLogin(){
+  const v = document.getElementById('venue-select').value;
+  const c = document.getElementById('venue-code').value.trim().toLowerCase();
+  if(!VENUES[v]){ return; }
+  if(VENUES[v].code !== c){
+    document.getElementById('venue-err').style.display='block';
+    return;
+  }
+  loadVenue(v);
+}
+
+function loadDemoVenue(){ loadVenue('demo'); }
+
+function loadVenue(slug){
+  currentVenue = slug;
+  const venue = VENUES[slug];
+  venueStaff = getVenueStaff();
+  if(!vGet('staff')) saveVenueStaff(venue.staff);
+  venueStaff = getVenueStaff();
+
+  // Update UI
+  document.getElementById('venue-name-badge').textContent = venue.name;
+  document.getElementById('mgr-venue-tag').textContent = venue.name;
+
+  // Populate staff dropdown
+  populateStaffDropdown();
+  show('s-land');
+}
+
+function signOut(){
+  currentVenue = null;
+  venueStaff = [];
+  sName=''; sRole=''; sPool=''; sTips=0;
+  // Reset login form
+  const vc = document.getElementById('venue-code');
+  const ve = document.getElementById('venue-err');
+  const vb = document.getElementById('venue-btn');
+  const vs = document.getElementById('venue-select');
+  if(vc) vc.value='';
+  if(ve) ve.style.display='none';
+  if(vb) vb.disabled=true;
+  if(vs) vs.value='';
+  show('s-venue');
+}
+
+function populateStaffDropdown(){
+  const sel = document.getElementById('sel-name');
+  sel.innerHTML = '<option value="">— Select name —</option>';
+  const staff = getVenueStaff();
+  const weeks = getVenueWeeks();
+  const lastWeek = weeks.length ? weeks[weeks.length-1] : null;
+  staff.forEach(s=>{
+    const o = document.createElement('option');
+    o.value = s.name;
+    o.dataset.role = s.role;
+    o.dataset.pool = s.pool;
+    const tips = lastWeek ? (lastWeek.entries[s.name]||0) : 0;
+    o.dataset.tips = tips;
+    o.textContent = s.name;
+    sel.appendChild(o);
+  });
+
+  sel.onchange = function(){
+    const o = this.selectedOptions[0];
     if(!o||!o.value){
       document.getElementById('test-cards').style.display='none';
       return;
     }
-    document.getElementById('inp-role').value = o.getAttribute('data-role')||'';
-    document.getElementById('inp-pool').value = o.getAttribute('data-pool')||'';
-    var t = parseFloat(o.getAttribute('data-tips')||'0');
-    document.getElementById('inp-tips').value = t>0 ? ('$'+t.toFixed(2)+' (09–15 Feb)') : '';
+    document.getElementById('inp-role').value = o.dataset.role||'';
+    document.getElementById('inp-pool').value = o.dataset.pool||'';
+    const t = parseFloat(o.dataset.tips||'0');
+    const weeks = getVenueWeeks();
+    const lw = weeks.length ? weeks[weeks.length-1] : null;
+    document.getElementById('inp-tips').value = t>0 && lw
+      ? fmtAUD(t)+' (wk ending '+lw.weekEnd+')'
+      : 'No tips uploaded yet';
     updateCards(o.value);
-  });
-})();
+  };
+}
 
-// ── GATHER SELECTED STAFF ──
+// ── CERTIFICATION STATUS ──
+function hasLegacyPass(name){
+  const c = getVenueCerts();
+  return c[name] && c[name].legacy && c[name].legacy.pct >= 70;
+}
+function hasMasterPass(name){
+  const c = getVenueCerts();
+  return c[name] && c[name].master && c[name].master.pct >= 90;
+}
+
+function updateCards(name){
+  const cards = document.getElementById('test-cards');
+  if(!name){ cards.style.display='none'; return; }
+  cards.style.display='block';
+  const certs = getVenueCerts();
+  const legacyDone = hasLegacyPass(name);
+  const masterDone = hasMasterPass(name);
+  const lc = certs[name]?.legacy;
+  const mc = certs[name]?.master;
+
+  const legCard = document.getElementById('card-legacy');
+  if(legacyDone){
+    legCard.style.borderColor='rgba(34,197,94,.25)'; legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
+    document.getElementById('legacy-title').textContent='Stage 1 · Legacy ✓';
+    document.getElementById('legacy-title').style.color='var(--green)';
+    document.getElementById('legacy-sub').textContent='Passed — '+lc.score+'/'+lc.total+' ('+lc.pct+'%) · '+fmtDate(lc.date)+' · Retake available';
+    document.getElementById('legacy-sub').style.color='var(--green)';
+    document.getElementById('legacy-badge').textContent='Retake';
+    document.getElementById('legacy-badge').style.cssText='background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.2)';
+  } else {
+    legCard.style.borderColor='var(--b3)'; legCard.style.opacity='1'; legCard.style.pointerEvents='auto';
+    document.getElementById('legacy-title').textContent='Stage 1 · Legacy';
+    document.getElementById('legacy-title').style.color='var(--cream)';
+    document.getElementById('legacy-sub').textContent='40 questions · Foundational knowledge · Unlocks 75%';
+    document.getElementById('legacy-sub').style.color='var(--muted2)';
+    document.getElementById('legacy-badge').textContent='Start →';
+    document.getElementById('legacy-badge').style.cssText='background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2)';
+  }
+
+  const masCard = document.getElementById('card-master');
+  if(masterDone){
+    masCard.style.borderColor='rgba(34,197,94,.25)'; masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
+    document.getElementById('master-title').textContent='Stage 2 · Master ✓';
+    document.getElementById('master-title').style.color='var(--green)';
+    document.getElementById('master-sub').textContent='Passed — '+mc.score+'/'+mc.total+' ('+mc.pct+'%) · '+fmtDate(mc.date)+' · Retake available';
+    document.getElementById('master-sub').style.color='var(--green)';
+    document.getElementById('master-badge').textContent='Retake';
+    document.getElementById('master-badge').style.cssText='background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.2)';
+  } else if(legacyDone){
+    masCard.style.borderColor='rgba(122,158,126,.2)'; masCard.style.opacity='1'; masCard.style.pointerEvents='auto';
+    document.getElementById('master-title').textContent='Stage 2 · Master';
+    document.getElementById('master-title').style.color='var(--cream)';
+    document.getElementById('master-sub').textContent='100 questions · Deep mastery · Unlocks 100%';
+    document.getElementById('master-sub').style.color='var(--muted2)';
+    document.getElementById('master-badge').textContent='Start →';
+    document.getElementById('master-badge').style.cssText='background:rgba(122,158,126,.1);color:var(--gold);border:1px solid rgba(122,158,126,.2)';
+  } else {
+    masCard.style.borderColor='var(--b2)'; masCard.style.opacity='.4'; masCard.style.pointerEvents='none';
+    document.getElementById('master-title').textContent='Stage 2 · Master';
+    document.getElementById('master-title').style.color='var(--muted)';
+    document.getElementById('master-sub').textContent='Complete Legacy first to unlock';
+    document.getElementById('master-sub').style.color='var(--muted)';
+    document.getElementById('master-badge').textContent='Locked';
+    document.getElementById('master-badge').style.cssText='background:rgba(90,90,90,.08);color:var(--muted);border:1px solid var(--b3)';
+  }
+}
+
+// ── QUIZ LAUNCH ──
 function _getSelected(){
   const sel=document.getElementById('sel-name');
   const o=sel.selectedOptions[0];
   if(!o||!o.value){ toast('Select your name first'); return null; }
-  sName=o.value; sRole=o.dataset.role; sPool=o.dataset.pool; sTips=parseFloat(o.dataset.tips);
+  sName=o.value; sRole=o.dataset.role; sPool=o.dataset.pool; sTips=parseFloat(o.dataset.tips||'0');
   return o;
 }
 
-function startLegacy(){
-  if(!_getSelected()) return;
-  isDemo = false;
-  quizMode = 'legacy';
-  _launchQuiz(40);
-}
-
+function startLegacy(){ if(!_getSelected()) return; isDemo=false; quizMode='legacy'; _launchQuiz(40); }
 function startMaster(){
   if(!_getSelected()) return;
   if(!hasLegacyPass(sName)){ toast('Complete Legacy first'); return; }
-  isDemo = false;
-  quizMode = 'master';
-  _launchQuiz(100);
+  isDemo=false; quizMode='master'; _launchQuiz(100);
 }
-
 function startDemo(){
   if(!_getSelected()) return;
-  isDemo = true;
-  quizMode = 'demo';
-  _launchQuiz(10);
+  isDemo=true; quizMode='demo'; _launchQuiz(10);
 }
 
 function _launchQuiz(count){
-  function pick(arr,n){ return shuffle([...arr]).slice(0,n); }
+  function pick(arr,n){ return shuffle([...arr]).slice(0,Math.min(n,arr.length)); }
+  const all = ALL_QUESTIONS;
   let qs;
   if(count<=10){
-    // Demo: 2 per category
-    qs=[
-      ...pick(hatsAllQuestions.entree,  2),
-      ...pick(hatsAllQuestions.main,    2),
-      ...pick(hatsAllQuestions.dessert, 2),
-      ...pick(hatsAllQuestions.other,   2),
-      ...pick(hatsAllQuestions.service, 2),
-    ].slice(0,10);
+    qs = shuffle([...pick(all.service,3),...pick(all.hospitality,4),...pick(all.beverage,3)]).slice(0,10);
   } else if(count<=40){
-    // Legacy: balanced draw to 40
-    qs=[
-      ...pick(hatsAllQuestions.entree,  8),
-      ...pick(hatsAllQuestions.main,   10),
-      ...pick(hatsAllQuestions.dessert, 6),
-      ...pick(hatsAllQuestions.other,   4),
-      ...pick(hatsAllQuestions.service,12),
-    ].slice(0,40);
+    qs = shuffle([...pick(all.service,16),...pick(all.hospitality,16),...pick(all.beverage,8)]).slice(0,40);
   } else {
-    // Master: balanced draw to 100
-    qs=[
-      ...pick(hatsAllQuestions.entree,  20),
-      ...pick(hatsAllQuestions.main,    25),
-      ...pick(hatsAllQuestions.dessert, 15),
-      ...pick(hatsAllQuestions.other,   10),
-      ...pick(hatsAllQuestions.service, 30),
-    ].slice(0,100);
+    qs = shuffle([...pick(all.service,20),...pick(all.hospitality,20),...pick(all.beverage,10),
+      ...pick(all.service,18),...pick(all.hospitality,16),...pick(all.beverage,10),...pick(all.hospitality,6)]).slice(0,100);
   }
-  qs=shuffle(qs);
 
-  QS={qs,idx:0,score:0,answered:false,
-    cats:{entree:{c:0,t:0},main:{c:0,t:0},dessert:{c:0,t:0},other:{c:0,t:0},service:{c:0,t:0}}};
-
-  // Update quiz nav for mode
-  const total = qs.length;
+  QS={qs,idx:0,score:0,answered:false,cats:{service:{c:0,t:0},hospitality:{c:0,t:0},beverage:{c:0,t:0}}};
   const modeLabel = quizMode==='demo'?'Demo':quizMode==='legacy'?'Legacy':'Master';
   document.getElementById('qz-namespan').textContent=modeLabel+' · '+sName.split(' ')[0];
   document.getElementById('qz-score').textContent='0';
-  document.querySelector('.qz-score-d').textContent='/ '+total;
+  document.querySelector('.qz-score-d').textContent='/ '+qs.length;
   document.getElementById('demo-banner').style.display=isDemo?'block':'none';
-
   show('s-quiz');
   renderQ();
 }
 
 // ── QUIZ RENDER ──
 const CM={
-  entree:{lbl:'Entrées',cls:'qc-e'},
-  main:{lbl:'Mains',cls:'qc-m'},
-  dessert:{lbl:'Desserts',cls:'qc-d'},
   service:{lbl:'Service',cls:'qc-s'},
-  other:{lbl:'Venue',cls:'qc-o'},
+  hospitality:{lbl:'Hospitality',cls:'qc-o'},
+  beverage:{lbl:'Beverage',cls:'qc-m'},
 };
 const LTRS=['A','B','C','D'];
 
 function renderQ(){
   const {qs,idx}=QS, q=qs[idx];
-  const cm=CM[q.cat]||CM.other;
+  const cm=CM[q.cat]||CM.service;
   document.getElementById('qz-progtxt').textContent=`Q${idx+1} of ${qs.length}`;
   document.getElementById('qz-bar').style.width=Math.round((idx+1)/qs.length*100)+'%';
   document.getElementById('qz-body').innerHTML=`
@@ -1020,7 +1354,7 @@ function choose(i){
   if(QS.answered) return;
   QS.answered=true;
   const q=QS.qs[QS.idx], ok=i===q.answer;
-  const cat=q.cat||'other';
+  const cat=q.cat||'service';
   QS.cats[cat]=QS.cats[cat]||{c:0,t:0};
   QS.cats[cat].t++;
   document.querySelectorAll('.qz-opt').forEach(b=>b.disabled=true);
@@ -1041,63 +1375,54 @@ function choose(i){
   document.getElementById('qz-nxt').style.display='block';
 }
 
-function nextQ(){
-  QS.idx++; QS.answered=false;
-  QS.idx>=QS.qs.length ? showResult() : renderQ();
-}
+function nextQ(){ QS.idx++; QS.answered=false; QS.idx>=QS.qs.length?showResult():renderQ(); }
+function quitQuiz(){ document.getElementById('demo-banner').style.display='none'; show('s-land'); }
 
 // ── RESULT ──
 function showResult(){
   const score=QS.score, total=QS.qs.length, pct=Math.round(score/total*100);
-  const t=getTier(score, total), ts=Date.now();
+  const t=getTier(score,total), ts=Date.now();
 
-  // Determine stage-specific tier
   let stageTier, stageLabel;
+  const certs = getVenueCerts();
+
   if(quizMode==='legacy'){
     const passed = pct>=70;
-    stageTier = passed ? '75' : '50';
-    stageLabel = passed ? 'Legacy Certified — 75%' : 'Not Yet Passed';
-    // Save to cert store
-    if(passed || !certStore[sName]?.legacy){
-      if(!certStore[sName]) certStore[sName]={};
-      certStore[sName].legacy = {score,total,pct,date:ts};
-      saveCerts();
-    }
+    stageTier = passed?'75':'50';
+    stageLabel = passed?'Legacy Certified — 75%':'Not Yet Passed';
+    if(!certs[sName]) certs[sName]={};
+    certs[sName].legacy = {score,total,pct,date:ts};
+    saveVenueCerts(certs);
   } else if(quizMode==='master'){
     const passed = pct>=90;
-    stageTier = passed ? 'full' : '75';
-    stageLabel = passed ? 'Master Certified — 100%' : 'Not Yet Passed — Legacy 75% maintained';
-    if(passed || !certStore[sName]?.master){
-      if(!certStore[sName]) certStore[sName]={};
-      certStore[sName].master = {score,total,pct,date:ts};
-      saveCerts();
-    }
+    stageTier = passed?'full':'75';
+    stageLabel = passed?'Master Certified — 100%':'Not Yet Passed — Legacy 75% maintained';
+    if(!certs[sName]) certs[sName]={};
+    certs[sName].master = {score,total,pct,date:ts};
+    saveVenueCerts(certs);
   } else {
-    // Demo
-    stageTier = t.key;
-    stageLabel = t.label;
+    stageTier = t.key; stageLabel = t.label;
   }
 
-  const tierObj = {
+  const tierMap={
     'full':{key:'full',pct:'100%',label:'Expert — Full Allocation',cls:'vc-full',col:'var(--green)',
       desc:'Outstanding. Master-level knowledge demonstrated. OTM allocation recommended at 100%.'},
     '75':{key:'75',pct:'75%',label:'Proficient — Standard Allocation',cls:'vc-75',col:'var(--amber)',
       desc:'Good foundation. OTM allocation at 75%. Continue studying for Master certification.'},
     '50':{key:'50',pct:'50%',label:'Development Level',cls:'vc-50',col:'var(--muted)',
-      desc:"Keep building your knowledge. Focus on the Tier Training Hub. 50% allocation applies. Retake when ready."}
+      desc:'Keep building your knowledge. 50% allocation applies. Retake when ready.'}
   };
-  const tier = tierObj[stageTier];
+  const tier = tierMap[stageTier];
 
   lastRes={id:ts,name:sName,role:sRole,pool:sPool,weekTips:sTips,
     score,total,pct,tier:tier.key,tierPct:tier.pct,tierLabel:stageLabel,
-    cats:JSON.parse(JSON.stringify(QS.cats)),date:ts,status:'pending',
-    quizMode:quizMode};
+    cats:JSON.parse(JSON.stringify(QS.cats)),date:ts,status:'pending',quizMode};
 
-  // Only push non-demo results to pending
   if(quizMode!=='demo'){
-    pending = pending.filter(r=>r.name!==sName || r.quizMode!==quizMode);
-    savePend();
-    pending.push(lastRes); savePend();
+    let pending = getVenuePending();
+    pending = pending.filter(r=>!(r.name===sName && r.quizMode===quizMode));
+    pending.push(lastRes);
+    savePending(pending);
   }
 
   document.getElementById('r-date').textContent=fmtDate(ts);
@@ -1107,13 +1432,11 @@ function showResult(){
   document.getElementById('st-w').textContent=total-QS.score;
   document.getElementById('st-a').textContent=pct+'%';
 
-  // Ring animation
   const circ=2*Math.PI*62, ring=document.getElementById('rg-fill');
   ring.style.strokeDasharray=circ; ring.style.stroke=tier.col; ring.style.strokeDashoffset=circ;
   document.getElementById('r-big').style.color=tier.col;
   setTimeout(()=>ring.style.strokeDashoffset=circ*(1-score/total),120);
 
-  // Verdict
   document.getElementById('r-verdict-inner').innerHTML=`
     <div class="v-card ${tier.cls}">
       <div class="v-top">
@@ -1122,26 +1445,24 @@ function showResult(){
       </div>
     </div>`;
 
-  // Cat bars
-  const cnm={entree:'Entrées',main:'Mains',dessert:'Desserts',other:'Venue & Other',service:'Service Standards'};
-  const ccol={entree:'var(--gold)',main:'var(--blue)',dessert:'#f87171',other:'var(--muted2)',service:'var(--violet)'};
+  const cnm={service:'Service Standards',hospitality:'Hospitality',beverage:'Beverage'};
+  const ccol={service:'var(--violet)',hospitality:'var(--gold)',beverage:'var(--blue)'};
   let ch='<div class="r-cats-ttl">Category Breakdown</div>';
   Object.entries(QS.cats).forEach(([cat,s])=>{
     if(!s.t) return;
     const p=Math.round(s.c/s.t*100);
     ch+=`<div class="cat-row">
-      <div class="cat-top"><span class="cat-nm">${cnm[cat]}</span><span class="cat-fr">${s.c}/${s.t} (${p}%)</span></div>
-      <div class="cat-track"><div class="cat-fill" style="background:${ccol[cat]}" data-p="${p}"></div></div>
+      <div class="cat-top"><span class="cat-nm">${cnm[cat]||cat}</span><span class="cat-fr">${s.c}/${s.t} (${p}%)</span></div>
+      <div class="cat-track"><div class="cat-fill" style="background:${ccol[cat]||'var(--muted)'}" data-p="${p}"></div></div>
     </div>`;
   });
   document.getElementById('r-cats').innerHTML=ch;
   setTimeout(()=>document.querySelectorAll('.cat-fill').forEach(el=>el.style.width=el.dataset.p+'%'),280);
 
-  // OTM fields
   const vc=tier.key==='full'?'green':tier.key==='75'?'amber':'gr';
-  const tierMult = tier.key==='full'?1:tier.key==='75'?0.75:0.5;
-  const adjTips = (sTips*tierMult).toFixed(2);
-  const modeLabel = quizMode==='demo'?'Demo':quizMode==='legacy'?'Legacy':'Master';
+  const tierMult=tier.key==='full'?1:tier.key==='75'?0.75:0.5;
+  const adjTips=(sTips*tierMult).toFixed(2);
+  const modeLabel=quizMode==='demo'?'Demo':quizMode==='legacy'?'Legacy':'Master';
   document.getElementById('otm-fields').innerHTML=`
     <div class="otm-f"><span class="otm-fk">Staff Member</span><span class="otm-fv">${sName}</span></div>
     <div class="otm-f"><span class="otm-fk">Role</span><span class="otm-fv">${sRole}</span></div>
@@ -1150,39 +1471,30 @@ function showResult(){
     <div class="otm-f"><span class="otm-fk">Score</span><span class="otm-fv">${score}/${total} (${pct}%)</span></div>
     <div class="otm-f"><span class="otm-fk">Result</span><span class="otm-fv ${vc}">${stageLabel}</span></div>
     <div class="otm-f"><span class="otm-fk">OTM Tip Allocation</span><span class="otm-fv ${vc} big">${tier.pct}</span></div>
-    <div class="otm-f"><span class="otm-fk">Applied to last week (${fmtAUD(sTips)})</span><span class="otm-fv ${vc}">${fmtAUD(parseFloat(adjTips))}</span></div>
+    ${sTips>0?`<div class="otm-f"><span class="otm-fk">Last week tips (${fmtAUD(sTips)})</span><span class="otm-fv ${vc}">${fmtAUD(parseFloat(adjTips))}</span></div>`:''}
     <div class="otm-f"><span class="otm-fk">Completed</span><span class="otm-fv">${fmtDate(ts)}</span></div>`;
 
   const notes={
-    full:`<strong>Ready for approval.</strong> Once approved, update ${sName.split(' ')[0]}'s tip allocation to <strong>100%</strong> in the OnTheMonee employer portal.`,
-    '75':`<strong>Ready for approval.</strong> Once approved, set allocation to <strong>75%</strong> in OnTheMonee. ${quizMode==='legacy'?'Master test available to unlock 100%.':'Recommend reviewing lower-scoring categories.'}`,
-    '50':`<strong>Development level.</strong> Set allocation to <strong>50%</strong> in OnTheMonee once approved. Staff may retake Legacy when ready — study the Tier Training Hub first.`
+    full:`<strong>Ready for approval.</strong> Once approved, update ${sName.split(' ')[0]}'s tip allocation to <strong>100%</strong> in the OnTheMonee portal.`,
+    '75':`<strong>Ready for approval.</strong> Once approved, set allocation to <strong>75%</strong> in OnTheMonee. ${quizMode==='legacy'?'Master test available to unlock 100%.':'Recommend reviewing lower-scoring areas.'}`,
+    '50':`<strong>Development level.</strong> Set allocation to <strong>50%</strong> in OnTheMonee once approved. Retake after studying.`
   };
   document.getElementById('otm-note').innerHTML=notes[tier.key];
 
-  // Retry section — stage-aware
   const rr=document.getElementById('r-retry');
   if(quizMode==='demo'){
     rr.innerHTML=`<div class="r-retry-sub">Ready for the real thing? Start with Legacy.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
   } else if(quizMode==='legacy'){
-    if(pct>=70){
-      rr.innerHTML=`<div class="r-retry-sub">Legacy passed! Master test is now unlocked.</div><button class="r-retry-btn" onclick="show('s-land')">Continue to Master →</button>`;
-    } else {
-      rr.innerHTML=`<div class="r-retry-sub">Score 70%+ to pass Legacy. Retake when ready.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
-    }
+    rr.innerHTML=pct>=70
+      ?`<div class="r-retry-sub">Legacy passed! Master test is now unlocked.</div><button class="r-retry-btn" onclick="show('s-land')">Continue to Master →</button>`
+      :`<div class="r-retry-sub">Score 70%+ to pass Legacy. Study and retake.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
   } else {
-    if(pct>=90){
-      rr.innerHTML=`<div class="r-retry-sub">Master certified! Full 100% allocation unlocked.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Home</button>`;
-    } else {
-      rr.innerHTML=`<div class="r-retry-sub">Score 90%+ to pass Master. Your Legacy 75% is maintained.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
-    }
+    rr.innerHTML=pct>=90
+      ?`<div class="r-retry-sub">Master certified! Full 100% allocation unlocked.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Home</button>`
+      :`<div class="r-retry-sub">Score 90%+ to pass Master. Legacy 75% maintained.</div><button class="r-retry-btn" onclick="show('s-land')">Back to Selection</button>`;
   }
-
-  // Update result ring denominator
   document.querySelector('.r-den').textContent='/ '+total;
-  // Hide demo banner on results
   document.getElementById('demo-banner').style.display='none';
-
   show('s-result');
 }
 
@@ -1190,47 +1502,54 @@ function copyResult(){
   if(!lastRes) return;
   const r=lastRes;
   const tierMult=r.tier==='full'?1:r.tier==='75'?0.75:0.5;
-  const mLabel=r.quizMode==='legacy'?'Legacy (40q)':r.quizMode==='master'?'Master (100q)':'Demo (10q)';
-  const txt=`ARIA TIP CERTIFICATION
+  const mLabel=r.quizMode==='legacy'?'Legacy (40 questions)':r.quizMode==='master'?'Master (100 questions)':'Demo (10 questions)';
+  const txt=`TIP & TRAINING PLATFORM — ${(VENUES[currentVenue]||{name:''}).name.toUpperCase()}
 ─────────────────────────────
 Staff      : ${r.name}
 Role       : ${r.role} (${r.pool})
 Assessment : ${mLabel}
-Score      : ${r.score}/${r.total||100} (${r.pct}%)
+Score      : ${r.score}/${r.total} (${r.pct}%)
 Result     : ${r.tierLabel}
 OTM Alloc. : ${r.tierPct}
-Last Wk Tips: ${fmtAUD(r.weekTips)}  →  ${fmtAUD(r.weekTips*tierMult)} at ${r.tierPct}
+${r.weekTips>0?'Last Wk Tips: '+fmtAUD(r.weekTips)+' → '+fmtAUD(r.weekTips*tierMult)+' at '+r.tierPct:''}
 Completed  : ${fmtDate(r.date)}
 Status     : PENDING APPROVAL
 ─────────────────────────────
-ACTION: Update ${r.name.split(' ')[0]}'s tip scaling
-to ${r.tierPct} in OnTheMonee employer portal.`;
+ACTION: Update ${r.name.split(' ')[0]}'s tip scaling to ${r.tierPct} in OnTheMonee portal.`;
   navigator.clipboard.writeText(txt).then(()=>toast('Copied to clipboard ✓')).catch(()=>toast('Copy manually from screen'));
 }
 
+// ── MANAGER PORTAL ──
 function showMgr(){ renderMgr(); show('s-mgr'); }
-function goBack(){ lastRes ? show('s-result') : show('s-land'); }
-function quitQuiz(){ document.getElementById('demo-banner').style.display='none'; show('s-land'); }
+function goBack(){ lastRes?show('s-result'):show('s-land'); }
 
-// ── MANAGER ──
+function mgrTab(btn, id){
+  document.querySelectorAll('.m-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.m-tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(id==='tab-tips') renderTipUpload();
+  if(id==='tab-staff') renderStaffList();
+}
+
 function renderMgr(){
-  const all=[...pending,...approved];
+  const pending = getVenuePending();
+  const approved = getVenueApproved();
+  const all = [...pending,...approved];
   document.getElementById('kpi-p').textContent=pending.length;
   document.getElementById('kpi-a').textContent=approved.length;
   document.getElementById('kpi-f').textContent=all.filter(r=>r.tier==='full').length;
   const sc=all.map(r=>r.pct);
   document.getElementById('kpi-av').textContent=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length)+'%':'—';
 
-  // Pending
   const pl=document.getElementById('pend-list');
   if(!pending.length){ pl.innerHTML='<div class="empty">No assessments pending</div>'; }
   else {
     pl.innerHTML=pending.map(r=>{
-      const t=getTier(r.score, r.total);
       const bc=r.tier==='full'?'ptb-full':r.tier==='75'?'ptb-75':'ptb-50';
       const sc_col=r.pct>=90?'var(--green)':r.pct>=70?'var(--amber)':'var(--muted2)';
       const ini=r.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'Assessment';
+      const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'Demo';
       return `<div class="pc" id="pc${r.id}">
         <div class="pc-top">
           <div class="pc-av">${ini}</div>
@@ -1238,10 +1557,10 @@ function renderMgr(){
             <div class="pc-name">${r.name}</div>
             <div class="pc-meta">${r.role} · ${r.pool} · ${mLabel} · ${fmtDate(r.date)}</div>
           </div>
-          <div class="pc-sc"><div class="pc-sc-n" style="color:${sc_col}">${r.score}</div><div class="pc-sc-d">/${r.total||100}</div></div>
+          <div class="pc-sc"><div class="pc-sc-n" style="color:${sc_col}">${r.score}</div><div class="pc-sc-d">/${r.total}</div></div>
         </div>
         <div class="pc-foot">
-          <span class="pc-tb ${bc}"><span class="ptb-dot"></span>${t.label} — ${t.pct}</span>
+          <span class="pc-tb ${bc}"><span class="ptb-dot"></span>${r.tierLabel} — ${r.tierPct}</span>
           <div class="pc-acts">
             <button class="pcb pcb-app" onclick="approve(${r.id})">✓ Approve</button>
             <button class="pcb pcb-dec" onclick="decline(${r.id})">Decline</button>
@@ -1251,47 +1570,217 @@ function renderMgr(){
     }).join('');
   }
 
-  // Approved
   const al=document.getElementById('appr-list');
   if(!approved.length){ al.innerHTML='<div class="empty">No approved records yet</div>'; }
   else {
     al.innerHTML=approved.map(r=>{
-      const t=getTier(r.score, r.total);
       const pc=r.tier==='full'?'full':r.tier==='75'?'t75':'t50';
       const mLabel=r.quizMode==='legacy'?'Legacy':r.quizMode==='master'?'Master':'—';
       return `<div class="ar">
         <div class="ar-name"><strong>${r.name}</strong></div>
         <div class="ar-role">${r.role} · ${mLabel}</div>
-        <div class="ar-sc">${r.score}/${r.total||100}</div>
-        <div class="ar-pct ${pc}">${t.pct}</div>
+        <div class="ar-sc">${r.score}/${r.total}</div>
+        <div class="ar-pct ${pc}">${r.tierPct}</div>
         <div class="ar-dt">${fmtDate(r.date)}</div>
         <div class="ar-tag">OTM Ready</div>
       </div>`;
     }).join('');
   }
-
-  // Week staff list
-  document.getElementById('wk-scroll').innerHTML=STAFF.map(s=>`
-    <div class="wk-row">
-      <div class="wk-nm"><strong>${s.name}</strong></div>
-      <div class="wk-rl">${s.role}</div>
-      <span class="wk-pool ${s.pool.toLowerCase()}">${s.pool}</span>
-      <div class="wk-tp">${fmtAUD(s.weekTips)}</div>
-    </div>`).join('');
 }
 
 function approve(id){
+  let pending = getVenuePending();
   const i=pending.findIndex(r=>r.id===id); if(i===-1) return;
   const r=pending.splice(i,1)[0]; r.status='approved'; r.approvedAt=Date.now();
-  approved.unshift(r); savePend(); saveAppr();
-  toast(`${r.name} approved at ${r.tierPct} ✓`); renderMgr();
+  savePending(pending);
+  let approved = getVenueApproved();
+  approved.unshift(r);
+  saveApproved(approved);
+  toast(`${r.name} approved at ${r.tierPct} ✓`);
+  renderMgr();
 }
+
 function decline(id){
+  let pending = getVenuePending();
   const i=pending.findIndex(r=>r.id===id); if(i===-1) return;
   const r=pending[i];
   if(confirm(`Decline ${r.name}'s assessment? This removes it from the queue.`)){
-    pending.splice(i,1); savePend(); toast(`${r.name}'s result declined`); renderMgr();
+    pending.splice(i,1); savePending(pending);
+    toast(`${r.name}'s result declined`); renderMgr();
   }
+}
+
+// ── TIP UPLOAD ──
+function getCertifiedTier(name){
+  if(hasMasterPass(name)) return {key:'full',pct:'100%',mult:1};
+  if(hasLegacyPass(name)) return {key:'75',pct:'75%',mult:0.75};
+  return {key:'50',pct:'50%',mult:0.5};
+}
+
+function renderTipUpload(){
+  const staff = getVenueStaff();
+  const grid = document.getElementById('tip-staff-grid');
+
+  // Set default dates if empty
+  if(!document.getElementById('tip-week-end').value){
+    const today = new Date();
+    const saturday = new Date(today);
+    saturday.setDate(today.getDate() - today.getDay() - 1);
+    document.getElementById('tip-week-end').value = saturday.toISOString().split('T')[0];
+    const payDay = new Date(saturday);
+    payDay.setDate(payDay.getDate() + 4);
+    document.getElementById('tip-pay-date').value = payDay.toISOString().split('T')[0];
+  }
+
+  grid.innerHTML = staff.map(s=>{
+    const tier = getCertifiedTier(s.name);
+    const cls = tier.key==='full'?'full':tier.key==='75'?'t75':'nc';
+    return `<div class="tip-row">
+      <div>
+        <div class="tip-row-name">${s.name}</div>
+        <div class="tip-row-sub">${s.role} · ${s.pool}</div>
+      </div>
+      <input type="number" class="tip-amount-inp" id="tip-${s.name.replace(/\s+/g,'_')}"
+        placeholder="0.00" min="0" step="0.01"
+        oninput="updateTipTotal()">
+      <div class="tip-certified-pct ${cls}">${tier.pct}</div>
+    </div>`;
+  }).join('');
+
+  updateTipTotal();
+  renderWeekHistory();
+}
+
+function updateTipTotal(){
+  const staff = getVenueStaff();
+  let total = 0;
+  staff.forEach(s=>{
+    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
+    if(el) total += parseFloat(el.value||0);
+  });
+  document.getElementById('tip-total-display').textContent = fmtAUD(total);
+}
+
+function saveTipWeek(){
+  const weekEnd = document.getElementById('tip-week-end').value;
+  const payDate = document.getElementById('tip-pay-date').value;
+  if(!weekEnd){ toast('Please enter week ending date'); return; }
+
+  const staff = getVenueStaff();
+  const entries = {};
+  let total = 0;
+  staff.forEach(s=>{
+    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
+    const v = parseFloat(el?.value||0);
+    entries[s.name] = v;
+    total += v;
+  });
+
+  const week = {id:Date.now(), weekEnd, payDate, entries, total, savedAt:Date.now()};
+  const weeks = getVenueWeeks();
+  const existing = weeks.findIndex(w=>w.weekEnd===weekEnd);
+  if(existing>=0){ weeks[existing]=week; } else { weeks.push(week); }
+  saveVenueWeeks(weeks);
+
+  // Update staff dropdown tips
+  populateStaffDropdown();
+  toast(`Week ending ${weekEnd} saved — ${fmtAUD(total)} gross ✓`);
+  renderWeekHistory();
+}
+
+function renderWeekHistory(){
+  const weeks = getVenueWeeks();
+  const container = document.getElementById('wk-history');
+  if(!weeks.length){ container.innerHTML='<div class="empty">No weeks uploaded yet</div>'; return; }
+
+  const staff = getVenueStaff();
+  container.innerHTML = [...weeks].reverse().map(w=>{
+    const rows = staff.map(s=>{
+      const gross = w.entries[s.name]||0;
+      if(!gross) return '';
+      const tier = getCertifiedTier(s.name);
+      const alloc = (gross * tier.mult).toFixed(2);
+      return `<div class="tip-row" style="margin:4px 0">
+        <div><div class="tip-row-name">${s.name}</div><div class="tip-row-sub">${s.role}</div></div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--muted2);text-align:right">${fmtAUD(gross)}</div>
+        <div class="tip-certified-pct ${tier.key==='full'?'full':tier.key==='75'?'t75':'nc'}">${fmtAUD(parseFloat(alloc))}</div>
+      </div>`;
+    }).join('');
+    return `<div class="wk-hist-row" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div>
+        <div class="wk-hist-label">Week ending ${w.weekEnd}</div>
+        <div class="wk-hist-meta">Pay date ${w.payDate||'—'} · ${staff.filter(s=>w.entries[s.name]>0).length} staff</div>
+      </div>
+      <div class="wk-hist-total">${fmtAUD(w.total)}</div>
+    </div>
+    <div class="wk-hist-expand">
+      <div style="padding:8px 0">${rows||'<div class="empty">No amounts entered</div>'}</div>
+    </div>`;
+  }).join('');
+}
+
+function exportTipCSV(){
+  const weekEnd = document.getElementById('tip-week-end').value;
+  const staff = getVenueStaff();
+  let csv = 'Name,Role,Pool,Gross Tips,Certified Tier,Allocated Amount\n';
+  staff.forEach(s=>{
+    const el = document.getElementById('tip-'+s.name.replace(/\s+/g,'_'));
+    const gross = parseFloat(el?.value||0);
+    const tier = getCertifiedTier(s.name);
+    const alloc = (gross * tier.mult).toFixed(2);
+    csv += `"${s.name}","${s.role}","${s.pool}",${gross.toFixed(2)},"${tier.pct}",${alloc}\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `tips-${weekEnd||'week'}.csv`;
+  a.click();
+  toast('CSV exported ✓');
+}
+
+// ── STAFF MANAGEMENT ──
+function renderStaffList(){
+  const staff = getVenueStaff();
+  const list = document.getElementById('staff-roster-list');
+  if(!staff.length){ list.innerHTML='<div class="empty" style="margin:16px">No staff added yet</div>'; return; }
+  list.innerHTML = staff.map((s,i)=>`
+    <div class="staff-row">
+      <div class="staff-row-name">${s.name}</div>
+      <div class="staff-row-role">${s.role}</div>
+      <span class="staff-row-pool ${s.pool.toLowerCase()}">${s.pool}</span>
+      <button class="staff-row-del" onclick="removeStaff(${i})" title="Remove">✕</button>
+    </div>`).join('');
+}
+
+function toggleAddStaff(){
+  const f = document.getElementById('staff-add-form');
+  f.classList.toggle('show');
+}
+
+function addStaffMember(){
+  const name = document.getElementById('saf-name').value.trim();
+  const role = document.getElementById('saf-role').value.trim();
+  const pool = document.getElementById('saf-pool').value;
+  if(!name||!role){ toast('Enter name and role'); return; }
+  const staff = getVenueStaff();
+  if(staff.find(s=>s.name.toLowerCase()===name.toLowerCase())){ toast('Staff member already exists'); return; }
+  staff.push({name,role,pool});
+  saveVenueStaff(staff);
+  document.getElementById('saf-name').value='';
+  document.getElementById('saf-role').value='';
+  renderStaffList();
+  populateStaffDropdown();
+  toast(`${name} added ✓`);
+}
+
+function removeStaff(idx){
+  const staff = getVenueStaff();
+  if(!confirm(`Remove ${staff[idx].name} from the roster?`)) return;
+  staff.splice(idx,1);
+  saveVenueStaff(staff);
+  renderStaffList();
+  populateStaffDropdown();
+  toast('Staff member removed');
 }
 
 </script>
