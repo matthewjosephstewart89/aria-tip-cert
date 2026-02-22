@@ -910,18 +910,18 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <div class="ml-logo">TIER.</div>
         <div class="ml-badge">Manager Access</div>
         <div class="ml-heading">Manager Portal</div>
-        <div class="ml-sub">Enter your venue code and manager code to access approvals, tip uploads and staff management.</div>
+        <div class="ml-sub">Enter your email and password to access approvals, tip uploads and staff management.</div>
         <div class="v-grp" style="text-align:left;margin-bottom:10px">
-          <label class="v-lbl">Venue Code</label>
-          <input class="v-inp" type="password" id="mgr-venue-code-inp" placeholder="Enter venue code" autocomplete="off"
+          <label class="v-lbl">Email</label>
+          <input class="v-inp" type="email" id="mgr-email-inp" placeholder="Enter your email" autocomplete="email"
             onkeydown="if(event.key==='Enter') mgrLoginSubmit()">
         </div>
         <div class="v-grp" style="text-align:left;margin-bottom:12px">
-          <label class="v-lbl">Manager Code</label>
-          <input class="v-inp" type="password" id="mgr-code-inp" placeholder="Enter manager code" autocomplete="off"
+          <label class="v-lbl">Password</label>
+          <input class="v-inp" type="password" id="mgr-code-inp" placeholder="Enter your password" autocomplete="current-password"
             onkeydown="if(event.key==='Enter') mgrLoginSubmit()">
         </div>
-        <div class="ml-err" id="mgr-login-err">Incorrect code — please check both codes and try again</div>
+        <div class="ml-err" id="mgr-login-err">Incorrect email or password — please try again</div>
         <button class="venue-btn" onclick="mgrLoginSubmit()">Enter Manager Portal →</button>
         <button class="ml-back" style="margin-top:12px" onclick="sendPasswordReset()">Forgot password?</button>
         <div class="venue-platform-note" style="margin-top:20px">
@@ -1370,7 +1370,7 @@ async function signOut(){
 
 // ── AUTH: MANAGER LOGIN ──
 function openMgrLogin(){
-  const vci=document.getElementById('mgr-venue-code-inp');
+  const vci=document.getElementById('mgr-email-inp');
   const mci=document.getElementById('mgr-code-inp');
   const err=document.getElementById('mgr-login-err');
   if(vci) vci.value='';
@@ -1380,14 +1380,13 @@ function openMgrLogin(){
 }
 
 async function mgrLoginSubmit(){
-  const venueCode = document.getElementById('mgr-venue-code-inp').value.trim().toLowerCase();
-  const mgrCode   = document.getElementById('mgr-code-inp').value.trim();
+  const email    = document.getElementById('mgr-email-inp').value.trim().toLowerCase();
+  const password = document.getElementById('mgr-code-inp').value.trim();
   const err = document.getElementById('mgr-login-err');
-  if(!venueCode || !mgrCode){ err.style.display='block'; return; }
+  if(!email || !password){ err.style.display='block'; return; }
 
-  // Manager login: email = venueCode+'@tier.manager', password = mgrCode
-  const email = venueCode + '@tier.manager';
-  const {data, error} = await sb.auth.signInWithPassword({email, password: mgrCode});
+  // Manager login: real Supabase Auth email + password
+  const {data, error} = await sb.auth.signInWithPassword({email, password});
 
   if(error){ err.style.display='block'; return; }
 
