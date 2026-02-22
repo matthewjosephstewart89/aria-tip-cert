@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Tier · Tip & Training Platform</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,500;0,700;0,800;1,300;1,700;1,800&family=Barlow:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -1055,10 +1056,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 // ════════════════════════════════════════════════
 // SUPABASE CONFIG
 // ════════════════════════════════════════════════
-// ── SESSION STORAGE HELPERS ──
-const STORE_KEY = v => 'tier_' + (currentVenue?.slug||currentVenue||'x') + '_' + v;
-const vGet = k => { try { return JSON.parse(sessionStorage.getItem(STORE_KEY(k))); } catch(e){ return null; } };
-const vSet = (k,v) => { try { sessionStorage.setItem(STORE_KEY(k), JSON.stringify(v)); } catch(e){} };
+const SUPABASE_URL = 'https://uhrsxqiksqvgjdksbxna.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_p_K8ZONW-YW16vvTlB5rsg_mEv_D5Hp';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Keep VENUES as fallback for question bank / local config
 // Venue data now comes from Supabase
@@ -1155,64 +1155,138 @@ function getTier(score, total){
     desc:'Building your knowledge. 50% allocation applies. Retake when ready.'};
 }
 
-// ── SESSION STORAGE DATA HELPERS ──
+// ── SUPABASE DATA HELPERS ──
 async function getVenueStaff(){
-  return vGet('staff') || [];
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('staff').select('*').eq('venue_id', currentVenue.id).order('name');
+  if(error){ console.error(error); return []; }
+  return data;
 }
+
 async function getVenuePending(){
-  const all = vGet('assessments') || [];
-  return all.filter(a => a.status === 'pending' || a.status === 'declined')
-            .sort((a,b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('assessments').select('*')
+    .eq('venue_id', currentVenue.id)
+    .in('status',['pending','declined'])
+    .order('submitted_at', {ascending:false});
+  if(error){ console.error(error); return []; }
+  return data.map(r=>({
+    id:r.id, name:r.staff_name, role:'', pool:'', quizMode:r.quiz_mode,
+    score:r.score, total:r.total, pct:r.pct, tier:r.tier, tierPct:r.tier_pct,
+    tierLabel:r.tier_label, status:r.status, date:new Date(r.submitted_at).getTime()
+  }));
 }
+
 async function getVenueApproved(){
-  const all = vGet('assessments') || [];
-  return all.filter(a => a.status === 'approved')
-            .sort((a,b) => new Date(b.approved_at||0) - new Date(a.approved_at||0));
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('assessments').select('*')
+    .eq('venue_id', currentVenue.id)
+    .eq('status','approved')
+    .order('approved_at', {ascending:false});
+  if(error){ console.error(error); return []; }
+  return data.map(r=>({
+    id:r.id, name:r.staff_name, role:'', pool:'', quizMode:r.quiz_mode,
+    score:r.score, total:r.total, pct:r.pct, tier:r.tier, tierPct:r.tier_pct,
+    tierLabel:r.tier_label, status:r.status, date:new Date(r.submitted_at).getTime(),
+    approvedAt:r.approved_at ? new Date(r.approved_at).getTime() : null
+  }));
 }
+
 async function getVenueCerts(){
-  const approved = await getVenueApproved();
+  if(!currentVenue) return {};
+  const {data,error} = await sb.from('assessments').select('*')
+    .eq('venue_id', currentVenue.id)
+    .eq('status','approved');
+  if(error){ console.error(error); return {}; }
   const certs = {};
-  approved.forEach(a => {
-    if(!certs[a.staff_name]) certs[a.staff_name] = {};
-    if(a.quiz_mode === 'legacy') certs[a.staff_name].legacy = {score:a.score,total:a.total,pct:a.pct,date:a.approved_at};
-    if(a.quiz_mode === 'master') certs[a.staff_name].master = {score:a.score,total:a.total,pct:a.pct,date:a.approved_at};
+  data.forEach(r=>{
+    if(!certs[r.staff_name]) certs[r.staff_name]={};
+    const key = r.quiz_mode === 'master' ? 'master' : 'legacy';
+    certs[r.staff_name][key] = {score:r.score, total:r.total, pct:r.pct, date:new Date(r.approved_at||r.submitted_at).getTime()};
   });
   return certs;
 }
+
 async function getVenueWeeks(){
-  return (vGet('weeks') || []).sort((a,b) => new Date(b.week_end) - new Date(a.week_end));
+  if(!currentVenue) return [];
+  const {data,error} = await sb.from('tip_weeks').select('*')
+    .eq('venue_id', currentVenue.id)
+    .order('week_end');
+  if(error){ console.error(error); return []; }
+  return data.map(w=>({
+    id:w.id, weekEnd:w.week_end, payDate:w.pay_date,
+    entries:w.entries||{}, total:w.total, savedAt:new Date(w.saved_at).getTime()
+  }));
 }
+
 async function savePendingResult(result){
-  let all = vGet('assessments') || [];
-  all = all.filter(a => !(a.staff_name === result.staff_name && a.quiz_mode === result.quiz_mode && (a.status === 'pending' || a.status === 'declined')));
-  all.unshift({...result, id: Date.now().toString()});
-  vSet('assessments', all);
+  if(!currentVenue) return;
+  // Remove existing pending/declined for same staff+mode
+  await sb.from('assessments').delete()
+    .eq('venue_id', currentVenue.id)
+    .eq('staff_name', result.name)
+    .eq('quiz_mode', result.quizMode)
+    .in('status',['pending','declined']);
+  // Insert new
+  const {error} = await sb.from('assessments').insert({
+    venue_id: currentVenue.id,
+    staff_name: result.name,
+    quiz_mode: result.quizMode,
+    score: result.score,
+    total: result.total,
+    pct: result.pct,
+    tier: result.tier,
+    tier_pct: result.tierPct,
+    tier_label: result.tierLabel,
+    status: 'pending'
+  });
+  if(error) console.error('Save assessment error:', error);
 }
+
 async function approveAssessment(id){
-  let all = vGet('assessments') || [];
-  all = all.map(a => a.id == id ? {...a, status:'approved', approved_at: new Date().toISOString()} : a);
-  vSet('assessments', all);
+  const {data,error} = await sb.from('assessments')
+    .update({status:'approved', approved_at: new Date().toISOString()})
+    .eq('id', id)
+    .select()
+    .single();
+  if(error){ console.error(error); return null; }
+  return data;
 }
+
 async function declineAssessment(id){
-  let all = vGet('assessments') || [];
-  all = all.map(a => a.id == id ? {...a, status:'declined'} : a);
-  vSet('assessments', all);
+  const {error} = await sb.from('assessments')
+    .update({status:'declined'})
+    .eq('id', id);
+  if(error) console.error(error);
 }
+
 async function saveWeek(weekData){
-  let weeks = vGet('weeks') || [];
-  weeks = weeks.filter(w => w.week_end !== weekData.week_end);
-  weeks.unshift({...weekData, id: Date.now().toString()});
-  vSet('weeks', weeks);
+  if(!currentVenue) return;
+  const {error} = await sb.from('tip_weeks').upsert({
+    venue_id: currentVenue.id,
+    week_end: weekData.weekEnd,
+    pay_date: weekData.payDate || null,
+    entries: weekData.entries,
+    total: weekData.total,
+    saved_at: new Date().toISOString()
+  }, {onConflict:'venue_id,week_end'});
+  if(error) console.error('Save week error:', error);
 }
+
 async function saveStaffMember(member){
-  let staff = vGet('staff') || [];
-  staff.push({...member, id: Date.now().toString()});
-  vSet('staff', staff);
+  if(!currentVenue) return;
+  const {error} = await sb.from('staff').insert({
+    venue_id: currentVenue.id,
+    name: member.name,
+    role: member.role,
+    pool: member.pool
+  });
+  if(error) console.error('Add staff error:', error);
 }
+
 async function removeStaffById(id){
-  let staff = vGet('staff') || [];
-  staff = staff.filter(s => s.id != id);
-  vSet('staff', staff);
+  const {error} = await sb.from('staff').delete().eq('id', id);
+  if(error) console.error('Remove staff error:', error);
 }
 
 // ── AUTH: STAFF LOGIN ──
@@ -1222,21 +1296,28 @@ function scrollToLogin(){
   setTimeout(()=>document.getElementById('venue-select').focus(),200);
 }
 
-const VENUES_LIST = [
-  { slug: 'demo', name: 'Demo Venue', staff_code: 'demo123' },
-  { slug: 'aria', name: 'Aria Restaurant', staff_code: 'aria123' },
-];
-
 async function initLoginSelect(){
   const sel = document.getElementById('venue-select');
   if(!sel) return;
-  sel.innerHTML = '<option value="">— Select venue —</option>';
-  VENUES_LIST.forEach(v=>{
-    const o = document.createElement('option');
-    o.value = v.slug; o.textContent = v.name;
-    sel.appendChild(o);
-  });
-  sel.disabled = false;
+  sel.innerHTML = '<option value="">— Loading venues... —</option>';
+  sel.disabled = true;
+  document.getElementById('venue-btn').disabled = true;
+  try {
+    const {data,error} = await sb.from('venues').select('id,name,slug').order('name');
+    if(error) throw error;
+    if(!data || !data.length){ sel.innerHTML='<option value="">— No venues found —</option>'; sel.disabled=false; return; }
+    sel.innerHTML = '<option value="">— Select venue —</option>';
+    data.forEach(v=>{
+      const o = document.createElement('option');
+      o.value = v.slug; o.textContent = v.name; o.dataset.id = v.id;
+      sel.appendChild(o);
+    });
+    sel.disabled = false;
+  } catch(e) {
+    console.error('Venue load error:', e);
+    sel.innerHTML='<option value="">— Error loading venues —</option>';
+    sel.disabled = false;
+  }
   sel.onchange = checkVenueReady;
   document.getElementById('venue-code').oninput = checkVenueReady;
   document.getElementById('venue-code').onkeydown = e=>{ if(e.key==='Enter') venueLogin(); };
@@ -1254,8 +1335,13 @@ async function venueLogin(){
   const slug = document.getElementById('venue-select').value;
   const code = document.getElementById('venue-code').value.trim().toLowerCase();
   if(!slug || !code){ return; }
-  const venue = VENUES_LIST.find(v => v.slug === slug);
-  if(!venue || venue.staff_code.toLowerCase() !== code){
+
+  // Look up venue and check staff_code
+  const {data, error} = await sb.from('venues').select('*').eq('slug', slug).single();
+  if(error || !data){
+    document.getElementById('venue-err').style.display='block'; return;
+  }
+  if(!data.staff_code || data.staff_code.toLowerCase() !== code){
     document.getElementById('venue-err').style.display='block'; return;
   }
   await loadVenueBySlug(slug);
@@ -1266,8 +1352,8 @@ async function loadDemoVenue(){
 }
 
 async function loadVenueBySlug(slug){
-  const data = VENUES_LIST.find(v => v.slug === slug);
-  if(!data){ toast('Venue not found'); return; }
+  const {data,error} = await sb.from('venues').select('*').eq('slug',slug).single();
+  if(error||!data){ toast('Venue not found'); return; }
   currentVenue = data;
   venueStaff = await getVenueStaff();
   document.getElementById('venue-name-badge').textContent = data.name;
@@ -1277,6 +1363,7 @@ async function loadVenueBySlug(slug){
 }
 
 async function signOut(){
+  await sb.auth.signOut();
   currentVenue=null; currentUser=null; currentRole=null;
   venueStaff=[]; sName=''; sRole=''; sPool=''; sTips=0;
   const vc=document.getElementById('venue-code');
@@ -1301,23 +1388,24 @@ function openMgrLogin(){
   show('s-mgr-login');
 }
 
-// Manager credentials — venue slug : { email, password }
-const MGR_CREDS = {
-  'demo': { email: 'matthew@tier.manager', password: 'Matthew123', venue: 'demo' },
-};
-
 async function mgrLoginSubmit(){
   const email    = document.getElementById('mgr-email-inp').value.trim().toLowerCase();
   const password = document.getElementById('mgr-code-inp').value.trim();
   const err = document.getElementById('mgr-login-err');
   if(!email || !password){ err.style.display='block'; return; }
 
-  // Find matching manager
-  const match = Object.values(MGR_CREDS).find(m => m.email === email && m.password === password);
-  if(!match){ err.style.display='block'; return; }
+  // Manager login: real Supabase Auth email + password
+  const {data, error} = await sb.auth.signInWithPassword({email, password});
 
-  currentVenue = VENUES_LIST.find(v => v.slug === match.venue);
+  if(error){ err.style.display='block'; return; }
+
+  // Verify this user is a manager
+  const {data:profile} = await sb.from('profiles').select('*,venues(*)').eq('id', data.user.id).single();
+  if(!profile || profile.role !== 'manager'){ err.style.display='block'; await sb.auth.signOut(); return; }
+
+  currentUser = data.user;
   currentRole = 'manager';
+  currentVenue = profile.venues;
   venueStaff = await getVenueStaff();
   document.getElementById('mgr-venue-tag').textContent = currentVenue.name;
 
@@ -1333,9 +1421,10 @@ function goBack(){ lastRes?show('s-result'):show('s-land'); }
 async function sendPasswordReset(){
   const email = prompt('Enter your email address to receive a reset link:');
   if(!email) return;
-  alert('Please contact your venue manager to reset your access code.');
-  return;
-  if(false){ toast('Could not send reset email — check address'); return; }
+  const {error} = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.href
+  });
+  if(error){ toast('Could not send reset email — check address'); return; }
   toast('Reset link sent — check your email ✓', 4000);
 }
 
@@ -1515,9 +1604,11 @@ async function updateCards(name){
 
 async function clearDeclined(mode){
   if(!currentVenue || !sName) return;
-  let all = vGet('assessments') || [];
-  all = all.filter(a => !(a.staff_name === sName && a.quiz_mode === mode && a.status === 'declined'));
-  vSet('assessments', all);
+  await sb.from('assessments').delete()
+    .eq('venue_id', currentVenue.id)
+    .eq('staff_name', sName)
+    .eq('quiz_mode', mode)
+    .eq('status','declined');
 }
 
 // ── MANAGER PORTAL ──
@@ -1757,7 +1848,19 @@ async function mgrTab(btn, id){
 
 // ── BOOT ──
 (function init(){
-  // Auth handler removed})();
+  // Check for password reset redirect
+  sb.auth.onAuthStateChange((event, session) => {
+    if(event === 'PASSWORD_RECOVERY'){
+      const newPass = prompt('Enter your new password:');
+      if(newPass){
+        sb.auth.updateUser({password: newPass}).then(({error})=>{
+          if(error) toast('Error updating password');
+          else toast('Password updated ✓', 4000);
+        });
+      }
+    }
+  });
+})();
 
 // ── QUIZ LAUNCH ──
 function _getSelected(){
